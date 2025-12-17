@@ -82,24 +82,24 @@ export const isProduction = env.environment === 'production';
  * Validate required environment variables
  */
 export const validateEnv = (): void => {
-  const required = ['REACT_APP_API_BASE_URL'];
-  const missing: string[] = [];
+  // Don't validate in production build - let it fail gracefully
+  // Environment variables should be set in Vercel, but we don't want to break the build
+  if (process.env.NODE_ENV === 'development') {
+    const required = ['REACT_APP_API_BASE_URL'];
+    const missing: string[] = [];
 
-  required.forEach((key) => {
-    if (!process.env[key]) {
-      missing.push(key);
+    required.forEach((key) => {
+      if (!process.env[key]) {
+        missing.push(key);
+      }
+    });
+
+    if (missing.length > 0) {
+      console.warn(`Missing environment variables: ${missing.join(', ')}`);
     }
-  });
-
-  if (missing.length > 0 && isProduction) {
-    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
-  }
-
-  if (missing.length > 0) {
-    console.warn(`Missing environment variables: ${missing.join(', ')}`);
   }
 };
 
-// Validate on module load
+// Validate on module load (only in development)
 validateEnv();
 

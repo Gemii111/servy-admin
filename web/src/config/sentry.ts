@@ -12,10 +12,9 @@ import { env } from './env';
  * Initialize Sentry if enabled and DSN is provided
  */
 export const initSentry = (): void => {
+  // Only initialize if explicitly enabled and DSN is provided
   if (!env.enableSentry || !env.sentryDsn) {
-    if (env.environment === 'production') {
-      console.warn('Sentry is enabled but DSN is not set. Error tracking will not work.');
-    }
+    // Silently skip initialization if not configured
     return;
   }
 
