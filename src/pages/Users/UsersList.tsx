@@ -242,10 +242,18 @@ const UsersListPage: React.FC = () => {
         }}
       >
         <Box>
-          <Typography variant="h5" fontWeight={700} mb={0.5}>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            mb={0.5}
+            sx={{ fontSize: { xs: 20, sm: 24 } }}
+          >
             إدارة المستخدمين
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography
+            variant="body2"
+            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+          >
             عرض وإدارة جميع المستخدمين في النظام
           </Typography>
         </Box>
@@ -254,6 +262,8 @@ const UsersListPage: React.FC = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={() => setDialogOpen(true)}
+          size="small"
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
         >
           إضافة مستخدم
         </Button>
@@ -344,11 +354,14 @@ const UsersListPage: React.FC = () => {
           setPhone('');
           setUserType('customer');
         }}
+        fullWidth
+        maxWidth="sm"
         PaperProps={{
           sx: {
             bgcolor: '#111827',
             border: '1px solid #1F2937',
-            minWidth: 500,
+            m: { xs: 1, sm: 2 },
+            width: { xs: 'calc(100% - 16px)', sm: 'auto' },
           },
         }}
       >

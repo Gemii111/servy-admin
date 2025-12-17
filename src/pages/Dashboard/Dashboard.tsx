@@ -60,18 +60,33 @@ const DashboardPage: React.FC = () => {
         }}
       >
         <Box>
-          <Typography variant="h5" fontWeight={700} mb={0.5}>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            mb={0.5}
+            sx={{ fontSize: { xs: 20, sm: 24 } }}
+          >
             لوحة التحكم
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography
+            variant="body2"
+            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+          >
             نظرة عامة على النظام، الطلبات، والمستخدمين.
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-          <Button variant="contained" color="primary">
+        <Box
+          sx={{
+            display: 'flex',
+            gap: { xs: 1, sm: 1.5 },
+            flexWrap: 'wrap',
+            width: { xs: '100%', sm: 'auto' },
+          }}
+        >
+          <Button variant="contained" color="primary" size="small">
             اليوم
           </Button>
-          <Button variant="outlined" color="inherit">
+          <Button variant="outlined" color="inherit" size="small">
             هذا الأسبوع
           </Button>
         </Box>

@@ -22,7 +22,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         component="main"
         sx={{
           flexGrow: 1,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
+          transition: 'width 0.3s ease',
         }}
       >
         <Toolbar />
@@ -30,8 +31,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           sx={{
             maxWidth: 1440,
             mx: 'auto',
-            px: 3, // 24px - consistent across all breakpoints
-            py: 3, // 24px - consistent vertical spacing
+            px: { xs: 1.5, sm: 2, md: 3 }, // Responsive padding: 12px mobile, 16px tablet, 24px desktop
+            py: { xs: 2, sm: 2.5, md: 3 }, // Responsive vertical spacing
+            width: '100%',
           }}
         >
           {children}

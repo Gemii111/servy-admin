@@ -110,10 +110,18 @@ const SettingsPage: React.FC = () => {
         }}
       >
         <Box>
-          <Typography variant="h5" fontWeight={700} mb={0.5}>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            mb={0.5}
+            sx={{ fontSize: { xs: 20, sm: 24 } }}
+          >
             الإعدادات
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography
+            variant="body2"
+            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+          >
             إدارة إعدادات النظام العامة
           </Typography>
         </Box>

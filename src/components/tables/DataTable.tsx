@@ -194,8 +194,34 @@ function DataTable<T extends Record<string, any>>({
         </Box>
       )}
 
-      <TableContainer>
-        <Table>
+      <TableContainer
+        sx={{
+          overflowX: 'auto',
+          '&::-webkit-scrollbar': {
+            height: 8,
+          },
+          '&::-webkit-scrollbar-track': {
+            bgcolor: '#020617',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            bgcolor: '#374151',
+            borderRadius: 4,
+            '&:hover': {
+              bgcolor: '#4B5563',
+            },
+          },
+        }}
+      >
+        <Table
+          sx={{
+            minWidth: 650,
+            '& .MuiTableCell-root': {
+              whiteSpace: { xs: 'nowrap', md: 'normal' },
+              fontSize: { xs: 12, sm: 13, md: 14 },
+              px: { xs: 1, sm: 1.5, md: 2 },
+            },
+          }}
+        >
           <TableHead>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} sx={{ bgcolor: '#020617' }}>

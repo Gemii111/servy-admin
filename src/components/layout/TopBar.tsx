@@ -47,7 +47,12 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
         borderBottom: '1px solid #1F2937',
       }}
     >
-      <Toolbar sx={{ minHeight: 64, px: 3 }}>
+      <Toolbar
+        sx={{
+          minHeight: { xs: 56, sm: 64 },
+          px: { xs: 1.5, sm: 2, md: 3 },
+        }}
+      >
         <IconButton
           color="inherit"
           edge="start"
@@ -57,27 +62,35 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
           <MenuIcon />
         </IconButton>
 
-        <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: 'flex',
+            alignItems: 'center',
+            gap: { xs: 1, sm: 2 },
+          }}
+        >
           <TextField
             placeholder="ابحث عن طلب، مستخدم، مطعم..."
             size="small"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: '#6B7280', fontSize: 20 }} />
+                  <SearchIcon sx={{ color: '#6B7280', fontSize: { xs: 18, sm: 20 } }} />
                 </InputAdornment>
               ),
             }}
             sx={{
-              maxWidth: 360,
+              maxWidth: { xs: 200, sm: 280, md: 360 },
+              flex: { xs: 1, sm: 'none' },
               '& .MuiOutlinedInput-root': {
                 bgcolor: '#020617',
                 borderRadius: 999,
-                fontSize: 13,
+                fontSize: { xs: 12, sm: 13 },
                 '& fieldset': { borderColor: '#1F2937' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              input: { color: '#E5E7EB' },
+              input: { color: '#E5E7EB', py: { xs: 1, sm: 1.25 } },
             }}
           />
         </Box>

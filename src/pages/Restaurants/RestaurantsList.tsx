@@ -232,18 +232,38 @@ const RestaurantsListPage: React.FC = () => {
         }}
       >
         <Box>
-          <Typography variant="h5" fontWeight={700} mb={0.5}>
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            mb={0.5}
+            sx={{ fontSize: { xs: 20, sm: 24 } }}
+          >
             إدارة المطاعم
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography
+            variant="body2"
+            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+          >
             عرض وإدارة جميع المطاعم في النظام
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex', gap: 1.5 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: { xs: 1, sm: 1.5 },
+            flexDirection: { xs: 'column', sm: 'row' },
+            width: { xs: '100%', sm: 'auto' },
+          }}
+        >
           <Button
             variant="outlined"
             onClick={() => navigate('/restaurants/pending')}
-            sx={{ borderColor: '#F59E0B', color: '#F59E0B' }}
+            sx={{
+              borderColor: '#F59E0B',
+              color: '#F59E0B',
+              width: { xs: '100%', sm: 'auto' },
+            }}
+            size="small"
           >
             المطاعم المعلقة ({data?.pagination.total || 0})
           </Button>
@@ -252,6 +272,8 @@ const RestaurantsListPage: React.FC = () => {
             color="primary"
             startIcon={<AddIcon />}
             onClick={() => setDialogOpen(true)}
+            size="small"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
           >
             إضافة مطعم
           </Button>
@@ -389,12 +411,14 @@ const RestaurantsListPage: React.FC = () => {
           setAddress('');
           setDescription('');
         }}
+        fullWidth
+        maxWidth="md"
         PaperProps={{
           sx: {
             bgcolor: '#111827',
             border: '1px solid #1F2937',
-            minWidth: 600,
-            maxWidth: 700,
+            m: { xs: 1, sm: 2 },
+            width: { xs: 'calc(100% - 16px)', sm: 'auto' },
           },
         }}
       >
