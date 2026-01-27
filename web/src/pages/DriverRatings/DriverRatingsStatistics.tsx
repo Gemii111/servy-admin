@@ -11,7 +11,7 @@ import {
   mockGetDriverRatingsStatistics,
   mockGetDriverRatings,
 } from '../../services/api/driverRatings';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 const DriverRatingsStatisticsPage: React.FC = () => {
   const { data: stats, isLoading: statsLoading } = useQuery({

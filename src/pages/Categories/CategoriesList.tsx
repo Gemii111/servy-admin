@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -161,9 +161,9 @@ const CategoriesListPage: React.FC = () => {
     }
   };
 
-  const handleToggleStatus = (category: Category) => {
+  const handleToggleStatus = useCallback((category: Category) => {
     toggleStatusMutation.mutate(category);
-  };
+  }, [toggleStatusMutation]);
 
   const columns = useMemo<ColumnDef<Category>[]>(() => {
     return [
@@ -227,7 +227,7 @@ const CategoriesListPage: React.FC = () => {
         ),
       },
     ];
-  }, []);
+  }, [handleToggleStatus]);
 
   const categories = data?.categories ?? [];
 

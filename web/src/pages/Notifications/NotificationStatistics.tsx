@@ -7,7 +7,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PeopleIcon from '@mui/icons-material/People';
 import StatCard from '../../components/common/StatCard';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
-import { mockGetNotificationStatistics, mockGetNotifications } from '../../services/api/notifications';
+import { mockGetNotificationStatistics } from '../../services/api/notifications';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 const NotificationStatisticsPage: React.FC = () => {
@@ -16,12 +16,7 @@ const NotificationStatisticsPage: React.FC = () => {
     queryFn: () => mockGetNotificationStatistics(),
   });
 
-  const { data: recentNotificationsData, isLoading: recentLoading } = useQuery({
-    queryKey: ['notifications', 'recent'],
-    queryFn: () => mockGetNotifications({ limit: 20, page: 1 }),
-  });
-
-  if (statsLoading || recentLoading) {
+  if (statsLoading) {
     return <SkeletonLoader variant="chart" />;
   }
 

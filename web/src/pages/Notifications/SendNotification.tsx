@@ -35,7 +35,7 @@ import {
   NotificationPriority,
   TargetAudience,
 } from '../../services/api/notifications';
-import { mockGetUsers, User } from '../../services/api/users';
+import { mockGetUsers } from '../../services/api/users';
 
 const SendNotificationPage: React.FC = () => {
   const location = useLocation();

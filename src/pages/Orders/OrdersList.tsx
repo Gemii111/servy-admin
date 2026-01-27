@@ -12,27 +12,26 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { ColumnDef } from '@tanstack/react-table';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import DataTable from '../../components/tables/DataTable';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
-import { mockGetOrders, mockUpdateOrderStatus, Order } from '../../services/api/orders';
+import { mockGetOrders, Order } from '../../services/api/orders';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
 const OrdersListPage: React.FC = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [paymentStatusFilter, setPaymentStatusFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
 
   const { data, isLoading } = useQuery({
     queryKey: ['orders', statusFilter, paymentStatusFilter, searchQuery, page, limit],
@@ -44,18 +43,6 @@ const OrdersListPage: React.FC = () => {
         page,
         limit,
       }),
-  });
-
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: Order['status'] }) =>
-      mockUpdateOrderStatus(id, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
-      showSnackbar('تم تحديث حالة الطلب بنجاح', 'success');
-    },
-    onError: () => {
-      showSnackbar('حدث خطأ أثناء تحديث حالة الطلب', 'error');
-    },
   });
 
   const columns = useMemo<ColumnDef<Order>[]>(

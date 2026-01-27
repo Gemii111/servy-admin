@@ -24,7 +24,6 @@ import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
   mockGetUsers,
-  mockUpdateUserStatus,
   mockDeleteUser,
   mockCreateUser,
   User,
@@ -37,9 +36,8 @@ const UsersListPage: React.FC = () => {
 
   const [userTypeFilter, setUserTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState('');
@@ -48,27 +46,14 @@ const UsersListPage: React.FC = () => {
   const [userType, setUserType] = useState<'customer' | 'driver' | 'restaurant'>('customer');
 
   const { data, isLoading } = useQuery({
-    queryKey: ['users', userTypeFilter, statusFilter, searchQuery, page, limit],
+    queryKey: ['users', userTypeFilter, statusFilter, page, limit],
     queryFn: () =>
       mockGetUsers({
         userType: userTypeFilter,
         status: statusFilter,
-        search: searchQuery,
         page,
         limit,
       }),
-  });
-
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'active' | 'suspended' }) =>
-      mockUpdateUserStatus(id, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-      showSnackbar('تم تحديث حالة المستخدم بنجاح', 'success');
-    },
-    onError: () => {
-      showSnackbar('حدث خطأ أثناء تحديث حالة المستخدم', 'error');
-    },
   });
 
   const deleteMutation = useMutation({
@@ -221,11 +206,6 @@ const UsersListPage: React.FC = () => {
     if (window.confirm(`هل أنت متأكد من حذف المستخدم "${user.name}"؟`)) {
       deleteMutation.mutate(user.id);
     }
-  };
-
-  const handleToggleStatus = (user: User) => {
-    const newStatus = user.status === 'active' ? 'suspended' : 'active';
-    updateStatusMutation.mutate({ id: user.id, status: newStatus });
   };
 
   return (

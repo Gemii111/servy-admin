@@ -26,7 +26,6 @@ import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
   mockGetRestaurants,
-  mockUpdateRestaurantStatus,
   mockCreateRestaurant,
   Restaurant,
 } from '../../services/api/restaurants';
@@ -39,7 +38,7 @@ const RestaurantsListPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit] = useState(10);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState('');
@@ -59,18 +58,6 @@ const RestaurantsListPage: React.FC = () => {
         page,
         limit,
       }),
-  });
-
-  const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'approved' | 'pending' | 'suspended' }) =>
-      mockUpdateRestaurantStatus(id, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['restaurants'] });
-      showSnackbar('تم تحديث حالة المطعم بنجاح', 'success');
-    },
-    onError: () => {
-      showSnackbar('حدث خطأ أثناء تحديث حالة المطعم', 'error');
-    },
   });
 
   const createMutation = useMutation({

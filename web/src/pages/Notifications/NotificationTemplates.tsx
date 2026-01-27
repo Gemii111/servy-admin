@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -117,7 +117,7 @@ const NotificationTemplatesPage: React.FC = () => {
     }
   };
 
-  const handleUse = (template: NotificationTemplate) => {
+  const handleUse = useCallback((template: NotificationTemplate) => {
     navigate('/notifications', {
       state: {
         template: {
@@ -128,7 +128,7 @@ const NotificationTemplatesPage: React.FC = () => {
         },
       },
     });
-  };
+  }, [navigate]);
 
   const handleDialogSave = () => {
     if (!name.trim() || !title.trim() || !message.trim()) {
