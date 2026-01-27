@@ -1,19 +1,22 @@
 import { createTheme } from '@mui/material/styles';
 
 export const appTheme = createTheme({
-  direction: 'rtl',
+  direction: 'ltr',
   palette: {
-    mode: 'dark',
+    mode: 'light',
     primary: {
-      main: '#2563EB', // Primary
+      main: '#667eea',
+    },
+    secondary: {
+      main: '#764ba2',
     },
     background: {
-      default: '#0F172A', // AppBackground
-      paper: '#111827', // CardBackground / TopBar / Sidebar base
+      default: '#FFFFFF',
+      paper: '#F8F9FA',
     },
     text: {
-      primary: '#E5E7EB',
-      secondary: '#9CA3AF',
+      primary: '#1A1A1A',
+      secondary: '#6B7280',
     },
     success: {
       main: '#22C55E',
@@ -55,5 +58,3 @@ export const appTheme = createTheme({
     },
   },
 });
-
-

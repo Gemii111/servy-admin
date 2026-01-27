@@ -6,6 +6,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { websiteContent } from '../../lib/content';
+import { renderMixedText } from '../../utils/textUtils';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -26,8 +27,8 @@ const Footer: React.FC = () => {
     <Box
       component="footer"
       sx={{
-        bgcolor: 'background.paper',
-        borderTop: '1px solid rgba(255,255,255,0.1)',
+        bgcolor: '#F8F9FA',
+        borderTop: '1px solid rgba(0,0,0,0.1)',
         pt: { xs: 6, md: 8 },
         pb: 4,
         mt: 8,
@@ -39,7 +40,7 @@ const Footer: React.FC = () => {
           left: 0,
           right: 0,
           height: '1px',
-          background: 'linear-gradient(90deg, transparent, rgba(102,126,234,0.5), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent)',
         },
       }}
     >
@@ -70,8 +71,8 @@ const Footer: React.FC = () => {
             >
               {websiteContent.appNameAr}
             </Typography>
-            <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.8, mb: 3 }}>
-              {websiteContent.description}
+            <Typography variant="body1" paragraph sx={{ lineHeight: 1.8, mb: 3, color: '#6B7280', direction: 'ltr' }}>
+              {renderMixedText(websiteContent.description)}
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
               {[
@@ -84,8 +85,9 @@ const Footer: React.FC = () => {
                   key={index}
                   size="small"
                   sx={{
-                    color: 'text.secondary',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#6B7280',
+                    border: '1px solid rgba(0,0,0,0.1)',
+                    bgcolor: 'white',
                     '&:hover': {
                       color: social.color,
                       borderColor: social.color,
@@ -108,7 +110,7 @@ const Footer: React.FC = () => {
               gutterBottom
               sx={{
                 mb: 2,
-                color: 'text.primary',
+                color: '#1A1A1A',
               }}
             >
               روابط سريعة
@@ -121,7 +123,7 @@ const Footer: React.FC = () => {
                   to={link.path}
                   sx={{
                     textDecoration: 'none',
-                    color: 'text.secondary',
+                    color: '#6B7280',
                     fontSize: '0.95rem',
                     transition: 'all 0.2s ease',
                     '&:hover': {
@@ -143,7 +145,7 @@ const Footer: React.FC = () => {
               gutterBottom
               sx={{
                 mb: 2,
-                color: 'text.primary',
+                color: '#1A1A1A',
               }}
             >
               قانوني
@@ -156,7 +158,7 @@ const Footer: React.FC = () => {
                   to={link.path}
                   sx={{
                     textDecoration: 'none',
-                    color: 'text.secondary',
+                    color: '#6B7280',
                     fontSize: '0.95rem',
                     transition: 'all 0.2s ease',
                     '&:hover': {
@@ -178,20 +180,20 @@ const Footer: React.FC = () => {
               gutterBottom
               sx={{
                 mb: 2,
-                color: 'text.primary',
+                color: '#1A1A1A',
               }}
             >
               اتصل بنا
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem' }}>
-                📧 {websiteContent.contact.customerService.email}
+              <Typography variant="body2" sx={{ fontSize: '0.95rem', color: '#6B7280', direction: 'ltr' }}>
+                📧 {renderMixedText(websiteContent.contact.customerService.email)}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem' }}>
-                📱 {websiteContent.contact.customerService.phone}
+              <Typography variant="body2" sx={{ fontSize: '0.95rem', color: '#6B7280', direction: 'ltr' }}>
+                📱 {renderMixedText(websiteContent.contact.customerService.phone)}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem' }}>
-                ⏰ {websiteContent.contact.customerService.hours}
+              <Typography variant="body2" sx={{ fontSize: '0.95rem', color: '#6B7280', direction: 'ltr' }}>
+                ⏰ {renderMixedText(websiteContent.contact.customerService.hours)}
               </Typography>
             </Box>
           </Box>
@@ -201,16 +203,15 @@ const Footer: React.FC = () => {
           sx={{
             mt: 6,
             pt: 4,
-            borderTop: '1px solid rgba(255,255,255,0.1)',
+            borderTop: '1px solid rgba(0,0,0,0.1)',
             textAlign: 'center',
           }}
         >
           <Typography
             variant="body2"
-            color="text.secondary"
             sx={{
               fontSize: '0.9rem',
-              opacity: 0.7,
+              color: '#9CA3AF',
             }}
           >
             © {currentYear} {websiteContent.appNameAr}. جميع الحقوق محفوظة.

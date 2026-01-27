@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Container, Typography, Card, CardContent, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { websiteContent } from '../../lib/content';
+import { renderMixedText } from '../../utils/textUtils';
 
 const HowToStart: React.FC = () => {
   const sections = [
@@ -29,7 +30,7 @@ const HowToStart: React.FC = () => {
     <Box
       sx={{
         py: { xs: 6, md: 10 },
-        bgcolor: 'background.default',
+        bgcolor: 'white',
         position: 'relative',
       }}
     >
@@ -65,8 +66,9 @@ const HowToStart: React.FC = () => {
               <Card
                 sx={{
                   height: '100%',
-                  bgcolor: 'background.paper',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  bgcolor: '#F8F9FA',
+                  border: '1px solid rgba(0,0,0,0.08)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                   borderRadius: 4,
                   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   position: 'relative',
@@ -85,7 +87,7 @@ const HowToStart: React.FC = () => {
                   },
                   '&:hover': {
                     transform: 'translateY(-12px)',
-                    boxShadow: `0 20px 60px ${section.color}30`,
+                    boxShadow: `0 20px 60px ${section.color}20`,
                     '&::before': {
                       transform: 'scaleX(1)',
                     },
@@ -119,7 +121,7 @@ const HowToStart: React.FC = () => {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              boxShadow: `0 4px 12px ${section.color}40`,
+                              boxShadow: `0 4px 12px ${section.color}30`,
                             }}
                           >
                             <CheckCircleIcon
@@ -131,13 +133,19 @@ const HowToStart: React.FC = () => {
                           </Box>
                         </ListItemIcon>
                         <ListItemText
-                          primary={`${stepIndex + 1}. ${step}`}
+                          primary={
+                            <>
+                              {stepIndex + 1}. {renderMixedText(step)}
+                            </>
+                          }
                           primaryTypographyProps={{
                             variant: 'body1',
                             sx: {
                               fontSize: '0.95rem',
                               lineHeight: 1.7,
                               fontWeight: 500,
+                              color: '#1A1A1A',
+                              direction: 'ltr',
                             },
                           }}
                         />

@@ -4,6 +4,7 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import StoreIcon from '@mui/icons-material/Store';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { websiteContent } from '../../lib/content';
+import { renderMixedText } from '../../utils/textUtils';
 
 const Features: React.FC = () => {
   const sections = [
@@ -34,7 +35,7 @@ const Features: React.FC = () => {
     <Box
       sx={{
         py: { xs: 6, md: 10 },
-        bgcolor: 'background.default',
+        bgcolor: '#F8F9FA',
         position: 'relative',
         '&::before': {
           content: '""',
@@ -43,7 +44,7 @@ const Features: React.FC = () => {
           left: 0,
           right: 0,
           height: '1px',
-          background: 'linear-gradient(90deg, transparent, rgba(102,126,234,0.5), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent)',
         },
       }}
     >
@@ -81,7 +82,7 @@ const Features: React.FC = () => {
                   p: 2,
                   borderRadius: 3,
                   background: section.gradient,
-                  boxShadow: `0 8px 32px ${section.color}40`,
+                  boxShadow: `0 8px 32px ${section.color}30`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -119,12 +120,13 @@ const Features: React.FC = () => {
                   <Card
                     sx={{
                       height: '100%',
-                      bgcolor: 'background.paper',
-                      border: `1px solid rgba(255,255,255,0.1)`,
+                      bgcolor: 'white',
+                      border: '1px solid rgba(0,0,0,0.08)',
                       borderRadius: 4,
                       transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                       position: 'relative',
                       overflow: 'hidden',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                       '&::before': {
                         content: '""',
                         position: 'absolute',
@@ -139,7 +141,7 @@ const Features: React.FC = () => {
                       },
                       '&:hover': {
                         transform: 'translateY(-12px)',
-                        boxShadow: `0 20px 60px ${section.color}30, 0 0 0 1px ${section.color}20`,
+                        boxShadow: `0 20px 60px ${section.color}20, 0 0 0 1px ${section.color}15`,
                         '&::before': {
                           transform: 'scaleX(1)',
                         },
@@ -154,20 +156,22 @@ const Features: React.FC = () => {
                         sx={{
                           mb: 2,
                           fontSize: '1.1rem',
-                          background: section.gradient,
-                          WebkitBackgroundClip: 'text',
-                          WebkitTextFillColor: 'transparent',
-                          backgroundClip: 'text',
+                          color: '#1A1A1A',
+                          direction: 'ltr',
                         }}
                       >
-                        {feature.title}
+                        {renderMixedText(feature.title)}
                       </Typography>
                       <Typography
                         variant="body1"
-                        color="text.secondary"
-                        sx={{ lineHeight: 1.8, fontSize: '0.95rem' }}
+                        sx={{
+                          lineHeight: 1.8,
+                          fontSize: '0.95rem',
+                          color: '#6B7280',
+                          direction: 'ltr',
+                        }}
                       >
-                        {feature.description}
+                        {renderMixedText(feature.description)}
                       </Typography>
                     </CardContent>
                   </Card>

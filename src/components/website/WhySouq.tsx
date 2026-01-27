@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Container, Typography, Card, CardContent } from '@mui/material';
 import { websiteContent } from '../../lib/content';
+import { renderMixedText } from '../../utils/textUtils';
 
 const WhySouq: React.FC = () => {
   const gradients = [
@@ -16,7 +17,7 @@ const WhySouq: React.FC = () => {
     <Box
       sx={{
         py: { xs: 6, md: 10 },
-        bgcolor: 'background.paper',
+        bgcolor: '#F8F9FA',
         position: 'relative',
       }}
     >
@@ -34,9 +35,9 @@ const WhySouq: React.FC = () => {
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
           }}
-        >
-          لماذا Souq؟
-        </Typography>
+          >
+            {renderMixedText('لماذا (Souq)؟')}
+          </Typography>
         <Box
           sx={{
             display: 'grid',
@@ -54,12 +55,13 @@ const WhySouq: React.FC = () => {
                 sx={{
                   height: '100%',
                   textAlign: 'center',
-                  bgcolor: 'background.default',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  bgcolor: 'white',
+                  border: '1px solid rgba(0,0,0,0.08)',
                   borderRadius: 4,
                   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   position: 'relative',
                   overflow: 'hidden',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                   '&::before': {
                     content: '""',
                     position: 'absolute',
@@ -74,7 +76,7 @@ const WhySouq: React.FC = () => {
                   },
                   '&:hover': {
                     transform: 'translateY(-12px)',
-                    boxShadow: `0 20px 60px rgba(102,126,234,0.3)`,
+                    boxShadow: '0 20px 60px rgba(102,126,234,0.2)',
                     '&::before': {
                       transform: 'scaleX(1)',
                     },
@@ -89,7 +91,7 @@ const WhySouq: React.FC = () => {
                       p: 2,
                       borderRadius: 3,
                       background: gradients[index % gradients.length],
-                      boxShadow: `0 8px 24px rgba(102,126,234,0.3)`,
+                      boxShadow: `0 8px 24px rgba(102,126,234,0.2)`,
                     }}
                   >
                     <Typography variant="h2" sx={{ fontSize: '3rem' }}>
@@ -106,16 +108,21 @@ const WhySouq: React.FC = () => {
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       backgroundClip: 'text',
+                      direction: 'ltr',
                     }}
                   >
-                    {item.title}
+                    {renderMixedText(item.title)}
                   </Typography>
                   <Typography
                     variant="body1"
-                    color="text.secondary"
-                    sx={{ lineHeight: 1.8, fontSize: '0.95rem' }}
+                    sx={{
+                      lineHeight: 1.8,
+                      fontSize: '0.95rem',
+                      color: '#6B7280',
+                      direction: 'ltr',
+                    }}
                   >
-                    {item.description}
+                    {renderMixedText(item.description)}
                   </Typography>
                 </CardContent>
               </Card>

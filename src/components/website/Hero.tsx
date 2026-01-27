@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import { websiteContent } from '../../lib/content';
+import { renderMixedText } from '../../utils/textUtils';
 
 const Hero: React.FC = () => {
   return (
@@ -87,9 +88,10 @@ const Hero: React.FC = () => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
+              direction: 'ltr',
             }}
           >
-            {websiteContent.home.hero.title}
+            {renderMixedText(websiteContent.home.hero.title)}
           </Typography>
           <Typography
             variant="h4"
@@ -100,9 +102,10 @@ const Hero: React.FC = () => {
               opacity: 0.95,
               textShadow: '0 4px 20px rgba(0,0,0,0.2)',
               letterSpacing: '0.02em',
+              direction: 'ltr',
             }}
           >
-            {websiteContent.home.hero.subtitle}
+            {renderMixedText(websiteContent.home.hero.subtitle)}
           </Typography>
           <Typography
             variant="h6"
@@ -115,9 +118,10 @@ const Hero: React.FC = () => {
               lineHeight: 1.9,
               textShadow: '0 2px 10px rgba(0,0,0,0.2)',
               fontWeight: 400,
+              direction: 'ltr',
             }}
           >
-            {websiteContent.home.hero.description}
+            {renderMixedText(websiteContent.home.hero.description)}
           </Typography>
         </Box>
       </Container>

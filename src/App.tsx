@@ -32,7 +32,6 @@ const App: React.FC = () => {
         sx={{
           minHeight: '100vh',
           bgcolor: 'background.default',
-          direction: 'rtl',
         }}
       >
         <Routes>
@@ -44,16 +43,25 @@ const App: React.FC = () => {
           <Route path="/contact" element={<ContactPage />} />
           
           {/* Login */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={
+              <Box sx={{ direction: 'rtl' }}>
+                <LoginPage />
+              </Box>
+            }
+          />
           
           {/* Admin Panel routes (protected) */}
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <DashboardPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <DashboardPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -61,9 +69,11 @@ const App: React.FC = () => {
             path="/users"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <UsersListPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <UsersListPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -71,9 +81,11 @@ const App: React.FC = () => {
             path="/users/:id"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <UserDetailsPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <UserDetailsPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -81,9 +93,11 @@ const App: React.FC = () => {
             path="/restaurants"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <RestaurantsListPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <RestaurantsListPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -91,9 +105,11 @@ const App: React.FC = () => {
             path="/restaurants/:id"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <RestaurantDetailsPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <RestaurantDetailsPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -101,9 +117,11 @@ const App: React.FC = () => {
             path="/restaurants/pending"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <PendingApprovalPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <PendingApprovalPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -111,9 +129,11 @@ const App: React.FC = () => {
             path="/orders"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <OrdersListPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <OrdersListPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -121,9 +141,11 @@ const App: React.FC = () => {
             path="/orders/:id"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <OrderDetailsPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <OrderDetailsPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -131,9 +153,11 @@ const App: React.FC = () => {
             path="/categories"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <CategoriesListPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <CategoriesListPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -141,9 +165,11 @@ const App: React.FC = () => {
             path="/coupons"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <CouponsListPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <CouponsListPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -151,9 +177,11 @@ const App: React.FC = () => {
             path="/reports"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <ReportsPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <ReportsPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />
@@ -161,9 +189,11 @@ const App: React.FC = () => {
             path="/settings"
             element={
               <ProtectedRoute>
-                <Layout>
-                  <SettingsPage />
-                </Layout>
+                <Box sx={{ direction: 'rtl' }}>
+                  <Layout>
+                    <SettingsPage />
+                  </Layout>
+                </Box>
               </ProtectedRoute>
             }
           />

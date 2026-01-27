@@ -106,11 +106,11 @@ const Header: React.FC = () => {
       <AppBar
         position="fixed"
         sx={{
-          bgcolor: trigger ? 'rgba(15, 23, 42, 0.98)' : 'transparent',
+          bgcolor: trigger ? 'rgba(255, 255, 255, 0.98)' : 'transparent',
           backdropFilter: trigger ? 'blur(20px)' : 'none',
           boxShadow: trigger ? '0 4px 20px rgba(0,0,0,0.1)' : 0,
           transition: 'all 0.3s ease',
-          borderBottom: trigger ? '1px solid rgba(255,255,255,0.1)' : 'none',
+          borderBottom: trigger ? '1px solid rgba(0,0,0,0.1)' : 'none',
         }}
       >
         <Toolbar sx={{ justifyContent: 'space-between', py: 1.5 }}>
@@ -141,6 +141,7 @@ const Header: React.FC = () => {
                   fontSize: '0.95rem',
                   px: 2,
                   borderRadius: 2,
+                  color: trigger ? 'text.primary' : 'white',
                   '&:hover': {
                     bgcolor: 'rgba(102,126,234,0.1)',
                     color: '#667eea',
@@ -161,6 +162,7 @@ const Header: React.FC = () => {
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 boxShadow: '0 4px 16px rgba(102,126,234,0.4)',
                 fontWeight: 600,
+                color: 'white',
                 '&:hover': {
                   background: 'linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%)',
                   boxShadow: '0 6px 24px rgba(102,126,234,0.5)',
@@ -178,7 +180,10 @@ const Header: React.FC = () => {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ display: { md: 'none' } }}
+            sx={{
+              display: { md: 'none' },
+              color: trigger ? 'text.primary' : 'white',
+            }}
           >
             <MenuIcon />
           </IconButton>

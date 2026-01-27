@@ -5,6 +5,7 @@ import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import StoreIcon from '@mui/icons-material/Store';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { websiteContent } from '../../lib/content';
+import { renderMixedText } from '../../utils/textUtils';
 
 const Apps: React.FC = () => {
   const apps = [
@@ -33,7 +34,7 @@ const Apps: React.FC = () => {
       id="apps"
       sx={{
         py: { xs: 6, md: 10 },
-        bgcolor: 'background.paper',
+        bgcolor: 'white',
         position: 'relative',
       }}
     >
@@ -72,8 +73,9 @@ const Apps: React.FC = () => {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  bgcolor: 'background.default',
-                  border: `1px solid rgba(255,255,255,0.1)`,
+                  bgcolor: '#F8F9FA',
+                  border: '1px solid rgba(0,0,0,0.08)',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                   borderRadius: 4,
                   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   position: 'relative',
@@ -92,7 +94,7 @@ const Apps: React.FC = () => {
                   },
                   '&:hover': {
                     transform: 'translateY(-12px) scale(1.02)',
-                    boxShadow: `0 24px 80px ${app.color}30, 0 0 0 1px ${app.color}20`,
+                    boxShadow: `0 24px 80px ${app.color}20, 0 0 0 1px ${app.color}15`,
                     '&::before': {
                       transform: 'scaleX(1)',
                     },
@@ -107,7 +109,7 @@ const Apps: React.FC = () => {
                       p: 3,
                       borderRadius: 4,
                       background: app.gradient,
-                      boxShadow: `0 12px 40px ${app.color}40`,
+                      boxShadow: `0 12px 40px ${app.color}30`,
                     }}
                   >
                     <Box sx={{ color: 'white' }}>{app.icon}</Box>
@@ -122,17 +124,18 @@ const Apps: React.FC = () => {
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       backgroundClip: 'text',
+                      direction: 'ltr',
                     }}
                   >
-                    {app.name}
+                    {renderMixedText(app.name)}
                   </Typography>
                   <Typography
                     variant="body1"
                     color="text.secondary"
                     paragraph
-                    sx={{ mb: 3, lineHeight: 1.8 }}
+                    sx={{ mb: 3, lineHeight: 1.8, direction: 'rtl' }}
                   >
-                    {app.description}
+                    {renderMixedText(app.description)}
                   </Typography>
                   <List dense sx={{ mb: 3, textAlign: 'right' }}>
                     {app.features.map((feature, featureIndex) => (
@@ -142,15 +145,14 @@ const Apps: React.FC = () => {
                             sx={{
                               fontSize: 22,
                               color: app.color,
-                              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
                             }}
                           />
                         </ListItemIcon>
                         <ListItemText
-                          primary={feature}
+                          primary={renderMixedText(feature)}
                           primaryTypographyProps={{
                             variant: 'body2',
-                            sx: { fontSize: '0.95rem', lineHeight: 1.6 },
+                            sx: { fontSize: '0.95rem', lineHeight: 1.6, color: '#1A1A1A', direction: 'rtl' },
                           }}
                         />
                       </ListItem>
@@ -164,13 +166,14 @@ const Apps: React.FC = () => {
                       py: 1.5,
                       borderRadius: 3,
                       background: app.gradient,
-                      boxShadow: `0 8px 24px ${app.color}40`,
+                      boxShadow: `0 8px 24px ${app.color}30`,
                       fontWeight: 600,
                       fontSize: '1rem',
                       textTransform: 'none',
+                      color: 'white',
                       '&:hover': {
                         background: app.gradient,
-                        boxShadow: `0 12px 32px ${app.color}50`,
+                        boxShadow: `0 12px 32px ${app.color}40`,
                         transform: 'translateY(-2px)',
                       },
                       transition: 'all 0.3s ease',

@@ -14,6 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Header from '../../components/website/Header';
 import Footer from '../../components/website/Footer';
 import { websiteContent } from '../../lib/content';
+import { renderMixedText } from '../../utils/textUtils';
 
 const FAQPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -35,15 +36,27 @@ const FAQPage: React.FC = () => {
       : websiteContent.faq.filter((faq) => faq.category === selectedCategory);
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#F8F9FA', direction: 'ltr' }}>
       <Header />
       <Box sx={{ pt: 8, pb: 4 }}>
         <Container maxWidth="lg">
-          <Typography variant="h3" fontWeight="bold" textAlign="center" gutterBottom sx={{ mb: 4 }}>
+          <Typography
+            variant="h3"
+            fontWeight={800}
+            textAlign="center"
+            gutterBottom
+            sx={{
+              mb: 4,
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
             الأسئلة الشائعة
           </Typography>
 
-          <Paper sx={{ mb: 4, p: 2 }}>
+          <Paper sx={{ mb: 4, p: 2, bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 3 }}>
             <Tabs
               value={selectedCategory}
               onChange={(_, newValue) => setSelectedCategory(newValue)}
@@ -58,19 +71,27 @@ const FAQPage: React.FC = () => {
 
           <Box>
             {filteredFAQs.map((faq, index) => (
-              <Accordion key={index} sx={{ mb: 2 }}>
+              <Accordion
+                key={index}
+                sx={{
+                  mb: 2,
+                  bgcolor: 'white',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  borderRadius: 2,
+                  '&:before': { display: 'none' },
+                }}
+              >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6" fontWeight="bold">
-                    {faq.question}
+                  <Typography variant="h6" fontWeight={700} sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                    {renderMixedText(faq.question)}
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography
                     variant="body1"
-                    color="text.secondary"
-                    sx={{ whiteSpace: 'pre-line', lineHeight: 1.8 }}
+                    sx={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: '#6B7280', direction: 'ltr' }}
                   >
-                    {faq.answer}
+                    {renderMixedText(faq.answer)}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
