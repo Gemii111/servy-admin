@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import LoadingFallback from './components/common/LoadingFallback';
@@ -8,6 +8,13 @@ import Layout from './components/layout/Layout';
 import { appTheme } from './theme/theme';
 
 // Lazy load pages for code splitting
+// Website pages
+const HomePage = lazy(() => import('./pages/website/Home'));
+const PrivacyPage = lazy(() => import('./pages/website/Privacy'));
+const TermsPage = lazy(() => import('./pages/website/Terms'));
+const FAQPage = lazy(() => import('./pages/website/FAQ'));
+const ContactPage = lazy(() => import('./pages/website/Contact'));
+// Admin pages
 const LoginPage = lazy(() => import('./pages/Login'));
 const DashboardPage = lazy(() => import('./pages/Dashboard/Dashboard'));
 const UsersListPage = lazy(() => import('./pages/Users/UsersList'));
@@ -42,7 +49,49 @@ const App: React.FC = () => {
         }}
       >
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Website routes */}
+          <Route 
+            path="/" 
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <HomePage />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/privacy" 
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <PrivacyPage />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/terms" 
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <TermsPage />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/faq" 
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <FAQPage />
+              </Suspense>
+            } 
+          />
+          <Route 
+            path="/contact" 
+            element={
+              <Suspense fallback={<LoadingFallback />}>
+                <ContactPage />
+              </Suspense>
+            } 
+          />
+          
+          {/* Login */}
           <Route 
             path="/login" 
             element={
