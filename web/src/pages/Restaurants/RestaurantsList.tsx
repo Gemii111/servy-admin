@@ -26,7 +26,6 @@ import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
   mockGetRestaurants,
-  mockUpdateRestaurantStatus,
   mockCreateRestaurant,
   Restaurant,
 } from '../../services/api/restaurants';

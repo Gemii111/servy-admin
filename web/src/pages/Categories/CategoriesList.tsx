@@ -161,11 +161,11 @@ const CategoriesListPage: React.FC = () => {
     }
   };
 
-  const handleToggleStatus = (category: Category) => {
-    toggleStatusMutation.mutate(category);
-  };
-
   const columns = useMemo<ColumnDef<Category>[]>(() => {
+    const handleToggleStatus = (category: Category) => {
+      toggleStatusMutation.mutate(category);
+    };
+
     return [
       {
         accessorKey: 'name',
@@ -227,7 +227,7 @@ const CategoriesListPage: React.FC = () => {
         ),
       },
     ];
-  }, [handleToggleStatus]);
+  }, [toggleStatusMutation]);
 
   const categories = data?.categories ?? [];
 

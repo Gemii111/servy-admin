@@ -12,20 +12,19 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { ColumnDef } from '@tanstack/react-table';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import DataTable from '../../components/tables/DataTable';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
-import { mockGetOrders, mockUpdateOrderStatus, Order } from '../../services/api/orders';
+import { mockGetOrders, Order } from '../../services/api/orders';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
 const OrdersListPage: React.FC = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
 
   const [statusFilter, setStatusFilter] = useState<string>('all');

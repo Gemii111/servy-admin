@@ -5,8 +5,8 @@
  * Set REACT_APP_SENTRY_DSN in your .env file to enable Sentry.
  */
 
-import * as Sentry from '@sentry/react';
 import { env } from './env';
+import * as Sentry from '@sentry/react';
 
 /**
  * Initialize Sentry if enabled and DSN is provided
@@ -15,6 +15,11 @@ export const initSentry = (): void => {
   // Only initialize if explicitly enabled and DSN is provided
   if (!env.enableSentry || !env.sentryDsn) {
     // Silently skip initialization if not configured
+    return;
+  }
+
+  // If Sentry is not available, skip initialization
+  if (!Sentry) {
     return;
   }
 
@@ -79,7 +84,7 @@ export const initSentry = (): void => {
  * Capture exception manually
  */
 export const captureException = (error: Error, context?: Record<string, any>): void => {
-  if (env.enableSentry && env.sentryDsn) {
+  if (env.enableSentry && env.sentryDsn && Sentry) {
     Sentry.captureException(error, {
       extra: context,
     });
@@ -89,8 +94,8 @@ export const captureException = (error: Error, context?: Record<string, any>): v
 /**
  * Capture message manually
  */
-export const captureMessage = (message: string, level: Sentry.SeverityLevel = 'info'): void => {
-  if (env.enableSentry && env.sentryDsn) {
+export const captureMessage = (message: string, level: any = 'info'): void => {
+  if (env.enableSentry && env.sentryDsn && Sentry) {
     Sentry.captureMessage(message, level);
   }
 };
@@ -99,7 +104,7 @@ export const captureMessage = (message: string, level: Sentry.SeverityLevel = 'i
  * Set user context for Sentry
  */
 export const setUserContext = (user: { id: string; email?: string; name?: string }): void => {
-  if (env.enableSentry && env.sentryDsn) {
+  if (env.enableSentry && env.sentryDsn && Sentry) {
     Sentry.setUser({
       id: user.id,
       email: user.email,
@@ -112,7 +117,7 @@ export const setUserContext = (user: { id: string; email?: string; name?: string
  * Clear user context
  */
 export const clearUserContext = (): void => {
-  if (env.enableSentry && env.sentryDsn) {
+  if (env.enableSentry && env.sentryDsn && Sentry) {
     Sentry.setUser(null);
   }
 };
