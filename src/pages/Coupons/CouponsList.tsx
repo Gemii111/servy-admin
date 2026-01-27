@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Typography,
@@ -200,10 +200,6 @@ const CouponsListPage: React.FC = () => {
     }
   };
 
-  const handleToggleStatus = useCallback((coupon: Coupon) => {
-    toggleStatusMutation.mutate(coupon);
-  }, [toggleStatusMutation]);
-
   const getStatusConfig = (status: CouponStatus) => {
     const map: Record<CouponStatus, { label: string; color: string }> = {
       active: { label: 'نشط', color: '#22C55E' },
@@ -217,6 +213,10 @@ const CouponsListPage: React.FC = () => {
   const coupons = data?.coupons ?? [];
 
   const columns = useMemo<ColumnDef<Coupon>[]>(() => {
+    const handleToggleStatus = (coupon: Coupon) => {
+      toggleStatusMutation.mutate(coupon);
+    };
+
     return [
       {
         accessorKey: 'code',
@@ -341,7 +341,7 @@ const CouponsListPage: React.FC = () => {
         },
       },
     ];
-  }, [handleToggleStatus]);
+  }, [toggleStatusMutation]);
 
   return (
     <Box sx={{ color: '#E5E7EB' }}>
