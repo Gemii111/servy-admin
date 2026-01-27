@@ -64,9 +64,14 @@ export const initSentry = (): void => {
       ],
     });
 
-    console.log('Sentry initialized successfully');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Sentry initialized successfully');
+    }
   } catch (error) {
-    console.error('Failed to initialize Sentry:', error);
+    // Don't throw error - just log in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to initialize Sentry:', error);
+    }
   }
 };
 

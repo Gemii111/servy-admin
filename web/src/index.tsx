@@ -15,7 +15,15 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import { initSentry } from './config/sentry';
 
 // Initialize Sentry before anything else
-initSentry();
+// Wrap in try-catch to prevent blocking app if Sentry fails
+try {
+  initSentry();
+} catch (error) {
+  // Don't block app initialization if Sentry fails
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Failed to initialize Sentry:', error);
+  }
+}
 
 const queryClient = new QueryClient();
 
