@@ -37,7 +37,7 @@ export interface AppSettings {
 // Mock settings data
 let mockSettings: AppSettings = {
   general: {
-    appName: 'Servy',
+    appName: 'Souq',
     defaultLanguage: 'ar',
     timezone: 'Asia/Riyadh',
     currency: 'SAR',

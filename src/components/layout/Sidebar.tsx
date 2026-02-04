@@ -58,19 +58,27 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
           bgcolor: '#020617',
         }}
       >
-        <Box>
-          <Typography
-            variant="subtitle2"
-            sx={{ color: '#9CA3AF', fontSize: 11, mb: 0.5 }}
-          >
-            لوحة الإدارة
-          </Typography>
-          <Typography
-            variant="h6"
-            sx={{ color: '#E5E7EB', fontWeight: 700, fontSize: 18 }}
-          >
-            Servy Admin
-          </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box
+            component="img"
+            src={`${process.env.PUBLIC_URL || ''}/logo.png`}
+            alt="Souq"
+            sx={{ width: 36, height: 36, borderRadius: 1, objectFit: 'contain' }}
+          />
+          <Box>
+            <Typography
+              variant="subtitle2"
+              sx={{ color: '#9CA3AF', fontSize: 11, mb: 0.5 }}
+            >
+              لوحة الإدارة
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{ color: '#E5E7EB', fontWeight: 700, fontSize: 18 }}
+            >
+              Souq
+            </Typography>
+          </Box>
         </Box>
       </Toolbar>
 
