@@ -234,8 +234,8 @@ export const websiteContent = {
       {
         title: '10. الاتصال بنا',
         content: `لأي استفسارات حول الخصوصية:
-- 📧 البريد الإلكتروني: privacy@(Souq).com
-- 📱 الهاتف: +20 XXX XXX XXXX`,
+- 📧 البريد الإلكتروني: khaledgamal101029@gmail.com
+- 📱 الهاتف: +201091717188 / +201000431699`,
       },
     ],
   },
@@ -355,8 +355,8 @@ export const websiteContent = {
       {
         title: '15. الاتصال',
         content: `لأي استفسارات:
-- 📧 البريد الإلكتروني: legal@(Souq).com
-- 📱 الهاتف: +20 XXX XXX XXXX`,
+- 📧 البريد الإلكتروني: khaledgamal101029@gmail.com
+- 📱 الهاتف: +201091717188 / +201000431699`,
       },
     ],
   },
@@ -519,7 +519,7 @@ export const websiteContent = {
     {
       question: 'كيف أتواصل مع خدمة العملاء؟',
       answer:
-        '- من خلال التطبيق: اذهب إلى "المساعدة والدعم"\n- البريد الإلكتروني: support@(Souq).com\n- الهاتف: +20 XXX XXX XXXX',
+        '- من خلال التطبيق: اذهب إلى "المساعدة والدعم"\n- البريد الإلكتروني: khaledgamal101029@gmail.com\n- الهاتف: +201091717188 / +201000431699',
       category: 'support',
     },
     {
@@ -532,19 +532,19 @@ export const websiteContent = {
   // معلومات الاتصال
   contact: {
     customerService: {
-      email: 'support@(Souq).com',
-      phone: '+20 XXX XXX XXXX',
-      whatsapp: '+20 XXX XXX XXXX',
+      email: 'khaledgamal101029@gmail.com',
+      phone: '+201091717188 / +201000431699',
+      whatsapp: '+201000431699',
       hours: 'من الساعة 9 صباحاً حتى 11 مساءً (يومياً)',
     },
     feedback: {
-      email: 'feedback@(Souq).com',
+      email: 'khaledgamal101029@gmail.com',
     },
     business: {
-      email: 'business@(Souq).com',
+      email: 'khaledgamal101029@gmail.com',
     },
     legal: {
-      email: 'legal@(Souq).com',
+      email: 'khaledgamal101029@gmail.com',
     },
   },
 };
