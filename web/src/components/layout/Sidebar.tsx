@@ -9,6 +9,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import logoImg from '../../assets/logo.png';
 import DashboardIcon from '@mui/icons-material/SpaceDashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -66,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
           <Box
             component="img"
-            src={`${process.env.PUBLIC_URL || ''}/logo.png`}
+            src={logoImg}
             alt="Souq"
             sx={{ width: 36, height: 36, borderRadius: 1, objectFit: 'contain' }}
           />
