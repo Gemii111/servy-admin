@@ -234,7 +234,7 @@ export const websiteContent = {
       {
         title: '10. الاتصال بنا',
         content: `لأي استفسارات حول الخصوصية:
-- 📧 البريد الإلكتروني: khaledgamal101029@gmail.com
+- 📧 البريد الإلكتروني: support@souqegy.net
 - 📱 الهاتف: +201091717188 / +201000431699`,
       },
     ],
@@ -355,7 +355,7 @@ export const websiteContent = {
       {
         title: '15. الاتصال',
         content: `لأي استفسارات:
-- 📧 البريد الإلكتروني: khaledgamal101029@gmail.com
+- 📧 البريد الإلكتروني: support@souqegy.net
 - 📱 الهاتف: +201091717188 / +201000431699`,
       },
     ],
@@ -519,7 +519,7 @@ export const websiteContent = {
     {
       question: 'كيف أتواصل مع خدمة العملاء؟',
       answer:
-        '- من خلال التطبيق: اذهب إلى "المساعدة والدعم"\n- البريد الإلكتروني: khaledgamal101029@gmail.com\n- الهاتف: +201091717188 / +201000431699',
+        '- من خلال التطبيق: اذهب إلى "المساعدة والدعم"\n- البريد الإلكتروني: support@souqegy.net\n- الهاتف: +201091717188 / +201000431699',
       category: 'support',
     },
     {
@@ -532,19 +532,19 @@ export const websiteContent = {
   // معلومات الاتصال
   contact: {
     customerService: {
-      email: 'khaledgamal101029@gmail.com',
+      email: 'support@souqegy.net',
       phone: '+201091717188 / +201000431699',
       whatsapp: '+201000431699',
       hours: 'من الساعة 9 صباحاً حتى 11 مساءً (يومياً)',
     },
     feedback: {
-      email: 'khaledgamal101029@gmail.com',
+      email: 'support@souqegy.net',
     },
     business: {
-      email: 'khaledgamal101029@gmail.com',
+      email: 'support@souqegy.net',
     },
     legal: {
-      email: 'khaledgamal101029@gmail.com',
+      email: 'support@souqegy.net',
     },
   },
 };
