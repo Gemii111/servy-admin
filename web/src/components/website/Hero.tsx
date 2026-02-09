@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Button } from '@mui/material';
+import AndroidIcon from '@mui/icons-material/Android';
 import { websiteContent } from '../../lib/content';
 import { renderMixedText } from '../../utils/textUtils';
 
@@ -111,7 +112,7 @@ const Hero: React.FC = () => {
             variant="h6"
             sx={{
               fontSize: { xs: '1.1rem', md: '1.3rem' },
-              mb: 6,
+              mb: 4,
               maxWidth: '700px',
               mx: 'auto',
               opacity: 0.9,
@@ -123,6 +124,36 @@ const Hero: React.FC = () => {
           >
             {renderMixedText(websiteContent.home.hero.description)}
           </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+            <Button
+              component="a"
+              href={websiteContent.appDownloadUrl}
+              download="souq.apk"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="contained"
+              size="large"
+              startIcon={<AndroidIcon />}
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderRadius: 3,
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                bgcolor: 'rgba(255,255,255,0.95)',
+                color: '#667eea',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+                '&:hover': {
+                  bgcolor: 'white',
+                  boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+                  transform: 'translateY(-2px)',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              {websiteContent.appDownloadLabel}
+            </Button>
+          </Box>
         </Box>
       </Container>
     </Box>

@@ -159,6 +159,11 @@ const Apps: React.FC = () => {
                     ))}
                   </List>
                   <Button
+                    component="a"
+                    href={app.downloadUrl}
+                    download={app.downloadFileName}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     variant="contained"
                     fullWidth
                     sx={{
@@ -171,6 +176,7 @@ const Apps: React.FC = () => {
                       fontSize: '1rem',
                       textTransform: 'none',
                       color: 'white',
+                      textDecoration: 'none',
                       '&:hover': {
                         background: app.gradient,
                         boxShadow: `0 12px 32px ${app.color}40`,

@@ -21,6 +21,9 @@ export const websiteContent = {
   appName: 'Souq',
   appNameAr: 'سوق',
   description: 'منصة توصيل الطعام والمنتجات المتكاملة',
+  /** رابط تحميل تطبيق الأندرويد (ضع ملف الـ APK في public/souq.apk) */
+  appDownloadUrl: '/souq.apk',
+  appDownloadLabel: 'تحميل التطبيق',
 
   // الصفحة الرئيسية
   home: {
@@ -99,6 +102,8 @@ export const websiteContent = {
         name: 'سوق',
         nameEn: '(Souq)',
         description: 'تطبيق للعملاء لطلب الطعام والمنتجات من المطاعم والصيدليات والسوبر ماركت',
+        downloadUrl: '/souq.apk',
+        downloadFileName: 'souq.apk',
         features: [
           'تصفح المطاعم والمتاجر',
           'طلب الطعام والمنتجات',
@@ -110,6 +115,8 @@ export const websiteContent = {
       vendor: {
         name: '(Souq Vendor)',
         description: 'تطبيق لأصحاب المطاعم والمتاجر لإدارة أعمالهم',
+        downloadUrl: '/souq-vendor.apk',
+        downloadFileName: 'souq-vendor.apk',
         features: [
           'إدارة الطلبات وحالاتها',
           'إدارة القائمة والمنتجات',
@@ -121,6 +128,8 @@ export const websiteContent = {
       driver: {
         name: '(Souq Driver)',
         description: 'تطبيق للسائقين لتوصيل الطلبات',
+        downloadUrl: '/souq-driver.apk',
+        downloadFileName: 'souq-driver.apk',
         features: [
           'عرض طلبات التوصيل المتاحة',
           'قبول/رفض الطلبات',
