@@ -79,25 +79,13 @@ const Header: React.FC = () => {
         ))}
         <ListItem disablePadding>
           <ListItemButton
-            component="a"
-            href={websiteContent.appDownloadUrl}
-            download="souq.apk"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ mx: 1, mt: 1, borderRadius: 2 }}
-          >
-            <ListItemText primary="تحميل التطبيق" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton
             onClick={() => {
               navigate('/login');
               setMobileOpen(false);
             }}
             sx={{
               mx: 1,
-              mt: 0.5,
+              mt: 1,
               borderRadius: 2,
               background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
               color: 'white',
@@ -164,28 +152,6 @@ const Header: React.FC = () => {
                 {item.label}
               </Button>
             ))}
-            <Button
-              component="a"
-              href={websiteContent.appDownloadUrl}
-              download="souq.apk"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                borderRadius: 3,
-                px: 2.5,
-                py: 1,
-                fontWeight: 600,
-                color: trigger ? 'primary.main' : 'white',
-                border: `2px solid ${trigger ? '#667eea' : 'rgba(255,255,255,0.8)'}`,
-                '&:hover': {
-                  borderColor: '#667eea',
-                  bgcolor: 'rgba(102,126,234,0.1)',
-                },
-                transition: 'all 0.2s ease',
-              }}
-            >
-              تحميل التطبيق
-            </Button>
             <Button
               variant="contained"
               onClick={() => navigate('/login')}
