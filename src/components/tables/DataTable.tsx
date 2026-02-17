@@ -91,7 +91,7 @@ function DataTable<T extends Record<string, any>>({
                   e.stopPropagation();
                   onEdit(row.original);
                 }}
-                sx={{ color: '#2563EB' }}
+                sx={{ color: '#86B573' }}
               >
                 <EditIcon fontSize="small" />
               </IconButton>
@@ -144,13 +144,13 @@ function DataTable<T extends Record<string, any>>({
     return (
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
         }}
       >
-        <Typography sx={{ color: '#9CA3AF', textAlign: 'center' }}>
+        <Typography sx={{ color: '#5A6A5A', textAlign: 'center' }}>
           جاري التحميل...
         </Typography>
       </Paper>
@@ -160,14 +160,14 @@ function DataTable<T extends Record<string, any>>({
   return (
     <Paper
       sx={{
-        bgcolor: '#111827',
+        bgcolor: '#FFFFFF',
         borderRadius: 2,
-        border: '1px solid #1F2937',
+        border: '1px solid #B1C0B1',
         overflow: 'hidden',
       }}
     >
       {searchable && (
-        <Box sx={{ p: 2, borderBottom: '1px solid #1F2937' }}>
+        <Box sx={{ p: 2, borderBottom: '1px solid #B1C0B1' }}>
           <TextField
             placeholder={searchPlaceholder}
             size="small"
@@ -184,11 +184,11 @@ function DataTable<T extends Record<string, any>>({
             sx={{
               maxWidth: 400,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                bgcolor: '#F5F9F3',
+                '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              input: { color: '#E5E7EB' },
+              input: { color: '#1A2E1A' },
             }}
           />
         </Box>
@@ -201,7 +201,7 @@ function DataTable<T extends Record<string, any>>({
             height: 8,
           },
           '&::-webkit-scrollbar-track': {
-            bgcolor: '#020617',
+            bgcolor: '#F5F9F3',
           },
           '&::-webkit-scrollbar-thumb': {
             bgcolor: '#374151',
@@ -224,15 +224,15 @@ function DataTable<T extends Record<string, any>>({
         >
           <TableHead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} sx={{ bgcolor: '#020617' }}>
+              <TableRow key={headerGroup.id} sx={{ bgcolor: '#F5F9F3' }}>
                 {headerGroup.headers.map((header) => (
                   <TableCell
                     key={header.id}
                     sx={{
-                      color: '#9CA3AF',
+                      color: '#5A6A5A',
                       fontWeight: 600,
                       fontSize: 13,
-                      borderBottom: '1px solid #1F2937',
+                      borderBottom: '1px solid #B1C0B1',
                       cursor: header.column.getCanSort() ? 'pointer' : 'default',
                     }}
                     onClick={header.column.getToggleSortingHandler()}
@@ -256,7 +256,7 @@ function DataTable<T extends Record<string, any>>({
                   sx={{
                     textAlign: 'center',
                     py: 4,
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   }}
                 >
                   لا توجد بيانات
@@ -272,9 +272,9 @@ function DataTable<T extends Record<string, any>>({
                     '&:hover': {
                       bgcolor: 'rgba(37,99,235,0.1)',
                     },
-                    borderBottom: '1px solid #1F2937',
+                    borderBottom: '1px solid #B1C0B1',
                     '& td': {
-                      color: '#E5E7EB',
+                      color: '#1A2E1A',
                       fontSize: 14,
                       py: 1.75, // 14px - row height 56px
                     },
@@ -299,10 +299,10 @@ function DataTable<T extends Record<string, any>>({
           alignItems: 'center',
           px: 2,
           py: 1.5,
-          borderTop: '1px solid #1F2937',
+          borderTop: '1px solid #B1C0B1',
         }}
       >
-        <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+        <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
           إجمالي النتائج: {filteredData.length}
         </Typography>
         <TablePagination
@@ -324,12 +324,12 @@ function DataTable<T extends Record<string, any>>({
             `${from}-${to} من ${count !== -1 ? count : `أكثر من ${to}`}`
           }
           sx={{
-            color: '#E5E7EB',
+            color: '#1A2E1A',
             '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
-              color: '#E5E7EB',
+              color: '#1A2E1A',
             },
             '& .MuiIconButton-root': {
-              color: '#9CA3AF',
+              color: '#5A6A5A',
             },
           }}
         />

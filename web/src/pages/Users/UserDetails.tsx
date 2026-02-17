@@ -27,7 +27,7 @@ const UserDetailsPage: React.FC = () => {
   if (!user) {
     return (
       <Box sx={{ textAlign: 'center', py: 6 }}>
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2 }}>
           المستخدم غير موجود
         </Typography>
         <Button variant="contained" onClick={() => navigate('/users')}>
@@ -38,18 +38,18 @@ const UserDetailsPage: React.FC = () => {
   }
 
   const userTypeLabels: Record<string, { label: string; color: string }> = {
-    customer: { label: 'عميل', color: '#2563EB' },
+    customer: { label: 'عميل', color: '#86B573' },
     driver: { label: 'سائق', color: '#22C55E' },
     restaurant: { label: 'مطعم', color: '#F59E0B' },
   };
 
   const typeConfig = userTypeLabels[user.userType] || {
     label: user.userType,
-    color: '#9CA3AF',
+    color: '#5A6A5A',
   };
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -60,14 +60,14 @@ const UserDetailsPage: React.FC = () => {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <IconButton onClick={() => navigate('/users')} sx={{ color: '#9CA3AF' }}>
+          <IconButton onClick={() => navigate('/users')} sx={{ color: '#5A6A5A' }}>
             <ArrowBackIcon />
           </IconButton>
           <Box>
             <Typography variant="h5" fontWeight={700}>
               تفاصيل المستخدم
             </Typography>
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               عرض معلومات المستخدم الكاملة
             </Typography>
           </Box>
@@ -99,14 +99,14 @@ const UserDetailsPage: React.FC = () => {
       {/* User Info Card */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           mb: 3,
         }}
       >
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2.5, fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600 }}>
           المعلومات الأساسية
         </Typography>
         <Box
@@ -121,31 +121,31 @@ const UserDetailsPage: React.FC = () => {
           }}
         >
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               الاسم الكامل
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 500 }}>
               {user.name}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               البريد الإلكتروني
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
               {user.email}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               رقم الهاتف
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
               {user.phone}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               نوع المستخدم
             </Typography>
             <Chip
@@ -159,7 +159,7 @@ const UserDetailsPage: React.FC = () => {
             />
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               الحالة
             </Typography>
             <Chip
@@ -173,10 +173,10 @@ const UserDetailsPage: React.FC = () => {
             />
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               تاريخ التسجيل
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
               {format(new Date(user.createdAt), 'dd MMM yyyy', { locale: ar })}
             </Typography>
           </Box>
@@ -186,13 +186,13 @@ const UserDetailsPage: React.FC = () => {
       {/* Statistics Card */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
         }}
       >
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2.5, fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600 }}>
           الإحصائيات
         </Typography>
         <Box
@@ -211,13 +211,13 @@ const UserDetailsPage: React.FC = () => {
               p: 2,
               borderRadius: 2,
               bgcolor: '#020617',
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
               إجمالي الطلبات
             </Typography>
-            <Typography variant="h5" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h5" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               {user.totalOrders}
             </Typography>
           </Box>
@@ -226,13 +226,13 @@ const UserDetailsPage: React.FC = () => {
               p: 2,
               borderRadius: 2,
               bgcolor: '#020617',
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
               إجمالي الإنفاق
             </Typography>
-            <Typography variant="h5" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h5" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               {user.totalSpent} ر.س
             </Typography>
           </Box>

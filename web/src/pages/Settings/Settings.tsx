@@ -99,7 +99,7 @@ const SettingsPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -120,7 +120,7 @@ const SettingsPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             إدارة إعدادات النظام العامة
           </Typography>
@@ -140,9 +140,9 @@ const SettingsPage: React.FC = () => {
         {/* Sidebar */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 2,
             height: 'fit-content',
           }}
@@ -160,7 +160,7 @@ const SettingsPage: React.FC = () => {
                 mb: 1,
                 cursor: 'pointer',
                 bgcolor: activeSection === section.key ? 'rgba(37, 99, 235, 0.15)' : 'transparent',
-                color: activeSection === section.key ? '#2563EB' : '#9CA3AF',
+                color: activeSection === section.key ? '#86B573' : '#5A6A5A',
                 '&:hover': {
                   bgcolor: 'rgba(15, 23, 42, 0.9)',
                 },
@@ -189,13 +189,13 @@ const SettingsPage: React.FC = () => {
           {activeSection === 'general' && (
             <Paper
               sx={{
-                bgcolor: '#111827',
+                bgcolor: '#FFFFFF',
                 borderRadius: 2,
-                border: '1px solid #1F2937',
+                border: '1px solid #B1C0B1',
                 p: 3,
               }}
             >
-              <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
                 الإعدادات العامة
               </Typography>
 
@@ -219,11 +219,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <TextField
@@ -235,11 +235,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <TextField
@@ -251,11 +251,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <TextField
@@ -268,11 +268,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <TextField
@@ -285,11 +285,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <TextField
@@ -302,11 +302,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
               </Box>
@@ -326,13 +326,13 @@ const SettingsPage: React.FC = () => {
           {activeSection === 'payment' && (
             <Paper
               sx={{
-                bgcolor: '#111827',
+                bgcolor: '#FFFFFF',
                 borderRadius: 2,
-                border: '1px solid #1F2937',
+                border: '1px solid #B1C0B1',
                 p: 3,
               }}
             >
-              <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
                 إعدادات الدفع
               </Typography>
 
@@ -357,24 +357,24 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <FormControl size="small" fullWidth>
-                  <InputLabel sx={{ color: '#9CA3AF' }}>جدول الدفع</InputLabel>
+                  <InputLabel sx={{ color: '#5A6A5A' }}>جدول الدفع</InputLabel>
                   <Select
                     value={formData.payment?.payoutSchedule || 'weekly'}
                     onChange={(e) => handleChange('payment', 'payoutSchedule', e.target.value)}
                     label="جدول الدفع"
                     sx={{
-                      color: '#E5E7EB',
-                      '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                      color: '#1A2E1A',
+                      '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                       '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-                      '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+                      '& .MuiSvgIcon-root': { color: '#5A6A5A' },
                       bgcolor: '#020617',
                     }}
                   >
@@ -390,16 +390,16 @@ const SettingsPage: React.FC = () => {
                       onChange={(e) => handleChange('payment', 'autoPayout', e.target.checked)}
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2563EB',
+                          backgroundColor: '#86B573',
                         },
                       }}
                     />
                   }
                   label="دفع تلقائي"
-                  sx={{ color: '#E5E7EB' }}
+                  sx={{ color: '#1A2E1A' }}
                 />
               </Box>
 
@@ -418,13 +418,13 @@ const SettingsPage: React.FC = () => {
           {activeSection === 'notifications' && (
             <Paper
               sx={{
-                bgcolor: '#111827',
+                bgcolor: '#FFFFFF',
                 borderRadius: 2,
-                border: '1px solid #1F2937',
+                border: '1px solid #B1C0B1',
                 p: 3,
               }}
             >
-              <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
                 الإشعارات
               </Typography>
 
@@ -436,16 +436,16 @@ const SettingsPage: React.FC = () => {
                       onChange={(e) => handleChange('notifications', 'emailEnabled', e.target.checked)}
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2563EB',
+                          backgroundColor: '#86B573',
                         },
                       }}
                     />
                   }
                   label="تفعيل الإشعارات عبر البريد الإلكتروني"
-                  sx={{ color: '#E5E7EB' }}
+                  sx={{ color: '#1A2E1A' }}
                 />
                 <FormControlLabel
                   control={
@@ -454,16 +454,16 @@ const SettingsPage: React.FC = () => {
                       onChange={(e) => handleChange('notifications', 'smsEnabled', e.target.checked)}
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2563EB',
+                          backgroundColor: '#86B573',
                         },
                       }}
                     />
                   }
                   label="تفعيل الإشعارات عبر الرسائل النصية"
-                  sx={{ color: '#E5E7EB' }}
+                  sx={{ color: '#1A2E1A' }}
                 />
                 <FormControlLabel
                   control={
@@ -472,18 +472,18 @@ const SettingsPage: React.FC = () => {
                       onChange={(e) => handleChange('notifications', 'pushEnabled', e.target.checked)}
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2563EB',
+                          backgroundColor: '#86B573',
                         },
                       }}
                     />
                   }
                   label="تفعيل الإشعارات الفورية"
-                  sx={{ color: '#E5E7EB' }}
+                  sx={{ color: '#1A2E1A' }}
                 />
-                <Divider sx={{ borderColor: '#1F2937', my: 1 }} />
+                <Divider sx={{ borderColor: '#B1C0B1', my: 1 }} />
                 <FormControlLabel
                   control={
                     <Switch
@@ -493,16 +493,16 @@ const SettingsPage: React.FC = () => {
                       }
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2563EB',
+                          backgroundColor: '#86B573',
                         },
                       }}
                     />
                   }
                   label="إشعارات الطلبات"
-                  sx={{ color: '#E5E7EB' }}
+                  sx={{ color: '#1A2E1A' }}
                 />
                 <FormControlLabel
                   control={
@@ -513,16 +513,16 @@ const SettingsPage: React.FC = () => {
                       }
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2563EB',
+                          backgroundColor: '#86B573',
                         },
                       }}
                     />
                   }
                   label="الإشعارات التسويقية"
-                  sx={{ color: '#E5E7EB' }}
+                  sx={{ color: '#1A2E1A' }}
                 />
               </Box>
 
@@ -541,13 +541,13 @@ const SettingsPage: React.FC = () => {
           {activeSection === 'delivery' && (
             <Paper
               sx={{
-                bgcolor: '#111827',
+                bgcolor: '#FFFFFF',
                 borderRadius: 2,
-                border: '1px solid #1F2937',
+                border: '1px solid #B1C0B1',
                 p: 3,
               }}
             >
-              <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
                 إعدادات التوصيل
               </Typography>
 
@@ -574,11 +574,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <TextField
@@ -593,24 +593,24 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <FormControl size="small" fullWidth>
-                  <InputLabel sx={{ color: '#9CA3AF' }}>تعيين السائق</InputLabel>
+                  <InputLabel sx={{ color: '#5A6A5A' }}>تعيين السائق</InputLabel>
                   <Select
                     value={formData.delivery?.driverAssignment || 'auto'}
                     onChange={(e) => handleChange('delivery', 'driverAssignment', e.target.value)}
                     label="تعيين السائق"
                     sx={{
-                      color: '#E5E7EB',
-                      '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                      color: '#1A2E1A',
+                      '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                       '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-                      '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+                      '& .MuiSvgIcon-root': { color: '#5A6A5A' },
                       bgcolor: '#020617',
                     }}
                   >
@@ -635,13 +635,13 @@ const SettingsPage: React.FC = () => {
           {activeSection === 'restaurant' && (
             <Paper
               sx={{
-                bgcolor: '#111827',
+                bgcolor: '#FFFFFF',
                 borderRadius: 2,
-                border: '1px solid #1F2937',
+                border: '1px solid #B1C0B1',
                 p: 3,
               }}
             >
-              <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
                 إعدادات المطاعم
               </Typography>
 
@@ -663,16 +663,16 @@ const SettingsPage: React.FC = () => {
                       onChange={(e) => handleChange('restaurant', 'autoApprove', e.target.checked)}
                       sx={{
                         '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                         '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: '#2563EB',
+                          backgroundColor: '#86B573',
                         },
                       }}
                     />
                   }
                   label="الموافقة التلقائية على المطاعم الجديدة"
-                  sx={{ color: '#E5E7EB' }}
+                  sx={{ color: '#1A2E1A' }}
                 />
                 <TextField
                   label="نسبة العمولة للمطاعم (%)"
@@ -686,11 +686,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
                 <TextField
@@ -704,11 +704,11 @@ const SettingsPage: React.FC = () => {
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       bgcolor: '#020617',
-                      '& fieldset': { borderColor: '#1F2937' },
+                      '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
-                    input: { color: '#E5E7EB' },
-                    '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
                 />
               </Box>

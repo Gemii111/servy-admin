@@ -5,12 +5,12 @@ import { renderMixedText } from '../../utils/textUtils';
 
 const WhySouq: React.FC = () => {
   const gradients = [
-    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+    'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
+    'linear-gradient(135deg, #9BCB88 0%, #86B573 100%)',
+    'linear-gradient(135deg, #6A9A5A 0%, #5A8A4A 100%)',
+    'linear-gradient(135deg, #86B573 0%, #9BCB88 100%)',
+    'linear-gradient(135deg, #6A9A5A 0%, #86B573 100%)',
+    'linear-gradient(135deg, #9BCB88 0%, #5A8A4A 100%)',
   ];
 
   return (
@@ -30,7 +30,7 @@ const WhySouq: React.FC = () => {
           sx={{
             mb: 8,
             fontSize: { xs: '2rem', md: '3rem' },
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+            background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -76,7 +76,7 @@ const WhySouq: React.FC = () => {
                   },
                   '&:hover': {
                     transform: 'translateY(-12px)',
-                    boxShadow: '0 20px 60px rgba(102,126,234,0.2)',
+                    boxShadow: '0 20px 60px rgba(134,181,115,0.25)',
                     '&::before': {
                       transform: 'scaleX(1)',
                     },
@@ -91,7 +91,7 @@ const WhySouq: React.FC = () => {
                       p: 2,
                       borderRadius: 3,
                       background: gradients[index % gradients.length],
-                      boxShadow: `0 8px 24px rgba(102,126,234,0.2)`,
+                      boxShadow: `0 8px 24px rgba(134,181,115,0.25)`,
                     }}
                   >
                     <Typography variant="h2" sx={{ fontSize: '3rem' }}>

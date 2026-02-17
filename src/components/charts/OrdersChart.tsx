@@ -12,9 +12,9 @@ const OrdersChart: React.FC<OrdersChartProps> = ({ data, isLoading }) => {
     return (
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           height: 320,
           display: 'flex',
@@ -22,7 +22,7 @@ const OrdersChart: React.FC<OrdersChartProps> = ({ data, isLoading }) => {
           justifyContent: 'center',
         }}
       >
-        <Typography sx={{ color: '#9CA3AF' }}>جاري التحميل...</Typography>
+        <Typography sx={{ color: '#5A6A5A' }}>جاري التحميل...</Typography>
       </Paper>
     );
   }
@@ -30,40 +30,40 @@ const OrdersChart: React.FC<OrdersChartProps> = ({ data, isLoading }) => {
   return (
     <Paper
       sx={{
-        bgcolor: '#111827',
+        bgcolor: '#FFFFFF',
         borderRadius: 2,
-        border: '1px solid #1F2937',
+        border: '1px solid #B1C0B1',
         p: 3,
       }}
     >
-      <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
+      <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
         الطلبات عبر الزمن
       </Typography>
       <Box sx={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>
           <LineChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
             <XAxis
               dataKey="date"
               stroke="#6B7280"
               style={{ fontSize: 12 }}
-              tick={{ fill: '#9CA3AF' }}
+              tick={{ fill: '#5A6A5A' }}
             />
-            <YAxis stroke="#6B7280" style={{ fontSize: 12 }} tick={{ fill: '#9CA3AF' }} />
+            <YAxis stroke="#6B7280" style={{ fontSize: 12 }} tick={{ fill: '#5A6A5A' }} />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#111827',
-                border: '1px solid #1F2937',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #B1C0B1',
                 borderRadius: 8,
-                color: '#E5E7EB',
+                color: '#1A2E1A',
               }}
             />
             <Line
               type="monotone"
               dataKey="value"
-              stroke="#2563EB"
+              stroke="#86B573"
               strokeWidth={2}
-              dot={{ fill: '#2563EB', r: 4 }}
+              dot={{ fill: '#86B573', r: 4 }}
               activeDot={{ r: 6 }}
             />
           </LineChart>

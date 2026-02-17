@@ -149,7 +149,7 @@ const NotificationHistoryPage: React.FC = () => {
         accessorKey: 'title',
         header: 'العنوان',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 500, fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -158,7 +158,7 @@ const NotificationHistoryPage: React.FC = () => {
         accessorKey: 'targetAudience',
         header: 'الجمهور المستهدف',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {getTargetLabel(info.getValue() as TargetAudience)}
           </Typography>
         ),
@@ -167,7 +167,7 @@ const NotificationHistoryPage: React.FC = () => {
         accessorKey: 'sentCount',
         header: 'عدد المستلمين',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -195,9 +195,9 @@ const NotificationHistoryPage: React.FC = () => {
         header: 'تاريخ الإرسال',
         cell: (info) => {
           const value = info.getValue();
-          if (!value) return <Typography sx={{ color: '#9CA3AF' }}>-</Typography>;
+          if (!value) return <Typography sx={{ color: '#5A6A5A' }}>-</Typography>;
           return (
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
               {format(new Date(String(value)), 'dd MMM yyyy, HH:mm', { locale: ar })}
             </Typography>
           );
@@ -207,7 +207,7 @@ const NotificationHistoryPage: React.FC = () => {
         accessorKey: 'adminName',
         header: 'أرسل بواسطة',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -225,7 +225,7 @@ const NotificationHistoryPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -247,7 +247,7 @@ const NotificationHistoryPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             عرض جميع الإشعارات المرسلة والمجدولة
           </Typography>
@@ -275,11 +275,11 @@ const NotificationHistoryPage: React.FC = () => {
             onClick={() => navigate('/notifications/statistics')}
             size="small"
             sx={{
-              borderColor: '#2563EB',
-              color: '#2563EB',
+              borderColor: '#86B573',
+              color: '#86B573',
               '&:hover': {
                 borderColor: '#3B82F6',
-                bgcolor: '#2563EB10',
+                bgcolor: '#86B57310',
               },
             }}
           >
@@ -297,7 +297,7 @@ const NotificationHistoryPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>الجمهور المستهدف</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>الجمهور المستهدف</InputLabel>
           <Select
             value={targetAudienceFilter}
             onChange={(e) => {
@@ -306,8 +306,8 @@ const NotificationHistoryPage: React.FC = () => {
             }}
             sx={{
               bgcolor: '#020617',
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}
             label="الجمهور المستهدف"
           >
@@ -321,7 +321,7 @@ const NotificationHistoryPage: React.FC = () => {
         </FormControl>
 
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>الحالة</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>الحالة</InputLabel>
           <Select
             value={statusFilter}
             onChange={(e) => {
@@ -330,8 +330,8 @@ const NotificationHistoryPage: React.FC = () => {
             }}
             sx={{
               bgcolor: '#020617',
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}
             label="الحالة"
           >
@@ -362,51 +362,51 @@ const NotificationHistoryPage: React.FC = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>تفاصيل الإشعار</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>تفاصيل الإشعار</DialogTitle>
         <DialogContent>
           {selectedNotification && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
               <Box>
-                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                   العنوان
                 </Typography>
-                <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                   {selectedNotification.title}
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                   الرسالة
                 </Typography>
-                <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                   {selectedNotification.message}
                 </Typography>
               </Box>
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                     الجمهور المستهدف
                   </Typography>
-                  <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                  <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                     {getTargetLabel(selectedNotification.targetAudience)}
                   </Typography>
                 </Box>
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                     عدد المستلمين
                   </Typography>
-                  <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                  <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                     {selectedNotification.sentCount}
                   </Typography>
                 </Box>
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                     الحالة
                   </Typography>
                   <Chip
@@ -417,10 +417,10 @@ const NotificationHistoryPage: React.FC = () => {
                   />
                 </Box>
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                     تاريخ الإرسال
                   </Typography>
-                  <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                  <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                     {selectedNotification.sentAt
                       ? format(new Date(selectedNotification.sentAt), 'dd MMM yyyy, HH:mm', {
                           locale: ar,
@@ -430,7 +430,7 @@ const NotificationHistoryPage: React.FC = () => {
                 </Box>
               </Box>
               <Box>
-                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                   حالة التسليم
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>

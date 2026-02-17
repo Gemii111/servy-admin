@@ -12,7 +12,7 @@ const Hero: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)',
+        background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
         backgroundSize: '400% 400%',
         animation: 'gradient 15s ease infinite',
         overflow: 'hidden',

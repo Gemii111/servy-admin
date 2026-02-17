@@ -42,11 +42,11 @@ const RestaurantDetailsPage: React.FC = () => {
 
   const status = statusConfig[restaurant.status] || {
     label: restaurant.status,
-    color: '#9CA3AF',
+    color: '#5A6A5A',
   };
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -62,7 +62,7 @@ const RestaurantDetailsPage: React.FC = () => {
           <IconButton
             onClick={() => navigate('/restaurants')}
             sx={{
-              color: '#9CA3AF',
+              color: '#5A6A5A',
               '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.08)' },
             }}
           >
@@ -72,7 +72,7 @@ const RestaurantDetailsPage: React.FC = () => {
             <Typography variant="h5" fontWeight={700} mb={0.5}>
               {restaurant.name}
             </Typography>
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               تفاصيل المطعم
             </Typography>
           </Box>
@@ -104,14 +104,14 @@ const RestaurantDetailsPage: React.FC = () => {
       {/* Main Info Card */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           mb: 3,
         }}
       >
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
           المعلومات الأساسية
         </Typography>
 
@@ -127,53 +127,53 @@ const RestaurantDetailsPage: React.FC = () => {
           }}
         >
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               اسم المطعم
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 500 }}>
               {restaurant.name}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               صاحب المطعم
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
               {restaurant.ownerName}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               البريد الإلكتروني
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
               {restaurant.ownerEmail}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               رقم الهاتف
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
               {restaurant.phone}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               نوع المطبخ
             </Typography>
             <Chip
               label={restaurant.cuisineType}
               size="small"
               sx={{
-                bgcolor: '#2563EB20',
-                color: '#2563EB',
+                bgcolor: '#86B57320',
+                color: '#86B573',
                 fontWeight: 500,
               }}
             />
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               الحالة
             </Typography>
             <Chip
@@ -188,19 +188,19 @@ const RestaurantDetailsPage: React.FC = () => {
           </Box>
           {restaurant.address && (
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 العنوان
             </Typography>
-              <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+              <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
                 {restaurant.address}
               </Typography>
             </Box>
           )}
           <Box>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               تاريخ التسجيل
             </Typography>
-            <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
               {format(new Date(restaurant.createdAt), 'dd MMM yyyy', { locale: ar })}
             </Typography>
           </Box>
@@ -208,10 +208,10 @@ const RestaurantDetailsPage: React.FC = () => {
 
         {restaurant.description && (
           <Box sx={{ mt: 3 }}>
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
               الوصف
             </Typography>
-            <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
               {restaurant.description}
             </Typography>
           </Box>
@@ -221,13 +221,13 @@ const RestaurantDetailsPage: React.FC = () => {
       {/* Statistics */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
         }}
       >
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
           الإحصائيات
         </Typography>
 
@@ -247,13 +247,13 @@ const RestaurantDetailsPage: React.FC = () => {
               p: 2,
               borderRadius: 2,
               bgcolor: '#020617',
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
               إجمالي الطلبات
             </Typography>
-            <Typography variant="h5" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h5" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               {restaurant.totalOrders}
             </Typography>
           </Box>
@@ -262,13 +262,13 @@ const RestaurantDetailsPage: React.FC = () => {
               p: 2,
               borderRadius: 2,
               bgcolor: '#020617',
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
               إجمالي الإيرادات
             </Typography>
-            <Typography variant="h5" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h5" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               {restaurant.totalRevenue} ر.س
             </Typography>
           </Box>
@@ -277,13 +277,13 @@ const RestaurantDetailsPage: React.FC = () => {
               p: 2,
               borderRadius: 2,
               bgcolor: '#020617',
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
               التقييم
             </Typography>
-            <Typography variant="h5" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h5" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               ⭐ {restaurant.rating}
             </Typography>
           </Box>
@@ -292,13 +292,13 @@ const RestaurantDetailsPage: React.FC = () => {
               p: 2,
               borderRadius: 2,
               bgcolor: '#020617',
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
               متوسط قيمة الطلب
             </Typography>
-            <Typography variant="h5" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h5" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               {restaurant.totalOrders > 0
                 ? Math.round(restaurant.totalRevenue / restaurant.totalOrders)
                 : 0}{' '}

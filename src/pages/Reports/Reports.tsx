@@ -42,7 +42,7 @@ import {
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import DataTable from '../../components/tables/DataTable';
 
-const COLORS = ['#2563EB', '#22C55E', '#F59E0B', '#EF4444', '#8B5CF6', '#38BDF8'];
+const COLORS = ['#86B573', '#22C55E', '#F59E0B', '#EF4444', '#8B5CF6', '#38BDF8'];
 
 const ReportsPage: React.FC = () => {
   const [reportType, setReportType] = useState<'sales' | 'restaurants' | 'drivers'>('sales');
@@ -87,7 +87,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'restaurantName',
         header: 'اسم المطعم',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 500, fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -96,7 +96,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'totalOrders',
         header: 'إجمالي الطلبات',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -105,7 +105,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'totalRevenue',
         header: 'إجمالي الإيرادات',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14, fontWeight: 500 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500 }}>
             {String(info.getValue())} ر.س
           </Typography>
         ),
@@ -114,7 +114,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'averageOrderValue',
         header: 'متوسط قيمة الطلب',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())} ر.س
           </Typography>
         ),
@@ -150,7 +150,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'driverName',
         header: 'اسم السائق',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 500, fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -159,7 +159,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'totalDeliveries',
         header: 'إجمالي التوصيلات',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -168,7 +168,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'completedDeliveries',
         header: 'المكتملة',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -177,7 +177,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'averageDeliveryTime',
         header: 'متوسط وقت التوصيل',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())} دقيقة
           </Typography>
         ),
@@ -211,7 +211,7 @@ const ReportsPage: React.FC = () => {
         accessorKey: 'totalEarnings',
         header: 'إجمالي الأرباح',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14, fontWeight: 500 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500 }}>
             {String(info.getValue())} ر.س
           </Typography>
         ),
@@ -221,7 +221,7 @@ const ReportsPage: React.FC = () => {
   );
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -237,7 +237,7 @@ const ReportsPage: React.FC = () => {
           <Typography variant="h5" fontWeight={700} mb={0.5}>
             التقارير والتحليلات
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
             تقارير مفصلة عن المبيعات، المطاعم، والسائقين
           </Typography>
         </Box>
@@ -266,9 +266,9 @@ const ReportsPage: React.FC = () => {
       {/* Filters */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           mb: 3,
         }}
@@ -281,7 +281,7 @@ const ReportsPage: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          <DateRangeIcon sx={{ color: '#9CA3AF' }} />
+          <DateRangeIcon sx={{ color: '#5A6A5A' }} />
           <TextField
             label="من تاريخ"
             type="date"
@@ -292,12 +292,12 @@ const ReportsPage: React.FC = () => {
             sx={{
               minWidth: 180,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                bgcolor: '#F5F9F3',
+                '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              input: { color: '#E5E7EB' },
-              '& .MuiInputLabel-root': { color: '#9CA3AF' },
+              input: { color: '#1A2E1A' },
+              '& .MuiInputLabel-root': { color: '#5A6A5A' },
             }}
           />
           <TextField
@@ -310,12 +310,12 @@ const ReportsPage: React.FC = () => {
             sx={{
               minWidth: 180,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                bgcolor: '#F5F9F3',
+                '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              input: { color: '#E5E7EB' },
-              '& .MuiInputLabel-root': { color: '#9CA3AF' },
+              input: { color: '#1A2E1A' },
+              '& .MuiInputLabel-root': { color: '#5A6A5A' },
             }}
           />
         </Box>
@@ -343,46 +343,46 @@ const ReportsPage: React.FC = () => {
               >
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     إجمالي الطلبات
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {salesReport.totalOrders.toLocaleString()}
                   </Typography>
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     إجمالي الإيرادات
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {salesReport.totalRevenue.toLocaleString()} ر.س
                   </Typography>
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     متوسط قيمة الطلب
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {salesReport.averageOrderValue.toLocaleString()} ر.س
                   </Typography>
                 </Paper>
@@ -403,13 +403,13 @@ const ReportsPage: React.FC = () => {
                 {/* Revenue by Day */}
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+                  <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
                     الإيرادات حسب اليوم
                   </Typography>
                   {revenueByDayLoading ? (
@@ -417,26 +417,26 @@ const ReportsPage: React.FC = () => {
                   ) : (
                     <ResponsiveContainer width="100%" height={300}>
                       <LineChart data={revenueByDay || []}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
                         <XAxis
                           dataKey="date"
-                          stroke="#9CA3AF"
-                          tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                          stroke="#5A6A5A"
+                          tick={{ fill: '#5A6A5A', fontSize: 12 }}
                         />
-                        <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF', fontSize: 12 }} />
+                        <YAxis stroke="#5A6A5A" tick={{ fill: '#5A6A5A', fontSize: 12 }} />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: '#111827',
-                            border: '1px solid #1F2937',
+                            backgroundColor: '#FFFFFF',
+                            border: '1px solid #B1C0B1',
                             borderRadius: 8,
-                            color: '#E5E7EB',
+                            color: '#1A2E1A',
                           }}
                         />
-                        <Legend wrapperStyle={{ color: '#9CA3AF' }} />
+                        <Legend wrapperStyle={{ color: '#5A6A5A' }} />
                         <Line
                           type="monotone"
                           dataKey="revenue"
-                          stroke="#2563EB"
+                          stroke="#86B573"
                           strokeWidth={2}
                           name="الإيرادات (ر.س)"
                         />
@@ -448,13 +448,13 @@ const ReportsPage: React.FC = () => {
                 {/* Orders by Status */}
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+                  <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
                     الطلبات حسب الحالة
                   </Typography>
                   <ResponsiveContainer width="100%" height={300}>
@@ -480,10 +480,10 @@ const ReportsPage: React.FC = () => {
                       </Pie>
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: '#111827',
-                          border: '1px solid #1F2937',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #B1C0B1',
                           borderRadius: 8,
-                          color: '#E5E7EB',
+                          color: '#1A2E1A',
                         }}
                       />
                     </PieChart>
@@ -494,13 +494,13 @@ const ReportsPage: React.FC = () => {
               {/* Revenue by Restaurant */}
               <Paper
                 sx={{
-                  bgcolor: '#111827',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 2,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                   p: 3,
                 }}
               >
-                <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
                   الإيرادات حسب المطعم
                 </Typography>
                 {revenueByRestaurantLoading ? (
@@ -508,26 +508,26 @@ const ReportsPage: React.FC = () => {
                 ) : (
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart data={revenueByRestaurant || []}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
                       <XAxis
                         dataKey="restaurantName"
-                        stroke="#9CA3AF"
-                        tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                        stroke="#5A6A5A"
+                        tick={{ fill: '#5A6A5A', fontSize: 12 }}
                         angle={-45}
                         textAnchor="end"
                         height={100}
                       />
-                      <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF', fontSize: 12 }} />
+                      <YAxis stroke="#5A6A5A" tick={{ fill: '#5A6A5A', fontSize: 12 }} />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: '#111827',
-                          border: '1px solid #1F2937',
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid #B1C0B1',
                           borderRadius: 8,
-                          color: '#E5E7EB',
+                          color: '#1A2E1A',
                         }}
                       />
-                      <Legend wrapperStyle={{ color: '#9CA3AF' }} />
-                      <Bar dataKey="revenue" fill="#2563EB" name="الإيرادات (ر.س)" />
+                      <Legend wrapperStyle={{ color: '#5A6A5A' }} />
+                      <Bar dataKey="revenue" fill="#86B573" name="الإيرادات (ر.س)" />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
@@ -559,46 +559,46 @@ const ReportsPage: React.FC = () => {
               >
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     إجمالي المطاعم
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {restaurantReports.length}
                   </Typography>
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     إجمالي الطلبات
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {restaurantReports.reduce((sum, r) => sum + r.totalOrders, 0).toLocaleString()}
                   </Typography>
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     إجمالي الإيرادات
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {restaurantReports
                       .reduce((sum, r) => sum + r.totalRevenue, 0)
                       .toLocaleString()}{' '}
@@ -607,16 +607,16 @@ const ReportsPage: React.FC = () => {
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     متوسط معدل الإتمام
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {(
                       (restaurantReports.reduce((sum, r) => sum + r.completionRate, 0) /
                         restaurantReports.length) *
@@ -630,38 +630,38 @@ const ReportsPage: React.FC = () => {
               {/* Chart: Revenue by Restaurant */}
               <Paper
                 sx={{
-                  bgcolor: '#111827',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 2,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                   p: 3,
                   mb: 3,
                 }}
               >
-                <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
                   الإيرادات حسب المطعم
                 </Typography>
                 <ResponsiveContainer width="100%" height={400}>
                   <BarChart data={restaurantReports}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
                     <XAxis
                       dataKey="restaurantName"
-                      stroke="#9CA3AF"
-                      tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                      stroke="#5A6A5A"
+                      tick={{ fill: '#5A6A5A', fontSize: 12 }}
                       angle={-45}
                       textAnchor="end"
                       height={100}
                     />
-                    <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF', fontSize: 12 }} />
+                    <YAxis stroke="#5A6A5A" tick={{ fill: '#5A6A5A', fontSize: 12 }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#111827',
-                        border: '1px solid #1F2937',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #B1C0B1',
                         borderRadius: 8,
-                        color: '#E5E7EB',
+                        color: '#1A2E1A',
                       }}
                     />
-                    <Legend wrapperStyle={{ color: '#9CA3AF' }} />
-                    <Bar dataKey="totalRevenue" fill="#2563EB" name="الإيرادات (ر.س)" />
+                    <Legend wrapperStyle={{ color: '#5A6A5A' }} />
+                    <Bar dataKey="totalRevenue" fill="#86B573" name="الإيرادات (ر.س)" />
                     <Bar dataKey="totalOrders" fill="#22C55E" name="عدد الطلبات" />
                   </BarChart>
                 </ResponsiveContainer>
@@ -670,13 +670,13 @@ const ReportsPage: React.FC = () => {
               {/* Table */}
               <Paper
                 sx={{
-                  bgcolor: '#111827',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 2,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                   p: 3,
                 }}
               >
-                <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
                   جدول تفصيلي للمطاعم
                 </Typography>
                 <DataTable
@@ -713,46 +713,46 @@ const ReportsPage: React.FC = () => {
               >
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     إجمالي السائقين
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {driverReports.length}
                   </Typography>
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     إجمالي التوصيلات
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {driverReports.reduce((sum, d) => sum + d.totalDeliveries, 0).toLocaleString()}
                   </Typography>
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     معدل الإتمام
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {(
                       (driverReports.reduce((sum, d) => sum + d.completedDeliveries, 0) /
                         driverReports.reduce((sum, d) => sum + d.totalDeliveries, 0)) *
@@ -763,16 +763,16 @@ const ReportsPage: React.FC = () => {
                 </Paper>
                 <Paper
                   sx={{
-                    bgcolor: '#111827',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 2,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     p: 3,
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 1 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 1 }}>
                     متوسط وقت التوصيل
                   </Typography>
-                  <Typography variant="h4" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+                  <Typography variant="h4" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
                     {Math.round(
                       driverReports.reduce((sum, d) => sum + d.averageDeliveryTime, 0) /
                         driverReports.length
@@ -785,38 +785,38 @@ const ReportsPage: React.FC = () => {
               {/* Chart: Deliveries by Driver */}
               <Paper
                 sx={{
-                  bgcolor: '#111827',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 2,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                   p: 3,
                   mb: 3,
                 }}
               >
-                <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
                   التوصيلات حسب السائق
                 </Typography>
                 <ResponsiveContainer width="100%" height={400}>
                   <BarChart data={driverReports.slice(0, 8)}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
                     <XAxis
                       dataKey="driverName"
-                      stroke="#9CA3AF"
-                      tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                      stroke="#5A6A5A"
+                      tick={{ fill: '#5A6A5A', fontSize: 12 }}
                       angle={-45}
                       textAnchor="end"
                       height={100}
                     />
-                    <YAxis stroke="#9CA3AF" tick={{ fill: '#9CA3AF', fontSize: 12 }} />
+                    <YAxis stroke="#5A6A5A" tick={{ fill: '#5A6A5A', fontSize: 12 }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#111827',
-                        border: '1px solid #1F2937',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #B1C0B1',
                         borderRadius: 8,
-                        color: '#E5E7EB',
+                        color: '#1A2E1A',
                       }}
                     />
-                    <Legend wrapperStyle={{ color: '#9CA3AF' }} />
-                    <Bar dataKey="totalDeliveries" fill="#2563EB" name="إجمالي التوصيلات" />
+                    <Legend wrapperStyle={{ color: '#5A6A5A' }} />
+                    <Bar dataKey="totalDeliveries" fill="#86B573" name="إجمالي التوصيلات" />
                     <Bar dataKey="completedDeliveries" fill="#22C55E" name="المكتملة" />
                   </BarChart>
                 </ResponsiveContainer>
@@ -825,38 +825,38 @@ const ReportsPage: React.FC = () => {
               {/* Chart: Ratings */}
               <Paper
                 sx={{
-                  bgcolor: '#111827',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 2,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                   p: 3,
                   mb: 3,
                 }}
               >
-                <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
                   التقييمات حسب السائق
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={driverReports.slice(0, 8)}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
                     <XAxis
                       dataKey="driverName"
-                      stroke="#9CA3AF"
-                      tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                      stroke="#5A6A5A"
+                      tick={{ fill: '#5A6A5A', fontSize: 12 }}
                       angle={-45}
                       textAnchor="end"
                       height={100}
                     />
                     <YAxis
-                      stroke="#9CA3AF"
-                      tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                      stroke="#5A6A5A"
+                      tick={{ fill: '#5A6A5A', fontSize: 12 }}
                       domain={[0, 5]}
                     />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#111827',
-                        border: '1px solid #1F2937',
+                        backgroundColor: '#FFFFFF',
+                        border: '1px solid #B1C0B1',
                         borderRadius: 8,
-                        color: '#E5E7EB',
+                        color: '#1A2E1A',
                       }}
                     />
                     <Bar dataKey="rating" fill="#F59E0B" name="التقييم" />
@@ -867,13 +867,13 @@ const ReportsPage: React.FC = () => {
               {/* Table */}
               <Paper
                 sx={{
-                  bgcolor: '#111827',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 2,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                   p: 3,
                 }}
               >
-                <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
                   جدول تفصيلي للسائقين
                 </Typography>
                 <DataTable

@@ -51,7 +51,7 @@ const OrdersListPage: React.FC = () => {
         accessorKey: 'orderNumber',
         header: 'رقم الطلب',
         cell: (info) => (
-          <Typography sx={{ color: '#2563EB', fontWeight: 600, fontSize: 13 }}>
+          <Typography sx={{ color: '#86B573', fontWeight: 600, fontSize: 13 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -60,7 +60,7 @@ const OrdersListPage: React.FC = () => {
         accessorKey: 'customerName',
         header: 'العميل',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -69,7 +69,7 @@ const OrdersListPage: React.FC = () => {
         accessorKey: 'restaurantName',
         header: 'المطعم',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -82,13 +82,13 @@ const OrdersListPage: React.FC = () => {
           const labels: Record<string, { label: string; color: string }> = {
             pending: { label: 'قيد الانتظار', color: '#F59E0B' },
             confirmed: { label: 'مؤكد', color: '#38BDF8' },
-            preparing: { label: 'قيد التحضير', color: '#2563EB' },
+            preparing: { label: 'قيد التحضير', color: '#86B573' },
             ready: { label: 'جاهز', color: '#22C55E' },
             picked_up: { label: 'تم الاستلام', color: '#8B5CF6' },
             delivered: { label: 'تم التسليم', color: '#22C55E' },
             cancelled: { label: 'ملغي', color: '#EF4444' },
           };
-          const config = labels[status] || { label: status, color: '#9CA3AF' };
+          const config = labels[status] || { label: status, color: '#5A6A5A' };
           return (
             <Chip
               label={config.label}
@@ -112,9 +112,9 @@ const OrdersListPage: React.FC = () => {
             pending: { label: 'قيد الانتظار', color: '#F59E0B' },
             paid: { label: 'مدفوع', color: '#22C55E' },
             failed: { label: 'فشل', color: '#EF4444' },
-            refunded: { label: 'مسترد', color: '#9CA3AF' },
+            refunded: { label: 'مسترد', color: '#5A6A5A' },
           };
-          const config = labels[status] || { label: status, color: '#9CA3AF' };
+          const config = labels[status] || { label: status, color: '#5A6A5A' };
           return (
             <Chip
               label={config.label}
@@ -133,7 +133,7 @@ const OrdersListPage: React.FC = () => {
         accessorKey: 'total',
         header: 'المبلغ الإجمالي',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14, fontWeight: 500 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500 }}>
             {String(info.getValue())} ر.س
           </Typography>
         ),
@@ -144,7 +144,7 @@ const OrdersListPage: React.FC = () => {
         cell: (info) => {
           const driver = info.getValue();
           return (
-            <Typography sx={{ color: driver ? '#E5E7EB' : '#9CA3AF', fontSize: 14 }}>
+            <Typography sx={{ color: driver ? '#1A2E1A' : '#5A6A5A', fontSize: 14 }}>
               {driver ? String(driver) : 'غير محدد'}
             </Typography>
           );
@@ -154,7 +154,7 @@ const OrdersListPage: React.FC = () => {
         accessorKey: 'createdAt',
         header: 'تاريخ الطلب',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {format(new Date(String(info.getValue())), 'dd MMM yyyy, HH:mm', { locale: ar })}
           </Typography>
         ),
@@ -179,7 +179,7 @@ const OrdersListPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -195,7 +195,7 @@ const OrdersListPage: React.FC = () => {
           <Typography variant="h5" fontWeight={700} mb={0.5}>
             إدارة الطلبات
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
             عرض وإدارة جميع الطلبات في النظام
           </Typography>
         </Box>
@@ -211,7 +211,7 @@ const OrdersListPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>حالة الطلب</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>حالة الطلب</InputLabel>
           <Select
             value={statusFilter}
             onChange={(e) => {
@@ -220,10 +220,10 @@ const OrdersListPage: React.FC = () => {
             }}
             label="حالة الطلب"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -238,7 +238,7 @@ const OrdersListPage: React.FC = () => {
         </FormControl>
 
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>حالة الدفع</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>حالة الدفع</InputLabel>
           <Select
             value={paymentStatusFilter}
             onChange={(e) => {
@@ -247,10 +247,10 @@ const OrdersListPage: React.FC = () => {
             }}
             label="حالة الدفع"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -283,11 +283,11 @@ const OrdersListPage: React.FC = () => {
           sx={{
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#020617',
-              '& fieldset': { borderColor: '#1F2937' },
+              bgcolor: '#F5F9F3',
+              '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
-            input: { color: '#E5E7EB' },
+            input: { color: '#1A2E1A' },
           }}
         />
       </Box>
@@ -321,7 +321,7 @@ const OrdersListPage: React.FC = () => {
               gap: 2,
             }}
           >
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               إجمالي النتائج: {data.pagination.total} | الصفحة {data.pagination.page} من{' '}
               {data.pagination.totalPages}
             </Typography>

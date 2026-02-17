@@ -10,7 +10,7 @@ import HowToStart from '../../components/website/HowToStart';
 
 const HomePage: React.FC = () => {
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#FFFFFF', direction: 'ltr' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#F5F9F3', direction: 'ltr' }}>
       <Header />
       <Box sx={{ pt: 8 }}>
         <Hero />

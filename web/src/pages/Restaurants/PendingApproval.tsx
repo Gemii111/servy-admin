@@ -86,7 +86,7 @@ const PendingApprovalPage: React.FC = () => {
   const restaurants = data?.restaurants || [];
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -100,7 +100,7 @@ const PendingApprovalPage: React.FC = () => {
           <Typography variant="h5" fontWeight={700} mb={0.5}>
             المطاعم المعلقة
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
             مراجعة والموافقة على المطاعم الجديدة
           </Typography>
         </Box>
@@ -133,14 +133,14 @@ const PendingApprovalPage: React.FC = () => {
             <Paper
               key={restaurant.id}
               sx={{
-                bgcolor: '#111827',
+                bgcolor: '#FFFFFF',
                 borderRadius: 2,
-                border: '1px solid #1F2937',
+                border: '1px solid #B1C0B1',
                 p: 3,
               }}
             >
               <Box sx={{ mb: 2 }}>
-                <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 1, fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 1, fontWeight: 600 }}>
                   {restaurant.name}
                 </Typography>
                 <Chip
@@ -155,33 +155,33 @@ const PendingApprovalPage: React.FC = () => {
               </Box>
 
               <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                   صاحب المطعم
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+                <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
                   {restaurant.ownerName}
                 </Typography>
               </Box>
 
               <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                   البريد الإلكتروني
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+                <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
                   {restaurant.ownerEmail}
                 </Typography>
               </Box>
 
               <Box sx={{ mb: 2 }}>
-                <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                   نوع المطبخ
                 </Typography>
                 <Chip
                   label={restaurant.cuisineType}
                   size="small"
                   sx={{
-                    bgcolor: '#2563EB20',
-                    color: '#2563EB',
+                    bgcolor: '#86B57320',
+                    color: '#86B573',
                     fontSize: 12,
                   }}
                 />
@@ -224,15 +224,15 @@ const PendingApprovalPage: React.FC = () => {
         }}
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             minWidth: 400,
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>رفض المطعم</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>رفض المطعم</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ color: '#9CA3AF', mb: 2 }}>
+          <Typography variant="body2" sx={{ color: '#5A6A5A', mb: 2 }}>
             يرجى إدخال سبب رفض المطعم "{selectedRestaurant?.name}"
           </Typography>
           <TextField
@@ -245,22 +245,22 @@ const PendingApprovalPage: React.FC = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              input: { color: '#E5E7EB' },
-              textarea: { color: '#E5E7EB' },
+              input: { color: '#1A2E1A' },
+              textarea: { color: '#1A2E1A' },
             }}
           />
         </DialogContent>
-        <DialogActions sx={{ p: 2, borderTop: '1px solid #1F2937' }}>
+        <DialogActions sx={{ p: 2, borderTop: '1px solid #B1C0B1' }}>
           <Button
             onClick={() => {
               setRejectDialogOpen(false);
               setRejectReason('');
               setSelectedRestaurant(null);
             }}
-            sx={{ color: '#9CA3AF' }}
+            sx={{ color: '#5A6A5A' }}
           >
             إلغاء
           </Button>

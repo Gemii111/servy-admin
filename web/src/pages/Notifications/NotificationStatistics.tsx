@@ -27,18 +27,18 @@ const NotificationStatisticsPage: React.FC = () => {
   // Prepare data for charts
   const notificationsByTypeData = [
     { name: 'معلومات', value: stats.byType.info, color: '#38BDF8' },
-    { name: 'عرض ترويجي', value: stats.byType.promotion, color: '#2563EB' },
+    { name: 'عرض ترويجي', value: stats.byType.promotion, color: '#86B573' },
     { name: 'تحذير', value: stats.byType.warning, color: '#F59E0B' },
     { name: 'نجاح', value: stats.byType.success, color: '#22C55E' },
     { name: 'خطأ', value: stats.byType.error, color: '#EF4444' },
   ].filter((item) => item.value > 0);
 
   const notificationsByAudienceData = [
-    { name: 'جميع المستخدمين', value: stats.byAudience.all, color: '#2563EB' },
+    { name: 'جميع المستخدمين', value: stats.byAudience.all, color: '#86B573' },
     { name: 'العملاء', value: stats.byAudience.customers, color: '#22C55E' },
     { name: 'السائقون', value: stats.byAudience.drivers, color: '#38BDF8' },
     { name: 'المطاعم', value: stats.byAudience.restaurants, color: '#F59E0B' },
-    { name: 'محددون', value: stats.byAudience.specific, color: '#9CA3AF' },
+    { name: 'محددون', value: stats.byAudience.specific, color: '#5A6A5A' },
   ].filter((item) => item.value > 0);
 
   // Mock data for notifications over time (in real app, this would come from API)
@@ -52,7 +52,7 @@ const NotificationStatisticsPage: React.FC = () => {
   ];
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -74,7 +74,7 @@ const NotificationStatisticsPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             نظرة شاملة على الإشعارات المرسلة ومعدلات التسليم
           </Typography>
@@ -133,13 +133,13 @@ const NotificationStatisticsPage: React.FC = () => {
         {/* Notifications by Type Pie Chart */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
             توزيع الإشعارات حسب النوع
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
@@ -166,29 +166,29 @@ const NotificationStatisticsPage: React.FC = () => {
         {/* Notifications by Audience Bar Chart */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
             توزيع الإشعارات حسب الجمهور
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={notificationsByAudienceData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-              <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} />
-              <YAxis stroke="#9CA3AF" fontSize={12} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
+              <XAxis dataKey="name" stroke="#5A6A5A" fontSize={12} />
+              <YAxis stroke="#5A6A5A" fontSize={12} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#111827',
-                  border: '1px solid #1F2937',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #B1C0B1',
                   borderRadius: 8,
-                  color: '#E5E7EB',
+                  color: '#1A2E1A',
                 }}
               />
-              <Bar dataKey="value" fill="#2563EB" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="value" fill="#86B573" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Paper>
@@ -196,37 +196,37 @@ const NotificationStatisticsPage: React.FC = () => {
         {/* Notifications Over Time Line Chart */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
             gridColumn: { xs: '1', md: '1 / -1' },
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
             الإشعارات عبر الزمن
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={notificationsOverTimeData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-              <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} />
-              <YAxis stroke="#9CA3AF" fontSize={12} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
+              <XAxis dataKey="date" stroke="#5A6A5A" fontSize={12} />
+              <YAxis stroke="#5A6A5A" fontSize={12} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#111827',
-                  border: '1px solid #1F2937',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #B1C0B1',
                   borderRadius: 8,
-                  color: '#E5E7EB',
+                  color: '#1A2E1A',
                 }}
               />
               <Legend />
               <Line
                 type="monotone"
                 dataKey="sent"
-                stroke="#2563EB"
+                stroke="#86B573"
                 strokeWidth={2}
                 name="مرسلة"
-                dot={{ fill: '#2563EB', r: 4 }}
+                dot={{ fill: '#86B573', r: 4 }}
               />
               <Line
                 type="monotone"
@@ -244,13 +244,13 @@ const NotificationStatisticsPage: React.FC = () => {
       {/* Summary Box */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
         }}
       >
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
           ملخص الأداء
         </Typography>
         <Box
@@ -269,13 +269,13 @@ const NotificationStatisticsPage: React.FC = () => {
               p: 2,
               bgcolor: '#020617',
               borderRadius: 1,
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13, mb: 0.5 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13, mb: 0.5 }}>
               معدل التسليم
             </Typography>
-            <Typography sx={{ color: '#E5E7EB', fontSize: 20, fontWeight: 700 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 20, fontWeight: 700 }}>
               {stats.deliveryRate.toFixed(1)}%
             </Typography>
           </Box>
@@ -284,10 +284,10 @@ const NotificationStatisticsPage: React.FC = () => {
               p: 2,
               bgcolor: '#020617',
               borderRadius: 1,
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13, mb: 0.5 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13, mb: 0.5 }}>
               الإشعارات الفاشلة
             </Typography>
             <Typography sx={{ color: '#EF4444', fontSize: 20, fontWeight: 700 }}>
@@ -299,13 +299,13 @@ const NotificationStatisticsPage: React.FC = () => {
               p: 2,
               bgcolor: '#020617',
               borderRadius: 1,
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13, mb: 0.5 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13, mb: 0.5 }}>
               متوسط الإشعارات/شهر
             </Typography>
-            <Typography sx={{ color: '#E5E7EB', fontSize: 20, fontWeight: 700 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 20, fontWeight: 700 }}>
               {Math.floor(stats.totalSent / 6).toLocaleString()}
             </Typography>
           </Box>
@@ -314,13 +314,13 @@ const NotificationStatisticsPage: React.FC = () => {
               p: 2,
               bgcolor: '#020617',
               borderRadius: 1,
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
             }}
           >
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13, mb: 0.5 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13, mb: 0.5 }}>
               أكثر نوع استخداماً
             </Typography>
-            <Typography sx={{ color: '#E5E7EB', fontSize: 20, fontWeight: 700 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 20, fontWeight: 700 }}>
               {Object.entries(stats.byType)
                 .sort(([, a], [, b]) => b - a)[0]?.[0] === 'info'
                 ? 'معلومات'

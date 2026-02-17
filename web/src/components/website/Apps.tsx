@@ -12,20 +12,20 @@ const Apps: React.FC = () => {
     {
       ...websiteContent.home.apps.customer,
       icon: <PhoneAndroidIcon sx={{ fontSize: 70 }} />,
-      color: '#667eea',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      color: '#86B573',
+      gradient: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
     },
     {
       ...websiteContent.home.apps.vendor,
       icon: <StoreIcon sx={{ fontSize: 70 }} />,
-      color: '#f093fb',
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      color: '#9BCB88',
+      gradient: 'linear-gradient(135deg, #9BCB88 0%, #86B573 100%)',
     },
     {
       ...websiteContent.home.apps.driver,
       icon: <LocalShippingIcon sx={{ fontSize: 70 }} />,
-      color: '#4facfe',
-      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      color: '#6A9A5A',
+      gradient: 'linear-gradient(135deg, #6A9A5A 0%, #5A8A4A 100%)',
     },
   ];
 
@@ -34,7 +34,7 @@ const Apps: React.FC = () => {
       id="apps"
       sx={{
         py: { xs: 6, md: 10 },
-        bgcolor: 'white',
+        bgcolor: '#F5F9F3',
         position: 'relative',
       }}
     >
@@ -47,7 +47,7 @@ const Apps: React.FC = () => {
           sx={{
             mb: 8,
             fontSize: { xs: '2rem', md: '3rem' },
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+            background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -73,10 +73,10 @@ const Apps: React.FC = () => {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  bgcolor: '#F8F9FA',
-                  border: '1px solid rgba(0,0,0,0.08)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                  borderRadius: 4,
+                  bgcolor: '#FFFFFF',
+                  border: '1px solid #B1C0B1',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                  borderRadius: 24,
                   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   position: 'relative',
                   overflow: 'hidden',
@@ -152,7 +152,7 @@ const Apps: React.FC = () => {
                           primary={renderMixedText(feature)}
                           primaryTypographyProps={{
                             variant: 'body2',
-                            sx: { fontSize: '0.95rem', lineHeight: 1.6, color: '#1A1A1A', direction: 'rtl' },
+                            sx: { fontSize: '0.95rem', lineHeight: 1.6, color: '#1A2E1A', direction: 'rtl' },
                           }}
                         />
                       </ListItem>

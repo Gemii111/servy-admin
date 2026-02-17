@@ -14,9 +14,9 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     return (
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
         }}
       >
@@ -65,9 +65,9 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
     return (
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           height: 380,
         }}

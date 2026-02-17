@@ -47,7 +47,7 @@ const DashboardPage: React.FC = () => {
   });
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -70,7 +70,7 @@ const DashboardPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             نظرة عامة على النظام، الطلبات، والمستخدمين.
           </Typography>

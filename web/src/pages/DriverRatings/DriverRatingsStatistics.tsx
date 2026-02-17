@@ -53,7 +53,7 @@ const DriverRatingsStatisticsPage: React.FC = () => {
   })) || [];
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -75,7 +75,7 @@ const DriverRatingsStatisticsPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             نظرة شاملة على تقييمات السائقين والأداء
           </Typography>
@@ -138,13 +138,13 @@ const DriverRatingsStatisticsPage: React.FC = () => {
         {/* Rating Distribution Pie Chart */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
             توزيع التقييمات
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
@@ -171,29 +171,29 @@ const DriverRatingsStatisticsPage: React.FC = () => {
         {/* Top Drivers Bar Chart */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
             أفضل 10 سائقين
           </Typography>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={topDriversData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-              <XAxis dataKey="name" stroke="#9CA3AF" fontSize={12} />
-              <YAxis stroke="#9CA3AF" fontSize={12} domain={[0, 5]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
+              <XAxis dataKey="name" stroke="#5A6A5A" fontSize={12} />
+              <YAxis stroke="#5A6A5A" fontSize={12} domain={[0, 5]} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#111827',
-                  border: '1px solid #1F2937',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #B1C0B1',
                   borderRadius: 8,
-                  color: '#E5E7EB',
+                  color: '#1A2E1A',
                 }}
               />
-              <Bar dataKey="rating" fill="#2563EB" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="rating" fill="#86B573" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Paper>
@@ -202,35 +202,35 @@ const DriverRatingsStatisticsPage: React.FC = () => {
         {recentRatingsChartData.length > 0 && (
           <Paper
             sx={{
-              bgcolor: '#111827',
+              bgcolor: '#FFFFFF',
               borderRadius: 2,
-              border: '1px solid #1F2937',
+              border: '1px solid #B1C0B1',
               p: 3,
               gridColumn: { xs: '1', md: '1 / -1' },
             }}
           >
-            <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
               التقييمات الأخيرة
             </Typography>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={recentRatingsChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
-                <XAxis dataKey="date" stroke="#9CA3AF" fontSize={12} />
-                <YAxis stroke="#9CA3AF" fontSize={12} domain={[0, 5]} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
+                <XAxis dataKey="date" stroke="#5A6A5A" fontSize={12} />
+                <YAxis stroke="#5A6A5A" fontSize={12} domain={[0, 5]} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#111827',
-                    border: '1px solid #1F2937',
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #B1C0B1',
                     borderRadius: 8,
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   }}
                 />
                 <Line
                   type="monotone"
                   dataKey="rating"
-                  stroke="#2563EB"
+                  stroke="#86B573"
                   strokeWidth={2}
-                  dot={{ fill: '#2563EB', r: 4 }}
+                  dot={{ fill: '#86B573', r: 4 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -253,13 +253,13 @@ const DriverRatingsStatisticsPage: React.FC = () => {
         {/* Top Drivers */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
             أفضل السائقين
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
@@ -273,7 +273,7 @@ const DriverRatingsStatisticsPage: React.FC = () => {
                   p: 1.5,
                   bgcolor: '#020617',
                   borderRadius: 1,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -282,11 +282,11 @@ const DriverRatingsStatisticsPage: React.FC = () => {
                       width: 32,
                       height: 32,
                       borderRadius: '50%',
-                      bgcolor: '#2563EB20',
+                      bgcolor: '#86B57320',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#2563EB',
+                      color: '#86B573',
                       fontWeight: 700,
                       fontSize: 14,
                     }}
@@ -294,17 +294,17 @@ const DriverRatingsStatisticsPage: React.FC = () => {
                     {index + 1}
                   </Box>
                   <Box>
-                    <Typography sx={{ color: '#E5E7EB', fontSize: 14, fontWeight: 500 }}>
+                    <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500 }}>
                       {driver.driverName}
                     </Typography>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                       {driver.totalRatings} تقييم
                     </Typography>
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <StarIcon sx={{ color: '#F59E0B', fontSize: 18 }} />
-                  <Typography sx={{ color: '#E5E7EB', fontSize: 16, fontWeight: 600 }}>
+                  <Typography sx={{ color: '#1A2E1A', fontSize: 16, fontWeight: 600 }}>
                     {driver.averageRating.toFixed(1)}
                   </Typography>
                 </Box>
@@ -316,13 +316,13 @@ const DriverRatingsStatisticsPage: React.FC = () => {
         {/* Lowest Drivers */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
             السائقين الأقل تقييماً
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
@@ -336,7 +336,7 @@ const DriverRatingsStatisticsPage: React.FC = () => {
                   p: 1.5,
                   bgcolor: '#020617',
                   borderRadius: 1,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -357,17 +357,17 @@ const DriverRatingsStatisticsPage: React.FC = () => {
                     {index + 1}
                   </Box>
                   <Box>
-                    <Typography sx={{ color: '#E5E7EB', fontSize: 14, fontWeight: 500 }}>
+                    <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500 }}>
                       {driver.driverName}
                     </Typography>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                       {driver.totalRatings} تقييم
                     </Typography>
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <StarIcon sx={{ color: '#F59E0B', fontSize: 18 }} />
-                  <Typography sx={{ color: '#E5E7EB', fontSize: 16, fontWeight: 600 }}>
+                  <Typography sx={{ color: '#1A2E1A', fontSize: 16, fontWeight: 600 }}>
                     {driver.averageRating.toFixed(1)}
                   </Typography>
                 </Box>

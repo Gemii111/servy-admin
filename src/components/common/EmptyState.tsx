@@ -34,7 +34,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           width: 64,
           height: 64,
           borderRadius: '50%',
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -44,10 +44,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       >
         {icon || <InboxIcon sx={{ fontSize: 32 }} />}
       </Box>
-      <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 1, fontWeight: 600 }}>
+      <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 1, fontWeight: 600 }}>
         {title}
       </Typography>
-      <Typography variant="body2" sx={{ color: '#9CA3AF', mb: 3, maxWidth: 400 }}>
+      <Typography variant="body2" sx={{ color: '#5A6A5A', mb: 3, maxWidth: 400 }}>
         {description}
       </Typography>
       {actionLabel && onAction && (

@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
               gutterBottom
               sx={{
                 mb: 2,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+                background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 50%, #9BCB88 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -127,7 +127,7 @@ const Footer: React.FC = () => {
                     fontSize: '0.95rem',
                     transition: 'all 0.2s ease',
                     '&:hover': {
-                      color: '#667eea',
+                      color: '#86B573',
                       transform: 'translateX(-4px)',
                     },
                   }}
@@ -162,7 +162,7 @@ const Footer: React.FC = () => {
                     fontSize: '0.95rem',
                     transition: 'all 0.2s ease',
                     '&:hover': {
-                      color: '#667eea',
+                      color: '#86B573',
                       transform: 'translateX(-4px)',
                     },
                   }}
@@ -211,7 +211,7 @@ const Footer: React.FC = () => {
             variant="body2"
             sx={{
               fontSize: '0.9rem',
-              color: '#9CA3AF',
+              color: '#5A6A5A',
             }}
           >
             © {currentYear} {websiteContent.appNameAr}. جميع الحقوق محفوظة.

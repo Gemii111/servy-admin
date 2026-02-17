@@ -109,11 +109,11 @@ const RewardsHistoryPage: React.FC = () => {
   const getStatusColor = (status: UserRewardStatus) => {
     const colors: Record<UserRewardStatus, string> = {
       active: '#22C55E',
-      used: '#2563EB',
-      expired: '#9CA3AF',
+      used: '#86B573',
+      expired: '#5A6A5A',
       revoked: '#EF4444',
     };
-    return colors[status] || '#9CA3AF';
+    return colors[status] || '#5A6A5A';
   };
 
   const getRewardTypeLabel = (type: string) => {
@@ -160,10 +160,10 @@ const RewardsHistoryPage: React.FC = () => {
           const user = (info.getValue() as { name: string; email: string }) || {};
           return (
             <Box>
-              <Typography sx={{ color: '#E5E7EB', fontWeight: 500, fontSize: 14 }}>
+              <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
                 {user.name || '-'}
               </Typography>
-              <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+              <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                 {user.email || '-'}
               </Typography>
             </Box>
@@ -177,10 +177,10 @@ const RewardsHistoryPage: React.FC = () => {
           const reward = (info.getValue() as { name: string; rewardType: string }) || {};
           return (
             <Box>
-              <Typography sx={{ color: '#E5E7EB', fontWeight: 500, fontSize: 14 }}>
+              <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
                 {reward.name || '-'}
               </Typography>
-              <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+              <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                 {getRewardTypeLabel(reward.rewardType || '')}
               </Typography>
             </Box>
@@ -204,7 +204,7 @@ const RewardsHistoryPage: React.FC = () => {
               ? ' ريال'
               : '';
           return (
-            <Typography sx={{ color: '#E5E7EB', fontSize: 14, fontWeight: 500 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500 }}>
               {value}
               {suffix}
             </Typography>
@@ -217,7 +217,7 @@ const RewardsHistoryPage: React.FC = () => {
         cell: (info) => {
           const date = info.getValue() as string;
           return (
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
               {date ? format(new Date(date), 'dd/MM/yyyy', { locale: ar }) : '-'}
             </Typography>
           );
@@ -229,7 +229,7 @@ const RewardsHistoryPage: React.FC = () => {
         cell: (info) => {
           const date = info.getValue() as string;
           return (
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
               {date ? format(new Date(date), 'dd/MM/yyyy', { locale: ar }) : '-'}
             </Typography>
           );
@@ -260,7 +260,7 @@ const RewardsHistoryPage: React.FC = () => {
         cell: (info) => {
           const date = info.getValue() as string;
           return (
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
               {date ? format(new Date(date), 'dd/MM/yyyy', { locale: ar }) : '-'}
             </Typography>
           );
@@ -282,12 +282,12 @@ const RewardsHistoryPage: React.FC = () => {
                   handleViewDetails(reward);
                 }}
                 sx={{
-                  borderColor: '#2563EB',
-                  color: '#2563EB',
+                  borderColor: '#86B573',
+                  color: '#86B573',
                   fontSize: 12,
                   '&:hover': {
                     borderColor: '#3B82F6',
-                    bgcolor: '#2563EB10',
+                    bgcolor: '#86B57310',
                   },
                 }}
               >
@@ -306,7 +306,7 @@ const RewardsHistoryPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -328,7 +328,7 @@ const RewardsHistoryPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             عرض جميع الجوائز الممنوحة للمستخدمين
           </Typography>
@@ -342,7 +342,7 @@ const RewardsHistoryPage: React.FC = () => {
           p: 2,
           bgcolor: '#020617',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           display: 'flex',
           flexDirection: { xs: 'column', sm: 'row' },
           gap: 2,
@@ -350,14 +350,14 @@ const RewardsHistoryPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 150 } }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>الحالة</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>الحالة</InputLabel>
           <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             sx={{
-              bgcolor: '#111827',
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              bgcolor: '#FFFFFF',
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -369,14 +369,14 @@ const RewardsHistoryPage: React.FC = () => {
         </FormControl>
 
         <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 150 } }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>نوع الجائزة</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>نوع الجائزة</InputLabel>
           <Select
             value={rewardTypeFilter}
             onChange={(e) => setRewardTypeFilter(e.target.value)}
             sx={{
-              bgcolor: '#111827',
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              bgcolor: '#FFFFFF',
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -399,11 +399,11 @@ const RewardsHistoryPage: React.FC = () => {
           sx={{
             minWidth: { xs: '100%', sm: 150 },
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#111827',
-              '& fieldset': { borderColor: '#1F2937' },
+              bgcolor: '#FFFFFF',
+              '& fieldset': { borderColor: '#B1C0B1' },
             },
-            input: { color: '#E5E7EB' },
-            '& .MuiInputLabel-root': { color: '#9CA3AF' },
+            input: { color: '#1A2E1A' },
+            '& .MuiInputLabel-root': { color: '#5A6A5A' },
           }}
         />
 
@@ -417,11 +417,11 @@ const RewardsHistoryPage: React.FC = () => {
           sx={{
             minWidth: { xs: '100%', sm: 150 },
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#111827',
-              '& fieldset': { borderColor: '#1F2937' },
+              bgcolor: '#FFFFFF',
+              '& fieldset': { borderColor: '#B1C0B1' },
             },
-            input: { color: '#E5E7EB' },
-            '& .MuiInputLabel-root': { color: '#9CA3AF' },
+            input: { color: '#1A2E1A' },
+            '& .MuiInputLabel-root': { color: '#5A6A5A' },
           }}
         />
       </Box>
@@ -451,13 +451,13 @@ const RewardsHistoryPage: React.FC = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>تفاصيل الجائزة</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>تفاصيل الجائزة</DialogTitle>
         <DialogContent>
           {selectedReward && (
             <Box
@@ -470,18 +470,18 @@ const RewardsHistoryPage: React.FC = () => {
             >
               {/* User Info */}
               <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #1F2937' }}>
+                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
-                      sx={{ color: '#9CA3AF', mb: 1.5, fontSize: 12 }}
+                      sx={{ color: '#5A6A5A', mb: 1.5, fontSize: 12 }}
                     >
                       معلومات المستخدم
                     </Typography>
-                    <Typography sx={{ color: '#E5E7EB', fontWeight: 500, mb: 0.5 }}>
+                    <Typography sx={{ color: '#1A2E1A', fontWeight: 500, mb: 0.5 }}>
                       {selectedReward.userName || '-'}
                     </Typography>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
                       {selectedReward.userEmail || '-'}
                     </Typography>
                   </CardContent>
@@ -490,30 +490,30 @@ const RewardsHistoryPage: React.FC = () => {
 
               {/* Reward Info */}
               <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #1F2937' }}>
+                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
-                      sx={{ color: '#9CA3AF', mb: 1.5, fontSize: 12 }}
+                      sx={{ color: '#5A6A5A', mb: 1.5, fontSize: 12 }}
                     >
                       معلومات الجائزة
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>الاسم:</Typography>
-                        <Typography sx={{ color: '#E5E7EB', fontSize: 13, fontWeight: 500 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>الاسم:</Typography>
+                        <Typography sx={{ color: '#1A2E1A', fontSize: 13, fontWeight: 500 }}>
                           {selectedReward.reward?.name || '-'}
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>النوع:</Typography>
-                        <Typography sx={{ color: '#E5E7EB', fontSize: 13, fontWeight: 500 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>النوع:</Typography>
+                        <Typography sx={{ color: '#1A2E1A', fontSize: 13, fontWeight: 500 }}>
                           {getRewardTypeLabel(selectedReward.reward?.rewardType || '')}
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>القيمة:</Typography>
-                        <Typography sx={{ color: '#E5E7EB', fontSize: 13, fontWeight: 500 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>القيمة:</Typography>
+                        <Typography sx={{ color: '#1A2E1A', fontSize: 13, fontWeight: 500 }}>
                           {selectedReward.reward?.rewardValue || 0}
                           {selectedReward.reward?.rewardType === 'discount_coupon'
                             ? '%'
@@ -531,11 +531,11 @@ const RewardsHistoryPage: React.FC = () => {
 
               {/* Status & Dates */}
               <Box>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #1F2937' }}>
+                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
-                      sx={{ color: '#9CA3AF', mb: 1.5, fontSize: 12 }}
+                      sx={{ color: '#5A6A5A', mb: 1.5, fontSize: 12 }}
                     >
                       الحالة
                     </Typography>
@@ -553,26 +553,26 @@ const RewardsHistoryPage: React.FC = () => {
               </Box>
 
               <Box>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #1F2937' }}>
+                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
-                      sx={{ color: '#9CA3AF', mb: 1.5, fontSize: 12 }}
+                      sx={{ color: '#5A6A5A', mb: 1.5, fontSize: 12 }}
                     >
                       التواريخ
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                      <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+                      <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                         منح: {format(new Date(selectedReward.assignedAt), 'dd/MM/yyyy', { locale: ar })}
                       </Typography>
                       {selectedReward.expiresAt && (
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                           انتهاء:{' '}
                           {format(new Date(selectedReward.expiresAt), 'dd/MM/yyyy', { locale: ar })}
                         </Typography>
                       )}
                       {selectedReward.usedAt && (
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                           استخدام:{' '}
                           {format(new Date(selectedReward.usedAt), 'dd/MM/yyyy', { locale: ar })}
                         </Typography>
@@ -584,15 +584,15 @@ const RewardsHistoryPage: React.FC = () => {
 
               {selectedReward.notes && (
                 <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
-                  <Card sx={{ bgcolor: '#020617', border: '1px solid #1F2937' }}>
+                  <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
                     <CardContent>
                       <Typography
                         variant="subtitle2"
-                        sx={{ color: '#9CA3AF', mb: 1, fontSize: 12 }}
+                        sx={{ color: '#5A6A5A', mb: 1, fontSize: 12 }}
                       >
                         ملاحظات
                       </Typography>
-                      <Typography sx={{ color: '#E5E7EB', fontSize: 13 }}>
+                      <Typography sx={{ color: '#1A2E1A', fontSize: 13 }}>
                         {selectedReward.notes}
                       </Typography>
                     </CardContent>
@@ -654,13 +654,13 @@ const RewardsHistoryPage: React.FC = () => {
         }}
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>إلغاء الجائزة</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>إلغاء الجائزة</DialogTitle>
         <DialogContent>
           <TextField
             label="سبب الإلغاء"
@@ -674,10 +674,10 @@ const RewardsHistoryPage: React.FC = () => {
               mt: 1,
               '& .MuiOutlinedInput-root': {
                 bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                '& fieldset': { borderColor: '#B1C0B1' },
               },
-              textarea: { color: '#E5E7EB' },
-              '& .MuiInputLabel-root': { color: '#9CA3AF' },
+              textarea: { color: '#1A2E1A' },
+              '& .MuiInputLabel-root': { color: '#5A6A5A' },
             }}
           />
         </DialogContent>
@@ -703,13 +703,13 @@ const RewardsHistoryPage: React.FC = () => {
         }}
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>تمديد صلاحية الجائزة</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>تمديد صلاحية الجائزة</DialogTitle>
         <DialogContent>
           <TextField
             label="عدد الأيام"
@@ -723,10 +723,10 @@ const RewardsHistoryPage: React.FC = () => {
               mt: 1,
               '& .MuiOutlinedInput-root': {
                 bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                '& fieldset': { borderColor: '#B1C0B1' },
               },
-              input: { color: '#E5E7EB' },
-              '& .MuiInputLabel-root': { color: '#9CA3AF' },
+              input: { color: '#1A2E1A' },
+              '& .MuiInputLabel-root': { color: '#5A6A5A' },
             }}
           />
         </DialogContent>

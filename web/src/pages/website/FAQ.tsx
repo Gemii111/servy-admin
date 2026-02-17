@@ -36,7 +36,7 @@ const FAQPage: React.FC = () => {
       : websiteContent.faq.filter((faq) => faq.category === selectedCategory);
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#F8F9FA', direction: 'ltr' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#F5F9F3', direction: 'ltr' }}>
       <Header />
       <Box sx={{ pt: 8, pb: 4 }}>
         <Container maxWidth="lg">
@@ -47,7 +47,7 @@ const FAQPage: React.FC = () => {
             gutterBottom
             sx={{
               mb: 4,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+              background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -56,7 +56,7 @@ const FAQPage: React.FC = () => {
             الأسئلة الشائعة
           </Typography>
 
-          <Paper sx={{ mb: 4, p: 2, bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 3 }}>
+          <Paper sx={{ mb: 4, p: 2, bgcolor: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', borderRadius: 24 }}>
             <Tabs
               value={selectedCategory}
               onChange={(_, newValue) => setSelectedCategory(newValue)}
@@ -82,14 +82,14 @@ const FAQPage: React.FC = () => {
                 }}
               >
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6" fontWeight={700} sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                  <Typography variant="h6" fontWeight={700} sx={{ color: '#1A2E1A', direction: 'ltr' }}>
                     {renderMixedText(faq.question)}
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography
                     variant="body1"
-                    sx={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: '#6B7280', direction: 'ltr' }}
+                    sx={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: '#3A4A3A', direction: 'ltr' }}
                   >
                     {renderMixedText(faq.answer)}
                   </Typography>

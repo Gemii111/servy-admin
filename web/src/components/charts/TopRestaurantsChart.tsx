@@ -18,9 +18,9 @@ const TopRestaurantsChart: React.FC<TopRestaurantsChartProps> = ({ data, isLoadi
     return (
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           height: 320,
           display: 'flex',
@@ -28,7 +28,7 @@ const TopRestaurantsChart: React.FC<TopRestaurantsChartProps> = ({ data, isLoadi
           justifyContent: 'center',
         }}
       >
-        <Typography sx={{ color: '#9CA3AF' }}>جاري التحميل...</Typography>
+        <Typography sx={{ color: '#5A6A5A' }}>جاري التحميل...</Typography>
       </Paper>
     );
   }
@@ -36,38 +36,38 @@ const TopRestaurantsChart: React.FC<TopRestaurantsChartProps> = ({ data, isLoadi
   return (
     <Paper
       sx={{
-        bgcolor: '#111827',
+        bgcolor: '#FFFFFF',
         borderRadius: 2,
-        border: '1px solid #1F2937',
+        border: '1px solid #B1C0B1',
         p: 3,
       }}
     >
-      <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
+      <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
         أفضل المطاعم
       </Typography>
       <Box sx={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>
           <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1F2937" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
             <XAxis
               dataKey="name"
-              stroke="#6B7280"
+              stroke="#5A6A5A"
               style={{ fontSize: 12 }}
-              tick={{ fill: '#9CA3AF' }}
+              tick={{ fill: '#5A6A5A' }}
               angle={-45}
               textAnchor="end"
               height={80}
             />
-            <YAxis stroke="#6B7280" style={{ fontSize: 12 }} tick={{ fill: '#9CA3AF' }} />
+            <YAxis stroke="#5A6A5A" style={{ fontSize: 12 }} tick={{ fill: '#5A6A5A' }} />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#111827',
-                border: '1px solid #1F2937',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #B1C0B1',
                 borderRadius: 8,
-                color: '#E5E7EB',
+                color: '#1A2E1A',
               }}
             />
-            <Bar dataKey="orders" fill="#2563EB" radius={[8, 8, 0, 0]} />
+            <Bar dataKey="orders" fill="#86B573" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Box>

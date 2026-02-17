@@ -9,20 +9,20 @@ const HowToStart: React.FC = () => {
     {
       title: 'للعملاء',
       steps: websiteContent.home.howToStart.customers,
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      color: '#667eea',
+      gradient: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
+      color: '#86B573',
     },
     {
       title: 'للتجار',
       steps: websiteContent.home.howToStart.vendors,
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      color: '#f093fb',
+      gradient: 'linear-gradient(135deg, #9BCB88 0%, #86B573 100%)',
+      color: '#86B573',
     },
     {
       title: 'للسائقين',
       steps: websiteContent.home.howToStart.drivers,
-      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      color: '#4facfe',
+      gradient: 'linear-gradient(135deg, #6A9A5A 0%, #5A8A4A 100%)',
+      color: '#6A9A5A',
     },
   ];
 
@@ -43,7 +43,7 @@ const HowToStart: React.FC = () => {
           sx={{
             mb: 8,
             fontSize: { xs: '2rem', md: '3rem' },
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+            background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',

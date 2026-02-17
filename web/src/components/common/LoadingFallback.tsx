@@ -25,8 +25,8 @@ const LoadingFallback: React.FC<LoadingFallbackProps> = ({
         gap: 2,
       }}
     >
-      <CircularProgress size={48} sx={{ color: '#3B82F6' }} />
-      <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+      <CircularProgress size={48} sx={{ color: '#86B573' }} />
+      <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
         {message}
       </Typography>
     </Box>

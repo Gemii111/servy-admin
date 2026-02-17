@@ -55,8 +55,8 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
         sx={{
           px: 2,
           minHeight: 64,
-          borderBottom: '1px solid #1F2933',
-          bgcolor: '#020617',
+          borderBottom: '1px solid #B1C0B1',
+          bgcolor: '#FFFFFF',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -69,13 +69,13 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
           <Box>
             <Typography
               variant="subtitle2"
-              sx={{ color: '#9CA3AF', fontSize: 11, mb: 0.5 }}
+              sx={{ color: '#5A6A5A', fontSize: 11, mb: 0.5 }}
             >
               لوحة الإدارة
             </Typography>
             <Typography
               variant="h6"
-              sx={{ color: '#E5E7EB', fontWeight: 700, fontSize: 18 }}
+              sx={{ color: '#1A2E1A', fontWeight: 700, fontSize: 18 }}
             >
               Souq
             </Typography>
@@ -123,16 +123,16 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
                   pr: 2,
                   py: 1.2,
                   borderRadius: 2,
-                  bgcolor: selected ? 'rgba(30,64,175,0.15)' : 'transparent',
+                  bgcolor: selected ? 'rgba(134,181,115,0.15)' : 'transparent',
                   '&:hover': {
-                    bgcolor: 'rgba(15,23,42,0.9)',
+                    bgcolor: 'rgba(134,181,115,0.08)',
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 40,
-                    color: selected ? 'primary.main' : '#9CA3AF',
+                    color: selected ? 'primary.main' : '#5A6A5A',
                   }}
                 >
                   {item.icon}
@@ -141,7 +141,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
                   primary={item.label}
                   primaryTypographyProps={{
                     fontSize: 14,
-                    color: selected ? '#E5E7EB' : '#9CA3AF',
+                    color: selected ? '#1A2E1A' : '#5A6A5A',
                   }}
                 />
               </ListItemButton>
@@ -165,7 +165,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
-            bgcolor: '#020617',
+            bgcolor: '#FFFFFF',
           },
         }}
       >
@@ -180,9 +180,9 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, onClose }) => {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
-            bgcolor: '#020617', // SidebarBg
-            color: '#E5E7EB',
-            borderInlineEnd: '1px solid #111827',
+            bgcolor: '#FFFFFF', // SidebarBg
+            color: '#1A2E1A',
+            borderInlineEnd: '1px solid #B1C0B1',
           },
         }}
         open

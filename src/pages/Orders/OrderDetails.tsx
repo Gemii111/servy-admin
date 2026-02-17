@@ -79,7 +79,7 @@ const OrderDetailsPage: React.FC = () => {
   const statusConfig: Record<string, { label: string; color: string }> = {
     pending: { label: 'قيد الانتظار', color: '#F59E0B' },
     confirmed: { label: 'مؤكد', color: '#38BDF8' },
-    preparing: { label: 'قيد التحضير', color: '#2563EB' },
+    preparing: { label: 'قيد التحضير', color: '#86B573' },
     ready: { label: 'جاهز', color: '#22C55E' },
     picked_up: { label: 'تم الاستلام', color: '#8B5CF6' },
     delivered: { label: 'تم التسليم', color: '#22C55E' },
@@ -90,7 +90,7 @@ const OrderDetailsPage: React.FC = () => {
     pending: { label: 'قيد الانتظار', color: '#F59E0B' },
     paid: { label: 'مدفوع', color: '#22C55E' },
     failed: { label: 'فشل', color: '#EF4444' },
-    refunded: { label: 'مسترد', color: '#9CA3AF' },
+    refunded: { label: 'مسترد', color: '#5A6A5A' },
   };
 
   const paymentMethodLabels: Record<string, string> = {
@@ -100,7 +100,7 @@ const OrderDetailsPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -116,7 +116,7 @@ const OrderDetailsPage: React.FC = () => {
           <IconButton
             onClick={() => navigate('/orders')}
             sx={{
-              color: '#9CA3AF',
+              color: '#5A6A5A',
               '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.08)' },
             }}
           >
@@ -126,7 +126,7 @@ const OrderDetailsPage: React.FC = () => {
             <Typography variant="h5" fontWeight={700} mb={0.5}>
               {order.orderNumber}
             </Typography>
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               تفاصيل الطلب
             </Typography>
           </Box>
@@ -157,28 +157,28 @@ const OrderDetailsPage: React.FC = () => {
       {/* Status Update */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           mb: 3,
         }}
       >
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2, fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
           تحديث حالة الطلب
         </Typography>
         <FormControl size="small" sx={{ minWidth: 200 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>حالة الطلب</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>حالة الطلب</InputLabel>
           <Select
             value={status}
             onChange={(e) => handleStatusChange(e.target.value as Order['status'])}
             label="حالة الطلب"
             disabled={updateStatusMutation.isPending}
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="pending">قيد الانتظار</MenuItem>
@@ -207,13 +207,13 @@ const OrderDetailsPage: React.FC = () => {
         {/* Customer & Restaurant Info */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
             معلومات الطلب
           </Typography>
 
@@ -225,46 +225,46 @@ const OrderDetailsPage: React.FC = () => {
             }}
           >
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 العميل
               </Typography>
-              <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+              <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 500 }}>
                 {order.customerName}
               </Typography>
-              <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+              <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
                 {order.customerPhone}
               </Typography>
             </Box>
 
-            <Divider sx={{ borderColor: '#1F2937' }} />
+            <Divider sx={{ borderColor: '#B1C0B1' }} />
 
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 المطعم
               </Typography>
-              <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+              <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 500 }}>
                 {order.restaurantName}
               </Typography>
             </Box>
 
             {order.driverName && (
               <>
-                <Divider sx={{ borderColor: '#1F2937' }} />
+                <Divider sx={{ borderColor: '#B1C0B1' }} />
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                     السائق
                   </Typography>
-                  <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+                  <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 500 }}>
                     {order.driverName}
                   </Typography>
                 </Box>
               </>
             )}
 
-            <Divider sx={{ borderColor: '#1F2937' }} />
+            <Divider sx={{ borderColor: '#B1C0B1' }} />
 
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 حالة الطلب
               </Typography>
               <Chip
@@ -279,7 +279,7 @@ const OrderDetailsPage: React.FC = () => {
             </Box>
 
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 حالة الدفع
               </Typography>
               <Chip
@@ -294,19 +294,19 @@ const OrderDetailsPage: React.FC = () => {
             </Box>
 
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 طريقة الدفع
               </Typography>
-              <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+              <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
                 {paymentMethodLabels[order.paymentMethod]}
               </Typography>
             </Box>
 
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 تاريخ الطلب
               </Typography>
-              <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+              <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
                 {format(new Date(order.createdAt), 'dd MMM yyyy, HH:mm', { locale: ar })}
               </Typography>
             </Box>
@@ -316,13 +316,13 @@ const OrderDetailsPage: React.FC = () => {
         {/* Delivery & Payment Info */}
         <Paper
           sx={{
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             p: 3,
           }}
         >
-          <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
             معلومات التسليم والدفع
           </Typography>
 
@@ -334,22 +334,22 @@ const OrderDetailsPage: React.FC = () => {
             }}
           >
             <Box>
-              <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+              <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                 عنوان التسليم
               </Typography>
-              <Typography variant="body1" sx={{ color: '#E5E7EB' }}>
+              <Typography variant="body1" sx={{ color: '#1A2E1A' }}>
                 {order.deliveryAddress}
               </Typography>
             </Box>
 
             {order.estimatedDeliveryTime && (
               <>
-                <Divider sx={{ borderColor: '#1F2937' }} />
+                <Divider sx={{ borderColor: '#B1C0B1' }} />
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                     الوقت المتوقع للتسليم
                   </Typography>
-                  <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+                  <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 500 }}>
                     {order.estimatedDeliveryTime}
                   </Typography>
                 </Box>
@@ -358,12 +358,12 @@ const OrderDetailsPage: React.FC = () => {
 
             {order.notes && (
               <>
-                <Divider sx={{ borderColor: '#1F2937' }} />
+                <Divider sx={{ borderColor: '#B1C0B1' }} />
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', display: 'block', mb: 0.5 }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', display: 'block', mb: 0.5 }}>
                     ملاحظات
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+                  <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
                     {order.notes}
                   </Typography>
                 </Box>
@@ -376,14 +376,14 @@ const OrderDetailsPage: React.FC = () => {
       {/* Order Items */}
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           mb: 3,
         }}
       >
-        <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 3, fontWeight: 600 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
           أصناف الطلب
         </Typography>
 
@@ -396,25 +396,25 @@ const OrderDetailsPage: React.FC = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 py: 2,
-                borderBottom: index < order.items.length - 1 ? '1px solid #1F2937' : 'none',
+                borderBottom: index < order.items.length - 1 ? '1px solid #B1C0B1' : 'none',
               }}
             >
               <Box sx={{ flex: 1 }}>
-                <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 500, mb: 0.5 }}>
+                <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 500, mb: 0.5 }}>
                   {item.name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+                <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
                   الكمية: {item.quantity} × {item.price} ر.س
                 </Typography>
               </Box>
-              <Typography variant="body1" sx={{ color: '#E5E7EB', fontWeight: 600 }}>
+              <Typography variant="body1" sx={{ color: '#1A2E1A', fontWeight: 600 }}>
                 {item.total} ر.س
               </Typography>
             </Box>
           ))}
         </Box>
 
-        <Divider sx={{ borderColor: '#1F2937', mb: 2 }} />
+        <Divider sx={{ borderColor: '#B1C0B1', mb: 2 }} />
 
         {/* Order Summary */}
         <Box
@@ -425,35 +425,35 @@ const OrderDetailsPage: React.FC = () => {
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               المجموع الفرعي
             </Typography>
-            <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
               {order.subtotal} ر.س
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               رسوم التوصيل
             </Typography>
-            <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
               {order.deliveryFee} ر.س
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               الضريبة
             </Typography>
-            <Typography variant="body2" sx={{ color: '#E5E7EB' }}>
+            <Typography variant="body2" sx={{ color: '#1A2E1A' }}>
               {order.tax} ر.س
             </Typography>
           </Box>
-          <Divider sx={{ borderColor: '#1F2937', my: 1 }} />
+          <Divider sx={{ borderColor: '#B1C0B1', my: 1 }} />
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant="h6" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h6" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               الإجمالي
             </Typography>
-            <Typography variant="h6" sx={{ color: '#E5E7EB', fontWeight: 700 }}>
+            <Typography variant="h6" sx={{ color: '#1A2E1A', fontWeight: 700 }}>
               {order.total} ر.س
             </Typography>
           </Box>

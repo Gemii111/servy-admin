@@ -104,7 +104,7 @@ const DriverRatingsListPage: React.FC = () => {
         cell: (info) => {
           const rating = info.row.original as DriverRating;
           return (
-            <Typography sx={{ color: '#E5E7EB', fontWeight: 500, fontSize: 14 }}>
+            <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
               {rating.driver.name}
             </Typography>
           );
@@ -116,7 +116,7 @@ const DriverRatingsListPage: React.FC = () => {
         cell: (info) => {
           const rating = info.row.original as DriverRating;
           return (
-            <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
               {rating.customer.name}
             </Typography>
           );
@@ -128,7 +128,7 @@ const DriverRatingsListPage: React.FC = () => {
         cell: (info) => {
           const rating = info.row.original as DriverRating;
           return (
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
               {rating.order.orderNumber}
             </Typography>
           );
@@ -142,7 +142,7 @@ const DriverRatingsListPage: React.FC = () => {
           return (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <Rating value={rating} readOnly size="small" />
-              <Typography sx={{ color: '#E5E7EB', fontSize: 13, ml: 0.5 }}>
+              <Typography sx={{ color: '#1A2E1A', fontSize: 13, ml: 0.5 }}>
                 {rating.toFixed(1)}
               </Typography>
             </Box>
@@ -157,7 +157,7 @@ const DriverRatingsListPage: React.FC = () => {
           return (
             <Typography
               sx={{
-                color: '#9CA3AF',
+                color: '#5A6A5A',
                 fontSize: 13,
                 maxWidth: 200,
                 overflow: 'hidden',
@@ -176,7 +176,7 @@ const DriverRatingsListPage: React.FC = () => {
         cell: (info) => {
           const value = info.getValue();
           return (
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
               {format(new Date(String(value)), 'dd MMM yyyy, HH:mm', { locale: ar })}
             </Typography>
           );
@@ -220,7 +220,7 @@ const DriverRatingsListPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -242,7 +242,7 @@ const DriverRatingsListPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             عرض وإدارة تقييمات السائقين من العملاء
           </Typography>
@@ -253,11 +253,11 @@ const DriverRatingsListPage: React.FC = () => {
           onClick={() => navigate('/driver-ratings/statistics')}
           size="small"
           sx={{
-            borderColor: '#2563EB',
-            color: '#2563EB',
+            borderColor: '#86B573',
+            color: '#86B573',
             '&:hover': {
               borderColor: '#3B82F6',
-              bgcolor: '#2563EB10',
+              bgcolor: '#86B57310',
             },
           }}
         >
@@ -274,7 +274,7 @@ const DriverRatingsListPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>التقييم</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>التقييم</InputLabel>
           <Select
             value={ratingFilter}
             onChange={(e) => {
@@ -283,8 +283,8 @@ const DriverRatingsListPage: React.FC = () => {
             }}
             sx={{
               bgcolor: '#020617',
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}
             label="التقييم"
           >
@@ -316,24 +316,24 @@ const DriverRatingsListPage: React.FC = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>تفاصيل التقييم</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>تفاصيل التقييم</DialogTitle>
         <DialogContent>
           {selectedRating && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
               {/* Rating */}
               <Box>
-                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                   التقييم العام
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
                   <Rating value={selectedRating.rating} readOnly size="large" />
-                  <Typography sx={{ color: '#E5E7EB', fontSize: 18, fontWeight: 600 }}>
+                  <Typography sx={{ color: '#1A2E1A', fontSize: 18, fontWeight: 600 }}>
                     {selectedRating.rating.toFixed(1)}
                   </Typography>
                 </Box>
@@ -342,10 +342,10 @@ const DriverRatingsListPage: React.FC = () => {
               {/* Comment */}
               {selectedRating.comment && (
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                     التعليق
                   </Typography>
-                  <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                  <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                     {selectedRating.comment}
                   </Typography>
                 </Box>
@@ -356,13 +356,13 @@ const DriverRatingsListPage: React.FC = () => {
                 selectedRating.communicationRating ||
                 selectedRating.serviceQualityRating) && (
                 <Box>
-                  <Typography variant="caption" sx={{ color: '#9CA3AF', mb: 1, display: 'block' }}>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A', mb: 1, display: 'block' }}>
                     التقييمات الفرعية
                   </Typography>
                   <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                     {selectedRating.punctualityRating && (
                       <Box>
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 13, mb: 0.5 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 13, mb: 0.5 }}>
                           الالتزام بالمواعيد
                         </Typography>
                         <Rating value={selectedRating.punctualityRating} readOnly size="small" />
@@ -370,7 +370,7 @@ const DriverRatingsListPage: React.FC = () => {
                     )}
                     {selectedRating.communicationRating && (
                       <Box>
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 13, mb: 0.5 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 13, mb: 0.5 }}>
                           التواصل
                         </Typography>
                         <Rating value={selectedRating.communicationRating} readOnly size="small" />
@@ -378,7 +378,7 @@ const DriverRatingsListPage: React.FC = () => {
                     )}
                     {selectedRating.serviceQualityRating && (
                       <Box>
-                        <Typography sx={{ color: '#9CA3AF', fontSize: 13, mb: 0.5 }}>
+                        <Typography sx={{ color: '#5A6A5A', fontSize: 13, mb: 0.5 }}>
                           جودة الخدمة
                         </Typography>
                         <Rating
@@ -394,28 +394,28 @@ const DriverRatingsListPage: React.FC = () => {
 
               {/* Driver Info */}
               <Box>
-                <Typography variant="caption" sx={{ color: '#9CA3AF', mb: 1, display: 'block' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A', mb: 1, display: 'block' }}>
                   معلومات السائق
                 </Typography>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                   <Box>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>الاسم</Typography>
-                    <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>الاسم</Typography>
+                    <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                       {selectedRating.driver.name}
                     </Typography>
                   </Box>
                   <Box>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>البريد الإلكتروني</Typography>
-                    <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>البريد الإلكتروني</Typography>
+                    <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                       {selectedRating.driver.email}
                     </Typography>
                   </Box>
                   {selectedRating.driver.averageRating && (
                     <Box>
-                      <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+                      <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
                         متوسط التقييم
                       </Typography>
-                      <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                      <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                         {selectedRating.driver.averageRating.toFixed(1)} (
                         {selectedRating.driver.totalRatings} تقييم)
                       </Typography>
@@ -426,19 +426,19 @@ const DriverRatingsListPage: React.FC = () => {
 
               {/* Customer Info */}
               <Box>
-                <Typography variant="caption" sx={{ color: '#9CA3AF', mb: 1, display: 'block' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A', mb: 1, display: 'block' }}>
                   معلومات العميل
                 </Typography>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                   <Box>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>الاسم</Typography>
-                    <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>الاسم</Typography>
+                    <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                       {selectedRating.customer.name}
                     </Typography>
                   </Box>
                   <Box>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>البريد الإلكتروني</Typography>
-                    <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>البريد الإلكتروني</Typography>
+                    <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                       {selectedRating.customer.email}
                     </Typography>
                   </Box>
@@ -447,33 +447,33 @@ const DriverRatingsListPage: React.FC = () => {
 
               {/* Order Info */}
               <Box>
-                <Typography variant="caption" sx={{ color: '#9CA3AF', mb: 1, display: 'block' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A', mb: 1, display: 'block' }}>
                   معلومات الطلب
                 </Typography>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
                   <Box>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>رقم الطلب</Typography>
-                    <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>رقم الطلب</Typography>
+                    <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                       {selectedRating.order.orderNumber}
                     </Typography>
                   </Box>
                   <Box>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>المبلغ الإجمالي</Typography>
-                    <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>المبلغ الإجمالي</Typography>
+                    <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                       {selectedRating.order.total} ر.س
                     </Typography>
                   </Box>
                   {selectedRating.order.restaurantName && (
                     <Box>
-                      <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>المطعم</Typography>
-                      <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                      <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>المطعم</Typography>
+                      <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                         {selectedRating.order.restaurantName}
                       </Typography>
                     </Box>
                   )}
                   <Box>
-                    <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>تاريخ التقييم</Typography>
-                    <Typography sx={{ color: '#E5E7EB', mt: 0.5 }}>
+                    <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>تاريخ التقييم</Typography>
+                    <Typography sx={{ color: '#1A2E1A', mt: 0.5 }}>
                       {format(new Date(selectedRating.createdAt), 'dd MMM yyyy, HH:mm', {
                         locale: ar,
                       })}

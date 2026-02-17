@@ -204,7 +204,7 @@ const CouponsListPage: React.FC = () => {
     const map: Record<CouponStatus, { label: string; color: string }> = {
       active: { label: 'نشط', color: '#22C55E' },
       scheduled: { label: 'مجدول', color: '#38BDF8' },
-      expired: { label: 'منتهي', color: '#9CA3AF' },
+      expired: { label: 'منتهي', color: '#5A6A5A' },
       disabled: { label: 'معطل', color: '#EF4444' },
     };
     return map[status];
@@ -222,7 +222,7 @@ const CouponsListPage: React.FC = () => {
         accessorKey: 'code',
         header: 'كود الكوبون',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 600, fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 600, fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -238,8 +238,8 @@ const CouponsListPage: React.FC = () => {
               label={label}
               size="small"
               sx={{
-                bgcolor: typeValue === 'percentage' ? '#2563EB20' : '#F9731620',
-                color: typeValue === 'percentage' ? '#2563EB' : '#F97316',
+                bgcolor: typeValue === 'percentage' ? '#86B57320' : '#F9731620',
+                color: typeValue === 'percentage' ? '#86B573' : '#F97316',
                 fontWeight: 500,
                 fontSize: 12,
               }}
@@ -254,13 +254,13 @@ const CouponsListPage: React.FC = () => {
           const row = info.row.original as Coupon;
           if (row.type === 'percentage') {
             return (
-              <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+              <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
                 {row.value}% {row.maxDiscount ? `(بحد أقصى ${row.maxDiscount} ر.س)` : ''}
               </Typography>
             );
           }
           return (
-            <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
               {row.value} ر.س
             </Typography>
           );
@@ -272,7 +272,7 @@ const CouponsListPage: React.FC = () => {
         cell: (info) => {
           const value = info.getValue() as number | null;
           return (
-            <Typography sx={{ color: value ? '#E5E7EB' : '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: value ? '#1A2E1A' : '#5A6A5A', fontSize: 13 }}>
               {value ? `${value} ر.س` : 'بدون حد أدنى'}
             </Typography>
           );
@@ -284,7 +284,7 @@ const CouponsListPage: React.FC = () => {
         cell: (info) => {
           const row = info.row.original as Coupon;
           return (
-            <Typography sx={{ color: '#E5E7EB', fontSize: 13 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 13 }}>
               {row.usedCount}
               {row.usageLimit ? ` / ${row.usageLimit}` : ' (غير محدود)'}
             </Typography>
@@ -321,7 +321,7 @@ const CouponsListPage: React.FC = () => {
         accessorKey: 'startDate',
         header: 'تاريخ البداية',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {format(new Date(String(info.getValue())), 'dd MMM yyyy', { locale: ar })}
           </Typography>
         ),
@@ -332,7 +332,7 @@ const CouponsListPage: React.FC = () => {
         cell: (info) => {
           const value = info.getValue() as string | undefined;
           return (
-            <Typography sx={{ color: value ? '#9CA3AF' : '#9CA3AF80', fontSize: 13 }}>
+            <Typography sx={{ color: value ? '#5A6A5A' : '#5A6A5A80', fontSize: 13 }}>
               {value
                 ? format(new Date(String(value)), 'dd MMM yyyy', { locale: ar })
                 : 'بدون انتهاء'}
@@ -344,7 +344,7 @@ const CouponsListPage: React.FC = () => {
   }, [toggleStatusMutation]);
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -360,7 +360,7 @@ const CouponsListPage: React.FC = () => {
           <Typography variant="h5" fontWeight={700} mb={0.5}>
             إدارة الكوبونات
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
             إنشاء وإدارة أكواد الخصم في النظام
           </Typography>
         </Box>
@@ -384,7 +384,7 @@ const CouponsListPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>حالة الكوبون</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>حالة الكوبون</InputLabel>
           <Select
             value={statusFilter}
             onChange={(e) => {
@@ -393,10 +393,10 @@ const CouponsListPage: React.FC = () => {
             }}
             label="حالة الكوبون"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -408,7 +408,7 @@ const CouponsListPage: React.FC = () => {
         </FormControl>
 
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>نوع الكوبون</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>نوع الكوبون</InputLabel>
           <Select
             value={typeFilter}
             onChange={(e) => {
@@ -417,10 +417,10 @@ const CouponsListPage: React.FC = () => {
             }}
             label="نوع الكوبون"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -451,11 +451,11 @@ const CouponsListPage: React.FC = () => {
           sx={{
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#020617',
-              '& fieldset': { borderColor: '#1F2937' },
+              bgcolor: '#F5F9F3',
+              '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
-            input: { color: '#E5E7EB' },
+            input: { color: '#1A2E1A' },
           }}
         />
       </Box>
@@ -490,7 +490,7 @@ const CouponsListPage: React.FC = () => {
               gap: 2,
             }}
           >
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               إجمالي النتائج: {data?.pagination.total ?? coupons.length} | الصفحة{' '}
               {data?.pagination.page ?? 1} من {data?.pagination.totalPages ?? 1}
             </Typography>
@@ -529,14 +529,14 @@ const CouponsListPage: React.FC = () => {
         }}
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             minWidth: 520,
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>
           {editingCoupon ? 'تعديل الكوبون' : 'إضافة كوبون جديد'}
         </DialogTitle>
         <DialogContent sx={{ pt: 1.5 }}>
@@ -560,35 +560,35 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
             </Box>
             <Box>
               <FormControl size="small" fullWidth>
-                <InputLabel sx={{ color: '#9CA3AF' }}>نوع الكوبون</InputLabel>
+                <InputLabel sx={{ color: '#5A6A5A' }}>نوع الكوبون</InputLabel>
                 <Select
                   value={type}
                   onChange={(e) => setType(e.target.value as CouponType)}
                   label="نوع الكوبون"
                   sx={{
-                    color: '#E5E7EB',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                    color: '#1A2E1A',
+                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-                    '& .MuiSvgIcon-root': { color: '#9CA3AF' },
-                    bgcolor: '#020617',
+                    '& .MuiSvgIcon-root': { color: '#5A6A5A' },
+                    bgcolor: '#F5F9F3',
                   }}
                 >
                   <MenuItem value="percentage">نسبة مئوية</MenuItem>
@@ -606,18 +606,18 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
@@ -635,18 +635,18 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
@@ -663,18 +663,18 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
@@ -691,18 +691,18 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
@@ -718,18 +718,18 @@ const CouponsListPage: React.FC = () => {
                 InputLabelProps={{ shrink: true }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
@@ -745,35 +745,35 @@ const CouponsListPage: React.FC = () => {
                 InputLabelProps={{ shrink: true }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
             </Box>
             <Box>
               <FormControl size="small" fullWidth>
-                <InputLabel sx={{ color: '#9CA3AF' }}>حالة الكوبون</InputLabel>
+                <InputLabel sx={{ color: '#5A6A5A' }}>حالة الكوبون</InputLabel>
                 <Select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as CouponStatus)}
                   label="حالة الكوبون"
                   sx={{
-                    color: '#E5E7EB',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                    color: '#1A2E1A',
+                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-                    '& .MuiSvgIcon-root': { color: '#9CA3AF' },
-                    bgcolor: '#020617',
+                    '& .MuiSvgIcon-root': { color: '#5A6A5A' },
+                    bgcolor: '#F5F9F3',
                   }}
                 >
                   <MenuItem value="active">نشط</MenuItem>
@@ -794,31 +794,31 @@ const CouponsListPage: React.FC = () => {
                 minRows={2}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
                   '& .MuiInputBase-input': {
-                    color: '#E5E7EB',
+                    color: '#1A2E1A',
                   },
                   '& .MuiInputLabel-root': {
-                    color: '#9CA3AF',
+                    color: '#5A6A5A',
                   },
                   '& .MuiInputLabel-root.Mui-focused': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
             </Box>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 2.5, borderTop: '1px solid #1F2937' }}>
+        <DialogActions sx={{ p: 2.5, borderTop: '1px solid #B1C0B1' }}>
           <Button
             onClick={() => {
               setDialogOpen(false);
               resetForm();
             }}
-            sx={{ color: '#9CA3AF' }}
+            sx={{ color: '#5A6A5A' }}
           >
             إلغاء
           </Button>

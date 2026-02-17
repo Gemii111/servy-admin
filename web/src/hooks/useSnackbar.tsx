@@ -43,7 +43,7 @@ export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }
                 ? '#EF4444'
                 : severity === 'warning'
                 ? '#F59E0B'
-                : '#2563EB',
+                : '#86B573',
             color: '#FFFFFF',
             '& .MuiAlert-icon': {
               color: '#FFFFFF',

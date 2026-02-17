@@ -44,7 +44,7 @@ const Header: React.FC = () => {
           variant="h6"
           fontWeight="bold"
           sx={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+            background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -69,7 +69,7 @@ const Header: React.FC = () => {
                 mx: 1,
                 mb: 0.5,
                 '&:hover': {
-                  bgcolor: 'rgba(102,126,234,0.1)',
+                  bgcolor: 'rgba(134,181,115,0.15)',
                 },
               }}
             >
@@ -87,10 +87,10 @@ const Header: React.FC = () => {
               mx: 1,
               mt: 1,
               borderRadius: 2,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
               color: 'white',
               '&:hover': {
-                background: 'linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%)',
+                background: 'linear-gradient(135deg, #6A9A5A 0%, #5A8A4A 100%)',
               },
             }}
           >
@@ -120,7 +120,7 @@ const Header: React.FC = () => {
             to="/"
             sx={{
               fontWeight: 900,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+              background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               textDecoration: 'none',
@@ -143,8 +143,8 @@ const Header: React.FC = () => {
                   borderRadius: 2,
                   color: trigger ? 'text.primary' : 'white',
                   '&:hover': {
-                    bgcolor: 'rgba(102,126,234,0.1)',
-                    color: '#667eea',
+                    bgcolor: 'rgba(134,181,115,0.2)',
+                    color: trigger ? '#86B573' : 'white',
                   },
                   transition: 'all 0.2s ease',
                 }}
@@ -159,13 +159,13 @@ const Header: React.FC = () => {
                 borderRadius: 3,
                 px: 3,
                 py: 1,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                boxShadow: '0 4px 16px rgba(102,126,234,0.4)',
+                background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
+                boxShadow: '0 4px 16px rgba(106,154,90,0.35)',
                 fontWeight: 600,
                 color: 'white',
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%)',
-                  boxShadow: '0 6px 24px rgba(102,126,234,0.5)',
+                  background: 'linear-gradient(135deg, #6A9A5A 0%, #5A8A4A 100%)',
+                  boxShadow: '0 6px 24px rgba(106,154,90,0.4)',
                   transform: 'translateY(-2px)',
                 },
                 transition: 'all 0.3s ease',

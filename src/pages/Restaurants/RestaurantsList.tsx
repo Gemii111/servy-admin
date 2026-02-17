@@ -95,7 +95,7 @@ const RestaurantsListPage: React.FC = () => {
         accessorKey: 'id',
         header: 'ID',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {String(info.getValue()).slice(0, 8)}...
           </Typography>
         ),
@@ -104,7 +104,7 @@ const RestaurantsListPage: React.FC = () => {
         accessorKey: 'name',
         header: 'اسم المطعم',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 500 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -113,7 +113,7 @@ const RestaurantsListPage: React.FC = () => {
         accessorKey: 'ownerEmail',
         header: 'البريد الإلكتروني',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -126,8 +126,8 @@ const RestaurantsListPage: React.FC = () => {
             label={String(info.getValue())}
             size="small"
             sx={{
-              bgcolor: '#2563EB20',
-              color: '#2563EB',
+              bgcolor: '#86B57320',
+              color: '#86B573',
               fontWeight: 500,
               fontSize: 12,
             }}
@@ -144,7 +144,7 @@ const RestaurantsListPage: React.FC = () => {
             pending: { label: 'قيد المراجعة', color: '#F59E0B' },
             suspended: { label: 'معطل', color: '#EF4444' },
           };
-          const config = labels[status] || { label: status, color: '#9CA3AF' };
+          const config = labels[status] || { label: status, color: '#5A6A5A' };
           return (
             <Chip
               label={config.label}
@@ -163,7 +163,7 @@ const RestaurantsListPage: React.FC = () => {
         accessorKey: 'totalOrders',
         header: 'عدد الطلبات',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -172,7 +172,7 @@ const RestaurantsListPage: React.FC = () => {
         accessorKey: 'totalRevenue',
         header: 'إجمالي الإيرادات',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())} ر.س
           </Typography>
         ),
@@ -181,7 +181,7 @@ const RestaurantsListPage: React.FC = () => {
         accessorKey: 'rating',
         header: 'التقييم',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             ⭐ {String(info.getValue())}
           </Typography>
         ),
@@ -206,7 +206,7 @@ const RestaurantsListPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -229,7 +229,7 @@ const RestaurantsListPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             عرض وإدارة جميع المطاعم في النظام
           </Typography>
@@ -277,7 +277,7 @@ const RestaurantsListPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>الحالة</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>الحالة</InputLabel>
           <Select
             value={statusFilter}
             onChange={(e) => {
@@ -286,10 +286,10 @@ const RestaurantsListPage: React.FC = () => {
             }}
             label="الحالة"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -321,11 +321,11 @@ const RestaurantsListPage: React.FC = () => {
           sx={{
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#020617',
-              '& fieldset': { borderColor: '#1F2937' },
+              bgcolor: '#F5F9F3',
+              '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
-            input: { color: '#E5E7EB' },
+            input: { color: '#1A2E1A' },
           }}
         />
       </Box>
@@ -359,7 +359,7 @@ const RestaurantsListPage: React.FC = () => {
               gap: 2,
             }}
           >
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               إجمالي النتائج: {data.pagination.total} | الصفحة {data.pagination.page} من{' '}
               {data.pagination.totalPages}
             </Typography>
@@ -402,14 +402,14 @@ const RestaurantsListPage: React.FC = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
             width: { xs: 'calc(100% - 16px)', sm: 'auto' },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>إضافة مطعم جديد</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>إضافة مطعم جديد</DialogTitle>
         <DialogContent sx={{ pt: 1.5 }}>
           <Box
             sx={{
@@ -431,12 +431,12 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -449,12 +449,12 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -468,12 +468,12 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -486,12 +486,12 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -504,12 +504,12 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -522,12 +522,12 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -542,18 +542,18 @@ const RestaurantsListPage: React.FC = () => {
                 minRows={2}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  textarea: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  textarea: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 2, borderTop: '1px solid #1F2937' }}>
+        <DialogActions sx={{ p: 2, borderTop: '1px solid #B1C0B1' }}>
           <Button
             onClick={() => {
               setDialogOpen(false);
@@ -565,7 +565,7 @@ const RestaurantsListPage: React.FC = () => {
               setAddress('');
               setDescription('');
             }}
-            sx={{ color: '#9CA3AF' }}
+            sx={{ color: '#5A6A5A' }}
           >
             إلغاء
           </Button>

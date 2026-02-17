@@ -138,7 +138,7 @@ const SendNotificationPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -160,7 +160,7 @@ const SendNotificationPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             أرسل إشعارات للمستخدمين (عملاء، سائقين، مطاعم)
           </Typography>
@@ -169,9 +169,9 @@ const SendNotificationPage: React.FC = () => {
 
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: { xs: 2, sm: 3 },
         }}
       >
@@ -185,11 +185,11 @@ const SendNotificationPage: React.FC = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              input: { color: '#E5E7EB' },
-              '& .MuiInputLabel-root': { color: '#9CA3AF' },
+              input: { color: '#1A2E1A' },
+              '& .MuiInputLabel-root': { color: '#5A6A5A' },
             }}
           />
 
@@ -204,23 +204,23 @@ const SendNotificationPage: React.FC = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 bgcolor: '#020617',
-                '& fieldset': { borderColor: '#1F2937' },
+                '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              textarea: { color: '#E5E7EB' },
-              '& .MuiInputLabel-root': { color: '#9CA3AF' },
+              textarea: { color: '#1A2E1A' },
+              '& .MuiInputLabel-root': { color: '#5A6A5A' },
             }}
           />
 
           <FormControl fullWidth>
-            <InputLabel sx={{ color: '#9CA3AF' }}>نوع الإشعار</InputLabel>
+            <InputLabel sx={{ color: '#5A6A5A' }}>نوع الإشعار</InputLabel>
             <Select
               value={notificationType}
               onChange={(e) => setNotificationType(e.target.value as NotificationType)}
               sx={{
                 bgcolor: '#020617',
-                color: '#E5E7EB',
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                color: '#1A2E1A',
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
               }}
             >
@@ -233,14 +233,14 @@ const SendNotificationPage: React.FC = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <InputLabel sx={{ color: '#9CA3AF' }}>الأولوية</InputLabel>
+            <InputLabel sx={{ color: '#5A6A5A' }}>الأولوية</InputLabel>
             <Select
               value={priority}
               onChange={(e) => setPriority(e.target.value as NotificationPriority)}
               sx={{
                 bgcolor: '#020617',
-                color: '#E5E7EB',
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                color: '#1A2E1A',
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
               }}
             >
@@ -251,11 +251,11 @@ const SendNotificationPage: React.FC = () => {
           </FormControl>
 
           <FormControl fullWidth>
-            <FormLabel sx={{ color: '#9CA3AF', mb: 1 }}>الجمهور المستهدف</FormLabel>
+            <FormLabel sx={{ color: '#5A6A5A', mb: 1 }}>الجمهور المستهدف</FormLabel>
             <RadioGroup
               value={targetAudience}
               onChange={(e) => setTargetAudience(e.target.value as TargetAudience)}
-              sx={{ color: '#E5E7EB' }}
+              sx={{ color: '#1A2E1A' }}
             >
               <FormControlLabel value="all" control={<Radio />} label="جميع المستخدمين" />
               <FormControlLabel value="customers" control={<Radio />} label="العملاء فقط" />
@@ -281,11 +281,11 @@ const SendNotificationPage: React.FC = () => {
                   size="small"
                   onClick={() => setUserSelectorOpen(true)}
                   sx={{
-                    borderColor: '#2563EB',
-                    color: '#2563EB',
+                    borderColor: '#86B573',
+                    color: '#86B573',
                     '&:hover': {
                       borderColor: '#3B82F6',
-                      bgcolor: '#2563EB10',
+                      bgcolor: '#86B57310',
                     },
                   }}
                 >
@@ -313,7 +313,7 @@ const SendNotificationPage: React.FC = () => {
                     p: 1.5,
                     bgcolor: '#020617',
                     borderRadius: 1,
-                    border: '1px solid #1F2937',
+                    border: '1px solid #B1C0B1',
                     maxHeight: 150,
                     overflowY: 'auto',
                   }}
@@ -327,10 +327,10 @@ const SendNotificationPage: React.FC = () => {
                         onDelete={() => handleToggleUser(user.id)}
                         size="small"
                         sx={{
-                          bgcolor: '#2563EB20',
-                          color: '#2563EB',
+                          bgcolor: '#86B57320',
+                          color: '#86B573',
                           '& .MuiChip-deleteIcon': {
-                            color: '#2563EB',
+                            color: '#86B573',
                           },
                         }}
                       />
@@ -341,11 +341,11 @@ const SendNotificationPage: React.FC = () => {
           )}
 
           <FormControl fullWidth>
-            <FormLabel sx={{ color: '#9CA3AF', mb: 1 }}>وضع الإرسال</FormLabel>
+            <FormLabel sx={{ color: '#5A6A5A', mb: 1 }}>وضع الإرسال</FormLabel>
             <RadioGroup
               value={sendMode}
               onChange={(e) => setSendMode(e.target.value as 'now' | 'schedule')}
-              sx={{ color: '#E5E7EB' }}
+              sx={{ color: '#1A2E1A' }}
             >
               <FormControlLabel value="now" control={<Radio />} label="إرسال فوري" />
               <FormControlLabel
@@ -379,11 +379,11 @@ const SendNotificationPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },
-                input: { color: '#E5E7EB' },
-                '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                input: { color: '#1A2E1A' },
+                '& .MuiInputLabel-root': { color: '#5A6A5A' },
               }}
             />
           )}
@@ -426,13 +426,13 @@ const SendNotificationPage: React.FC = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>اختر المستخدمين</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>اختر المستخدمين</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
             <Box sx={{ display: 'flex', gap: 1.5 }}>
@@ -445,21 +445,21 @@ const SendNotificationPage: React.FC = () => {
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
+                  input: { color: '#1A2E1A' },
                 }}
               />
               <FormControl size="small" sx={{ minWidth: 150 }}>
-                <InputLabel sx={{ color: '#9CA3AF' }}>النوع</InputLabel>
+                <InputLabel sx={{ color: '#5A6A5A' }}>النوع</InputLabel>
                 <Select
                   value={userTypeFilter}
                   onChange={(e) => setUserTypeFilter(e.target.value)}
                   sx={{
                     bgcolor: '#020617',
-                    color: '#E5E7EB',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                    color: '#1A2E1A',
+                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                   }}
                   label="النوع"
                 >
@@ -477,10 +477,10 @@ const SendNotificationPage: React.FC = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 pb: 1,
-                borderBottom: '1px solid #1F2937',
+                borderBottom: '1px solid #B1C0B1',
               }}
             >
-              <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+              <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
                 تم اختيار {selectedUsers.length} مستخدم
               </Typography>
               <Button size="small" onClick={handleSelectAll}>
@@ -502,7 +502,7 @@ const SendNotificationPage: React.FC = () => {
                   overflowY: 'auto',
                   bgcolor: '#020617',
                   borderRadius: 1,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                 }}
               >
                 {usersData?.users && usersData.users.length > 0 ? (
@@ -521,21 +521,21 @@ const SendNotificationPage: React.FC = () => {
                             checked={selectedUsers.includes(user.id)}
                             edge="start"
                             sx={{
-                              color: '#2563EB',
+                              color: '#86B573',
                               '&.Mui-checked': {
-                                color: '#2563EB',
+                                color: '#86B573',
                               },
                             }}
                           />
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+                            <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
                               {user.name}
                             </Typography>
                           }
                           secondary={
-                            <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+                            <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                               {user.email} •{' '}
                               {user.userType === 'customer'
                                 ? 'عميل'
@@ -550,7 +550,7 @@ const SendNotificationPage: React.FC = () => {
                   ))
                 ) : (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
-                    <Typography sx={{ color: '#9CA3AF' }}>لا توجد نتائج</Typography>
+                    <Typography sx={{ color: '#5A6A5A' }}>لا توجد نتائج</Typography>
                   </Box>
                 )}
               </List>

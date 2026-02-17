@@ -47,7 +47,7 @@ const FAQPage: React.FC = () => {
             gutterBottom
             sx={{
               mb: 4,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+              background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 50%, #9BCB88 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',

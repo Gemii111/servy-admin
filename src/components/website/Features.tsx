@@ -12,22 +12,22 @@ const Features: React.FC = () => {
       title: 'للعملاء',
       icon: <RestaurantIcon sx={{ fontSize: 50 }} />,
       features: websiteContent.home.features.customers,
-      color: '#667eea',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      color: '#86B573',
+      gradient: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
     },
     {
       title: 'للتجار',
       icon: <StoreIcon sx={{ fontSize: 50 }} />,
       features: websiteContent.home.features.vendors,
-      color: '#f093fb',
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      color: '#9BCB88',
+      gradient: 'linear-gradient(135deg, #9BCB88 0%, #86B573 100%)',
     },
     {
       title: 'للسائقين',
       icon: <LocalShippingIcon sx={{ fontSize: 50 }} />,
       features: websiteContent.home.features.drivers,
-      color: '#4facfe',
-      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      color: '#6A9A5A',
+      gradient: 'linear-gradient(135deg, #6A9A5A 0%, #5A8A4A 100%)',
     },
   ];
 
@@ -57,7 +57,7 @@ const Features: React.FC = () => {
           sx={{
             mb: 8,
             fontSize: { xs: '2rem', md: '3rem' },
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+            background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 50%, #9BCB88 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',

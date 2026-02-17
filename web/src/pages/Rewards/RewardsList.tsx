@@ -313,7 +313,7 @@ const RewardsListPage: React.FC = () => {
         accessorKey: 'name',
         header: 'اسم الجائزة',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 500, fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -326,8 +326,8 @@ const RewardsListPage: React.FC = () => {
             label={getRewardTypeLabel(info.getValue() as RewardType)}
             size="small"
             sx={{
-              bgcolor: '#2563EB20',
-              color: '#2563EB',
+              bgcolor: '#86B57320',
+              color: '#86B573',
               fontWeight: 500,
               fontSize: 12,
             }}
@@ -341,7 +341,7 @@ const RewardsListPage: React.FC = () => {
           const value = info.getValue() as number;
           const type = (info.row.original as Reward).rewardType;
           return (
-            <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+            <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
               {type === 'discount_coupon' ? `${value}%` : `${value} ر.س`}
             </Typography>
           );
@@ -353,7 +353,7 @@ const RewardsListPage: React.FC = () => {
         cell: (info) => {
           const value = info.getValue();
           return (
-            <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+            <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
               {value ? `${value} يوم` : 'غير محدد'}
             </Typography>
           );
@@ -363,7 +363,7 @@ const RewardsListPage: React.FC = () => {
         accessorKey: 'usageLimit',
         header: 'حد الاستخدام',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {String(info.getValue())} مرة
           </Typography>
         ),
@@ -427,7 +427,7 @@ const RewardsListPage: React.FC = () => {
   }
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -449,7 +449,7 @@ const RewardsListPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             إنشاء وإدارة الجوائز والهدايا للمستخدمين
           </Typography>
@@ -461,11 +461,11 @@ const RewardsListPage: React.FC = () => {
             onClick={() => navigate('/rewards/statistics')}
             size="small"
             sx={{
-              borderColor: '#2563EB',
-              color: '#2563EB',
+              borderColor: '#86B573',
+              color: '#86B573',
               '&:hover': {
                 borderColor: '#3B82F6',
-                bgcolor: '#2563EB10',
+                bgcolor: '#86B57310',
               },
             }}
           >
@@ -489,14 +489,14 @@ const RewardsListPage: React.FC = () => {
 
       <Box sx={{ mb: 2 }}>
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>نوع الجائزة</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>نوع الجائزة</InputLabel>
           <Select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
             sx={{
               bgcolor: '#020617',
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}
             label="نوع الجائزة"
           >
@@ -539,13 +539,13 @@ const RewardsListPage: React.FC = () => {
         maxWidth="sm"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>
           {editingReward ? 'تعديل الجائزة' : 'إضافة جائزة جديدة'}
         </DialogTitle>
         <DialogContent sx={{ pt: 1.5 }}>
@@ -559,10 +559,10 @@ const RewardsListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                 },
-                input: { color: '#E5E7EB' },
-                '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                input: { color: '#1A2E1A' },
+                '& .MuiInputLabel-root': { color: '#5A6A5A' },
               }}
             />
 
@@ -576,22 +576,22 @@ const RewardsListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                 },
-                textarea: { color: '#E5E7EB' },
-                '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                textarea: { color: '#1A2E1A' },
+                '& .MuiInputLabel-root': { color: '#5A6A5A' },
               }}
             />
 
             <FormControl fullWidth>
-              <InputLabel sx={{ color: '#9CA3AF' }}>نوع الجائزة</InputLabel>
+              <InputLabel sx={{ color: '#5A6A5A' }}>نوع الجائزة</InputLabel>
               <Select
                 value={rewardType}
                 onChange={(e) => setRewardType(e.target.value as RewardType)}
                 sx={{
                   bgcolor: '#020617',
-                  color: '#E5E7EB',
-                  '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                  color: '#1A2E1A',
+                  '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 }}
               >
                 <MenuItem value="discount_coupon">كوبون خصم</MenuItem>
@@ -618,10 +618,10 @@ const RewardsListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                 },
-                input: { color: '#E5E7EB' },
-                '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                input: { color: '#1A2E1A' },
+                '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 '& .MuiFormHelperText-root': { color: '#6B7280' },
               }}
             />
@@ -636,10 +636,10 @@ const RewardsListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                 },
-                input: { color: '#E5E7EB' },
-                '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                input: { color: '#1A2E1A' },
+                '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 '& .MuiFormHelperText-root': { color: '#6B7280' },
               }}
             />
@@ -654,10 +654,10 @@ const RewardsListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                 },
-                input: { color: '#E5E7EB' },
-                '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                input: { color: '#1A2E1A' },
+                '& .MuiInputLabel-root': { color: '#5A6A5A' },
               }}
             />
           </Box>
@@ -699,19 +699,19 @@ const RewardsListPage: React.FC = () => {
         maxWidth="md"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>
           منح الجائزة: {selectedReward?.name}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
             <FormControl fullWidth>
-              <FormLabel sx={{ color: '#9CA3AF', mb: 1 }}>طريقة المنح</FormLabel>
+              <FormLabel sx={{ color: '#5A6A5A', mb: 1 }}>طريقة المنح</FormLabel>
               <RadioGroup
                 value={assignMode}
                 onChange={(e) => {
@@ -720,7 +720,7 @@ const RewardsListPage: React.FC = () => {
                     setSelectedUsers([]);
                   }
                 }}
-                sx={{ color: '#E5E7EB' }}
+                sx={{ color: '#1A2E1A' }}
               >
                 <FormControlLabel value="specific" control={<Radio />} label="مستخدمون محددون" />
                 <FormControlLabel value="all" control={<Radio />} label="جميع المستخدمين" />
@@ -742,21 +742,21 @@ const RewardsListPage: React.FC = () => {
                     sx={{
                       '& .MuiOutlinedInput-root': {
                         bgcolor: '#020617',
-                        '& fieldset': { borderColor: '#1F2937' },
+                        '& fieldset': { borderColor: '#B1C0B1' },
                         '&:hover fieldset': { borderColor: '#374151' },
                       },
-                      input: { color: '#E5E7EB' },
+                      input: { color: '#1A2E1A' },
                     }}
                   />
                   <FormControl size="small" sx={{ minWidth: 150 }}>
-                    <InputLabel sx={{ color: '#9CA3AF' }}>النوع</InputLabel>
+                    <InputLabel sx={{ color: '#5A6A5A' }}>النوع</InputLabel>
                     <Select
                       value={userTypeFilter}
                       onChange={(e) => setUserTypeFilter(e.target.value)}
                       sx={{
                         bgcolor: '#020617',
-                        color: '#E5E7EB',
-                        '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                        color: '#1A2E1A',
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                       }}
                       label="النوع"
                     >
@@ -774,10 +774,10 @@ const RewardsListPage: React.FC = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 pb: 1,
-                borderBottom: '1px solid #1F2937',
+                borderBottom: '1px solid #B1C0B1',
               }}
             >
-              <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+              <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
                 تم اختيار {selectedUsers.length} مستخدم
               </Typography>
               <Button size="small" onClick={handleSelectAll}>
@@ -799,7 +799,7 @@ const RewardsListPage: React.FC = () => {
                   overflowY: 'auto',
                   bgcolor: '#020617',
                   borderRadius: 1,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                 }}
               >
                 {usersData?.users && usersData.users.length > 0 ? (
@@ -818,21 +818,21 @@ const RewardsListPage: React.FC = () => {
                             checked={selectedUsers.includes(user.id)}
                             edge="start"
                             sx={{
-                              color: '#2563EB',
+                              color: '#86B573',
                               '&.Mui-checked': {
-                                color: '#2563EB',
+                                color: '#86B573',
                               },
                             }}
                           />
                         </ListItemIcon>
                         <ListItemText
                           primary={
-                            <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+                            <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
                               {user.name}
                             </Typography>
                           }
                           secondary={
-                            <Typography sx={{ color: '#9CA3AF', fontSize: 12 }}>
+                            <Typography sx={{ color: '#5A6A5A', fontSize: 12 }}>
                               {user.email} •{' '}
                               {user.userType === 'customer'
                                 ? 'عميل'
@@ -847,7 +847,7 @@ const RewardsListPage: React.FC = () => {
                   ))
                 ) : (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
-                    <Typography sx={{ color: '#9CA3AF' }}>لا توجد نتائج</Typography>
+                    <Typography sx={{ color: '#5A6A5A' }}>لا توجد نتائج</Typography>
                   </Box>
                 )}
               </List>
@@ -861,13 +861,13 @@ const RewardsListPage: React.FC = () => {
                   p: 2,
                   bgcolor: '#020617',
                   borderRadius: 1,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                 }}
               >
-                <Typography sx={{ color: '#E5E7EB', fontSize: 14, fontWeight: 500, mb: 0.5 }}>
+                <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500, mb: 0.5 }}>
                   سيتم منح الجائزة لـ:
                 </Typography>
-                <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+                <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
                   {assignMode === 'all' && 'جميع المستخدمين في النظام'}
                   {assignMode === 'customers' && 'جميع العملاء المسجلين'}
                   {assignMode === 'drivers' && 'جميع السائقين المسجلين'}
@@ -885,7 +885,7 @@ const RewardsListPage: React.FC = () => {
                   p: 1.5,
                   bgcolor: '#020617',
                   borderRadius: 1,
-                  border: '1px solid #1F2937',
+                  border: '1px solid #B1C0B1',
                   maxHeight: 120,
                   overflowY: 'auto',
                 }}
@@ -899,10 +899,10 @@ const RewardsListPage: React.FC = () => {
                       onDelete={() => handleToggleUser(user.id)}
                       size="small"
                       sx={{
-                        bgcolor: '#2563EB20',
-                        color: '#2563EB',
+                        bgcolor: '#86B57320',
+                        color: '#86B573',
                         '& .MuiChip-deleteIcon': {
-                          color: '#2563EB',
+                          color: '#86B573',
                         },
                       }}
                     />
@@ -920,10 +920,10 @@ const RewardsListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                 },
-                textarea: { color: '#E5E7EB' },
-                '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                textarea: { color: '#1A2E1A' },
+                '& .MuiInputLabel-root': { color: '#5A6A5A' },
               }}
             />
 
@@ -932,13 +932,13 @@ const RewardsListPage: React.FC = () => {
                 checked={sendNotification}
                 onChange={(e) => setSendNotification(e.target.checked)}
                 sx={{
-                  color: '#2563EB',
+                  color: '#86B573',
                   '&.Mui-checked': {
-                    color: '#2563EB',
+                    color: '#86B573',
                   },
                 }}
               />
-              <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+              <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
                 إرسال إشعار للمستخدمين عند منح الجائزة
               </Typography>
             </Box>

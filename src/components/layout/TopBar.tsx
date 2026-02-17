@@ -43,8 +43,9 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
       elevation={0}
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        bgcolor: '#111827', // CardBackground / TopBar background
-        borderBottom: '1px solid #1F2937',
+        bgcolor: '#FFFFFF',
+        borderBottom: '1px solid #B1C0B1',
+        color: '#1A2E1A',
       }}
     >
       <Toolbar
@@ -84,24 +85,24 @@ const TopBar: React.FC<TopBarProps> = ({ onMenuClick }) => {
               maxWidth: { xs: 200, sm: 280, md: 360 },
               flex: { xs: 1, sm: 'none' },
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#F5F9F3',
                 borderRadius: 999,
                 fontSize: { xs: 12, sm: 13 },
-                '& fieldset': { borderColor: '#1F2937' },
+                '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
-              input: { color: '#E5E7EB', py: { xs: 1, sm: 1.25 } },
+              input: { color: '#1A2E1A', py: { xs: 1, sm: 1.25 } },
             }}
           />
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <IconButton sx={{ color: '#9CA3AF' }}>
+          <IconButton sx={{ color: '#5A6A5A' }}>
             <NotificationsNoneIcon />
           </IconButton>
 
           <IconButton onClick={handleOpen} size="small">
-            <Avatar sx={{ width: 32, height: 32, bgcolor: '#2563EB' }}>
+            <Avatar sx={{ width: 32, height: 32, bgcolor: '#86B573' }}>
               {admin?.name?.charAt(0) ?? 'أ'}
             </Avatar>
           </IconButton>

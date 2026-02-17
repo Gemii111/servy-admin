@@ -19,8 +19,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => {
       sx={{
         height: { xs: 100, sm: 120 },
         borderRadius: 2,
-        bgcolor: '#111827', // CardBackground
-        border: '1px solid #1F2937',
+        bgcolor: '#FFFFFF', // CardBackground
+        border: '1px solid #B1C0B1',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -33,7 +33,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => {
         <Typography
           variant="caption"
           sx={{
-            color: '#9CA3AF',
+            color: '#5A6A5A',
             letterSpacing: 0.3,
             fontSize: { xs: 11, sm: 12 },
           }}
@@ -43,7 +43,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => {
         <Typography
           variant="h6"
           sx={{
-            color: '#E5E7EB',
+            color: '#1A2E1A',
             fontWeight: 700,
             mt: 0.75,
             fontSize: { xs: 16, sm: 18, md: 20 },
@@ -76,7 +76,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#E5E7EB',
+            color: '#1A2E1A',
             '& svg': {
               fontSize: { xs: 20, sm: 24 },
             },

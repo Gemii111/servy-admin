@@ -50,7 +50,7 @@ const ContactPage: React.FC = () => {
             gutterBottom
             sx={{
               mb: 6,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+              background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 50%, #9BCB88 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -77,7 +77,7 @@ const ContactPage: React.FC = () => {
 
                 <Box sx={{ mb: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <EmailIcon sx={{ color: '#667eea' }} />
+                    <EmailIcon sx={{ color: '#86B573' }} />
                     <Box>
                       <Typography variant="body2" sx={{ color: '#6B7280' }}>
                         البريد الإلكتروني
@@ -89,7 +89,7 @@ const ContactPage: React.FC = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <PhoneIcon sx={{ color: '#667eea' }} />
+                    <PhoneIcon sx={{ color: '#86B573' }} />
                     <Box>
                       <Typography variant="body2" sx={{ color: '#6B7280' }}>
                         الهاتف
@@ -101,7 +101,7 @@ const ContactPage: React.FC = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <WhatsAppIcon sx={{ color: '#667eea' }} />
+                    <WhatsAppIcon sx={{ color: '#86B573' }} />
                     <Box>
                       <Typography variant="body2" sx={{ color: '#6B7280' }}>
                         واتساب
@@ -113,7 +113,7 @@ const ContactPage: React.FC = () => {
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <AccessTimeIcon sx={{ color: '#667eea' }} />
+                    <AccessTimeIcon sx={{ color: '#86B573' }} />
                     <Box>
                       <Typography variant="body2" sx={{ color: '#6B7280' }}>
                         ساعات العمل
@@ -197,7 +197,7 @@ const ContactPage: React.FC = () => {
                     size="large"
                     sx={{
                       mt: 3,
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
                       boxShadow: '0 4px 16px rgba(102,126,234,0.4)',
                       fontWeight: 600,
                       py: 1.5,

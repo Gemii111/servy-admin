@@ -15,16 +15,16 @@ interface OrdersByStatusChartProps {
   isLoading?: boolean;
 }
 
-const COLORS = ['#2563EB', '#22C55E', '#F59E0B', '#EF4444', '#38BDF8'];
+const COLORS = ['#86B573', '#22C55E', '#F59E0B', '#EF4444', '#38BDF8'];
 
 const OrdersByStatusChart: React.FC<OrdersByStatusChartProps> = ({ data, isLoading }) => {
   if (isLoading) {
     return (
       <Paper
         sx={{
-          bgcolor: '#111827',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
-          border: '1px solid #1F2937',
+          border: '1px solid #B1C0B1',
           p: 3,
           height: 320,
           display: 'flex',
@@ -32,7 +32,7 @@ const OrdersByStatusChart: React.FC<OrdersByStatusChartProps> = ({ data, isLoadi
           justifyContent: 'center',
         }}
       >
-        <Typography sx={{ color: '#9CA3AF' }}>جاري التحميل...</Typography>
+        <Typography sx={{ color: '#5A6A5A' }}>جاري التحميل...</Typography>
       </Paper>
     );
   }
@@ -40,13 +40,13 @@ const OrdersByStatusChart: React.FC<OrdersByStatusChartProps> = ({ data, isLoadi
   return (
     <Paper
       sx={{
-        bgcolor: '#111827',
+        bgcolor: '#FFFFFF',
         borderRadius: 2,
-        border: '1px solid #1F2937',
+        border: '1px solid #B1C0B1',
         p: 3,
       }}
     >
-      <Typography variant="h6" sx={{ color: '#E5E7EB', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
+      <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
         الطلبات حسب الحالة
       </Typography>
       <Box sx={{ width: '100%', height: 300 }}>
@@ -73,16 +73,16 @@ const OrdersByStatusChart: React.FC<OrdersByStatusChartProps> = ({ data, isLoadi
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: '#111827',
-                border: '1px solid #1F2937',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #B1C0B1',
                 borderRadius: 8,
-                color: '#E5E7EB',
+                color: '#1A2E1A',
               }}
             />
             <Legend
-              wrapperStyle={{ color: '#9CA3AF', fontSize: 12 }}
+              wrapperStyle={{ color: '#5A6A5A', fontSize: 12 }}
               iconType="circle"
-              formatter={(value) => <span style={{ color: '#E5E7EB' }}>{value}</span>}
+              formatter={(value) => <span style={{ color: '#1A2E1A' }}>{value}</span>}
             />
           </PieChart>
         </ResponsiveContainer>

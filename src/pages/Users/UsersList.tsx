@@ -96,7 +96,7 @@ const UsersListPage: React.FC = () => {
         accessorKey: 'id',
         header: 'ID',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {String(info.getValue()).slice(0, 8)}...
           </Typography>
         ),
@@ -105,7 +105,7 @@ const UsersListPage: React.FC = () => {
         accessorKey: 'name',
         header: 'الاسم',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 500 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -114,7 +114,7 @@ const UsersListPage: React.FC = () => {
         accessorKey: 'email',
         header: 'البريد الإلكتروني',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -123,7 +123,7 @@ const UsersListPage: React.FC = () => {
         accessorKey: 'phone',
         header: 'الهاتف',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 14 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -134,11 +134,11 @@ const UsersListPage: React.FC = () => {
         cell: (info) => {
           const type = String(info.getValue());
           const labels: Record<string, { label: string; color: string }> = {
-            customer: { label: 'عميل', color: '#2563EB' },
+            customer: { label: 'عميل', color: '#86B573' },
             driver: { label: 'سائق', color: '#22C55E' },
             restaurant: { label: 'مطعم', color: '#F59E0B' },
           };
-          const config = labels[type] || { label: type, color: '#9CA3AF' };
+          const config = labels[type] || { label: type, color: '#5A6A5A' };
           return (
             <Chip
               label={config.label}
@@ -157,7 +157,7 @@ const UsersListPage: React.FC = () => {
         accessorKey: 'totalOrders',
         header: 'عدد الطلبات',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -166,7 +166,7 @@ const UsersListPage: React.FC = () => {
         accessorKey: 'totalSpent',
         header: 'إجمالي الإنفاق',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())} ر.س
           </Typography>
         ),
@@ -209,7 +209,7 @@ const UsersListPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -232,7 +232,7 @@ const UsersListPage: React.FC = () => {
           </Typography>
           <Typography
             variant="body2"
-            sx={{ color: '#9CA3AF', fontSize: { xs: 12, sm: 14 } }}
+            sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
             عرض وإدارة جميع المستخدمين في النظام
           </Typography>
@@ -259,7 +259,7 @@ const UsersListPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>نوع المستخدم</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>نوع المستخدم</InputLabel>
           <Select
             value={userTypeFilter}
             onChange={(e) => {
@@ -268,10 +268,10 @@ const UsersListPage: React.FC = () => {
             }}
             label="نوع المستخدم"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -282,7 +282,7 @@ const UsersListPage: React.FC = () => {
         </FormControl>
 
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>الحالة</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>الحالة</InputLabel>
           <Select
             value={statusFilter}
             onChange={(e) => {
@@ -291,10 +291,10 @@ const UsersListPage: React.FC = () => {
             }}
             label="الحالة"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -338,14 +338,14 @@ const UsersListPage: React.FC = () => {
         maxWidth="sm"
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
-            border: '1px solid #1F2937',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #B1C0B1',
             m: { xs: 1, sm: 2 },
             width: { xs: 'calc(100% - 16px)', sm: 'auto' },
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>إضافة مستخدم جديد</DialogTitle>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>إضافة مستخدم جديد</DialogTitle>
         <DialogContent sx={{ pt: 1.5 }}>
           <Box
             sx={{
@@ -367,12 +367,12 @@ const UsersListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -386,12 +386,12 @@ const UsersListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
@@ -404,28 +404,28 @@ const UsersListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
-                    '& fieldset': { borderColor: '#1F2937' },
+                    bgcolor: '#F5F9F3',
+                    '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
-                  input: { color: '#E5E7EB' },
-                  '& .MuiInputLabel-root': { color: '#9CA3AF' },
+                  input: { color: '#1A2E1A' },
+                  '& .MuiInputLabel-root': { color: '#5A6A5A' },
                 }}
               />
             </Box>
             <Box>
               <FormControl size="small" fullWidth>
-                <InputLabel sx={{ color: '#9CA3AF' }}>نوع المستخدم</InputLabel>
+                <InputLabel sx={{ color: '#5A6A5A' }}>نوع المستخدم</InputLabel>
                 <Select
                   value={userType}
                   onChange={(e) => setUserType(e.target.value as 'customer' | 'driver' | 'restaurant')}
                   label="نوع المستخدم"
                   sx={{
-                    color: '#E5E7EB',
-                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+                    color: '#1A2E1A',
+                    '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-                    '& .MuiSvgIcon-root': { color: '#9CA3AF' },
-                    bgcolor: '#020617',
+                    '& .MuiSvgIcon-root': { color: '#5A6A5A' },
+                    bgcolor: '#F5F9F3',
                   }}
                 >
                   <MenuItem value="customer">عميل</MenuItem>
@@ -436,7 +436,7 @@ const UsersListPage: React.FC = () => {
             </Box>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 2, borderTop: '1px solid #1F2937' }}>
+        <DialogActions sx={{ p: 2, borderTop: '1px solid #B1C0B1' }}>
           <Button
             onClick={() => {
               setDialogOpen(false);
@@ -445,7 +445,7 @@ const UsersListPage: React.FC = () => {
               setPhone('');
               setUserType('customer');
             }}
-            sx={{ color: '#9CA3AF' }}
+            sx={{ color: '#5A6A5A' }}
           >
             إلغاء
           </Button>

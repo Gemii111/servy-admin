@@ -171,7 +171,7 @@ const CategoriesListPage: React.FC = () => {
         accessorKey: 'name',
         header: 'اسم الفئة',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontWeight: 500 }}>
+          <Typography sx={{ color: '#1A2E1A', fontWeight: 500 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -180,7 +180,7 @@ const CategoriesListPage: React.FC = () => {
         accessorKey: 'slug',
         header: 'Slug',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -212,7 +212,7 @@ const CategoriesListPage: React.FC = () => {
         accessorKey: 'sortOrder',
         header: 'الترتيب',
         cell: (info) => (
-          <Typography sx={{ color: '#E5E7EB', fontSize: 14 }}>
+          <Typography sx={{ color: '#1A2E1A', fontSize: 14 }}>
             {String(info.getValue())}
           </Typography>
         ),
@@ -221,7 +221,7 @@ const CategoriesListPage: React.FC = () => {
         accessorKey: 'createdAt',
         header: 'تاريخ الإنشاء',
         cell: (info) => (
-          <Typography sx={{ color: '#9CA3AF', fontSize: 13 }}>
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
             {format(new Date(String(info.getValue())), 'dd MMM yyyy', { locale: ar })}
           </Typography>
         ),
@@ -232,7 +232,7 @@ const CategoriesListPage: React.FC = () => {
   const categories = data?.categories ?? [];
 
   return (
-    <Box sx={{ color: '#E5E7EB' }}>
+    <Box sx={{ color: '#1A2E1A' }}>
       {/* Header */}
       <Box
         sx={{
@@ -248,7 +248,7 @@ const CategoriesListPage: React.FC = () => {
           <Typography variant="h5" fontWeight={700} mb={0.5}>
             إدارة الفئات
           </Typography>
-          <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+          <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
             تنظيم وإدارة فئات قائمة الطعام
           </Typography>
         </Box>
@@ -272,7 +272,7 @@ const CategoriesListPage: React.FC = () => {
         }}
       >
         <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel sx={{ color: '#9CA3AF' }}>الحالة</InputLabel>
+          <InputLabel sx={{ color: '#5A6A5A' }}>الحالة</InputLabel>
           <Select
             value={statusFilter}
             onChange={(e) => {
@@ -281,10 +281,10 @@ const CategoriesListPage: React.FC = () => {
             }}
             label="الحالة"
             sx={{
-              color: '#E5E7EB',
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#1F2937' },
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
-              '& .MuiSvgIcon-root': { color: '#9CA3AF' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
             }}
           >
             <MenuItem value="all">الكل</MenuItem>
@@ -308,7 +308,7 @@ const CategoriesListPage: React.FC = () => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon sx={{ color: '#6B7280', fontSize: 20 }} />
+                <SearchIcon sx={{ color: '#5A6A5A', fontSize: 20 }} />
               </InputAdornment>
             ),
           }}
@@ -316,10 +316,10 @@ const CategoriesListPage: React.FC = () => {
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
               bgcolor: '#020617',
-              '& fieldset': { borderColor: '#1F2937' },
+              '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
-            input: { color: '#E5E7EB' },
+            input: { color: '#1A2E1A' },
           }}
         />
       </Box>
@@ -354,7 +354,7 @@ const CategoriesListPage: React.FC = () => {
               gap: 2,
             }}
           >
-            <Typography variant="body2" sx={{ color: '#9CA3AF' }}>
+            <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               إجمالي النتائج: {data?.pagination.total ?? categories.length} | الصفحة{' '}
               {data?.pagination.page ?? 1} من {data?.pagination.totalPages ?? 1}
             </Typography>
@@ -381,7 +381,7 @@ const CategoriesListPage: React.FC = () => {
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 2 }}>
                 <ToggleOnIcon sx={{ color: '#22C55E', fontSize: 20 }} />
-                <Typography variant="caption" sx={{ color: '#9CA3AF' }}>
+                <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
                   اضغط على حالة الفئة للتفعيل / التعطيل
                 </Typography>
               </Box>
@@ -399,14 +399,14 @@ const CategoriesListPage: React.FC = () => {
         }}
         PaperProps={{
           sx: {
-            bgcolor: '#111827',
+            bgcolor: '#FFFFFF',
             borderRadius: 2,
-            border: '1px solid #1F2937',
+            border: '1px solid #B1C0B1',
             minWidth: 420,
           },
         }}
       >
-        <DialogTitle sx={{ color: '#E5E7EB' }}>
+        <DialogTitle sx={{ color: '#1A2E1A' }}>
           {editingCategory ? 'تعديل الفئة' : 'إضافة فئة جديدة'}
         </DialogTitle>
         <DialogContent sx={{ pt: 1.5 }}>
@@ -420,17 +420,17 @@ const CategoriesListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },
                 '& .MuiInputBase-input': {
-                  color: '#E5E7EB',
+                  color: '#1A2E1A',
                 },
                 '& .MuiInputLabel-root': {
-                  color: '#9CA3AF',
+                  color: '#5A6A5A',
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                  color: '#2563EB',
+                  color: '#86B573',
                 },
               }}
             />
@@ -443,17 +443,17 @@ const CategoriesListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },
                 '& .MuiInputBase-input': {
-                  color: '#E5E7EB',
+                  color: '#1A2E1A',
                 },
                 '& .MuiInputLabel-root': {
-                  color: '#9CA3AF',
+                  color: '#5A6A5A',
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                  color: '#2563EB',
+                  color: '#86B573',
                 },
               }}
             />
@@ -468,29 +468,29 @@ const CategoriesListPage: React.FC = () => {
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: '#020617',
-                  '& fieldset': { borderColor: '#1F2937' },
+                  '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },
                 '& .MuiInputBase-input': {
-                  color: '#E5E7EB',
+                  color: '#1A2E1A',
                 },
                 '& .MuiInputLabel-root': {
-                  color: '#9CA3AF',
+                  color: '#5A6A5A',
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                  color: '#2563EB',
+                  color: '#86B573',
                 },
               }}
             />
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 2.5, borderTop: '1px solid #1F2937' }}>
+        <DialogActions sx={{ p: 2.5, borderTop: '1px solid #B1C0B1' }}>
           <Button
             onClick={() => {
               setDialogOpen(false);
               resetForm();
             }}
-            sx={{ color: '#9CA3AF' }}
+            sx={{ color: '#5A6A5A' }}
           >
             إلغاء
           </Button>

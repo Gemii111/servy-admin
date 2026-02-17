@@ -37,7 +37,7 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: '#F8F9FA', direction: 'ltr' }}>
+    <Box sx={{ minHeight: '100vh', bgcolor: '#F5F9F3', direction: 'ltr' }}>
       <Header />
       <Box sx={{ pt: 8, pb: 4 }}>
         <Container maxWidth="lg">
@@ -48,7 +48,7 @@ const ContactPage: React.FC = () => {
             gutterBottom
             sx={{
               mb: 6,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+              background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -68,55 +68,55 @@ const ContactPage: React.FC = () => {
             }}
           >
             <Box>
-              <Paper sx={{ p: 4, bgcolor: 'white', height: '100%', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 4 }}>
-                <Typography variant="h5" fontWeight={700} gutterBottom sx={{ mb: 3, color: '#1A1A1A' }}>
+              <Paper sx={{ p: 4, bgcolor: 'white', height: '100%', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', borderRadius: 24 }}>
+                <Typography variant="h5" fontWeight={700} gutterBottom sx={{ mb: 3, color: '#1A2E1A' }}>
                   معلومات الاتصال
                 </Typography>
 
                 <Box sx={{ mb: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <EmailIcon sx={{ color: '#667eea' }} />
+                    <EmailIcon sx={{ color: '#86B573' }} />
                     <Box>
-                      <Typography variant="body2" sx={{ color: '#6B7280' }}>
+                      <Typography variant="body2" sx={{ color: '#3A4A3A' }}>
                         البريد الإلكتروني
                       </Typography>
-                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A2E1A', direction: 'ltr' }}>
                         {renderMixedText(websiteContent.contact.customerService.email)}
                       </Typography>
                     </Box>
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <PhoneIcon sx={{ color: '#667eea' }} />
+                    <PhoneIcon sx={{ color: '#86B573' }} />
                     <Box>
-                      <Typography variant="body2" sx={{ color: '#6B7280' }}>
+                      <Typography variant="body2" sx={{ color: '#3A4A3A' }}>
                         الهاتف
                       </Typography>
-                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A2E1A', direction: 'ltr' }}>
                         {renderMixedText(websiteContent.contact.customerService.phone)}
                       </Typography>
                     </Box>
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <WhatsAppIcon sx={{ color: '#667eea' }} />
+                    <WhatsAppIcon sx={{ color: '#86B573' }} />
                     <Box>
-                      <Typography variant="body2" sx={{ color: '#6B7280' }}>
+                      <Typography variant="body2" sx={{ color: '#3A4A3A' }}>
                         واتساب
                       </Typography>
-                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A2E1A', direction: 'ltr' }}>
                         {renderMixedText(websiteContent.contact.customerService.whatsapp)}
                       </Typography>
                     </Box>
                   </Box>
 
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <AccessTimeIcon sx={{ color: '#667eea' }} />
+                    <AccessTimeIcon sx={{ color: '#86B573' }} />
                     <Box>
-                      <Typography variant="body2" sx={{ color: '#6B7280' }}>
+                      <Typography variant="body2" sx={{ color: '#3A4A3A' }}>
                         ساعات العمل
                       </Typography>
-                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                      <Typography variant="body1" fontWeight={600} sx={{ color: '#1A2E1A', direction: 'ltr' }}>
                         {renderMixedText(websiteContent.contact.customerService.hours)}
                       </Typography>
                     </Box>
@@ -124,19 +124,19 @@ const ContactPage: React.FC = () => {
                 </Box>
 
                 <Box sx={{ mt: 4 }}>
-                  <Typography variant="h6" fontWeight={700} gutterBottom sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                  <Typography variant="h6" fontWeight={700} gutterBottom sx={{ color: '#1A2E1A', direction: 'ltr' }}>
                     للشكاوى والاقتراحات
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#6B7280', direction: 'ltr' }}>
+                  <Typography variant="body2" sx={{ color: '#3A4A3A', direction: 'ltr' }}>
                     {renderMixedText(websiteContent.contact.feedback.email)}
                   </Typography>
                 </Box>
 
                 <Box sx={{ mt: 3 }}>
-                  <Typography variant="h6" fontWeight={700} gutterBottom sx={{ color: '#1A1A1A', direction: 'ltr' }}>
+                  <Typography variant="h6" fontWeight={700} gutterBottom sx={{ color: '#1A2E1A', direction: 'ltr' }}>
                     للشراكة التجارية
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#6B7280', direction: 'ltr' }}>
+                  <Typography variant="body2" sx={{ color: '#3A4A3A', direction: 'ltr' }}>
                     {renderMixedText(websiteContent.contact.business.email)}
                   </Typography>
                 </Box>
@@ -145,7 +145,7 @@ const ContactPage: React.FC = () => {
 
             <Box>
               <Paper sx={{ p: 4, bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderRadius: 4 }}>
-                <Typography variant="h5" fontWeight={700} gutterBottom sx={{ mb: 3, color: '#1A1A1A' }}>
+                <Typography variant="h5" fontWeight={700} gutterBottom sx={{ mb: 3, color: '#1A2E1A' }}>
                   أرسل لنا رسالة
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit}>
@@ -195,14 +195,14 @@ const ContactPage: React.FC = () => {
                     size="large"
                     sx={{
                       mt: 3,
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      boxShadow: '0 4px 16px rgba(102,126,234,0.4)',
+                      background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
+                      boxShadow: '0 4px 16px rgba(106,154,90,0.35)',
                       fontWeight: 600,
                       py: 1.5,
                       borderRadius: 3,
                       '&:hover': {
-                        background: 'linear-gradient(135deg, #5568d3 0%, #6a3d8f 100%)',
-                        boxShadow: '0 6px 24px rgba(102,126,234,0.5)',
+                        background: 'linear-gradient(135deg, #6A9A5A 0%, #5A8A4A 100%)',
+                        boxShadow: '0 6px 24px rgba(106,154,90,0.4)',
                       },
                     }}
                   >
