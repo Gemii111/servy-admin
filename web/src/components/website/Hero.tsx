@@ -111,6 +111,7 @@ const Hero: React.FC = () => {
             variant="h6"
             sx={{
               fontSize: { xs: '1.1rem', md: '1.3rem' },
+              mt: 2,
               mb: 6,
               maxWidth: '700px',
               mx: 'auto',

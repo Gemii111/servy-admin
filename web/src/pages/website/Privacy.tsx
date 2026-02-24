@@ -10,8 +10,18 @@ const PrivacyPage: React.FC = () => {
     <Box sx={{ minHeight: '100vh', bgcolor: '#F5F9F3', direction: 'ltr' }}>
       <Header />
       <Box sx={{ pt: 8, pb: 4 }}>
-        <Container maxWidth="lg">
-          <Paper sx={{ p: 4, bgcolor: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', borderRadius: 24 }}>
+        <Container sx={{ maxWidth: 1400, px: { xs: 2, sm: 3 } }}>
+          <Paper
+            sx={{
+              width: '100%',
+              boxSizing: 'border-box',
+              px: { xs: 4, sm: 5, md: 6, lg: 8 },
+              py: { xs: 4, sm: 5, md: 6 },
+              bgcolor: 'white',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              borderRadius: 0,
+            }}
+          >
             <Typography
               variant="h3"
               fontWeight={800}
@@ -37,7 +47,14 @@ const PrivacyPage: React.FC = () => {
                 </Typography>
                 <Typography
                   variant="body1"
-                  sx={{ whiteSpace: 'pre-line', lineHeight: 1.8, color: '#3A4A3A', direction: 'ltr' }}
+                  sx={{
+                    whiteSpace: 'pre-line',
+                    lineHeight: 1.8,
+                    color: '#3A4A3A',
+                    direction: 'ltr',
+                    overflowWrap: 'break-word',
+                    wordBreak: 'break-word',
+                  }}
                 >
                   {renderMixedText(section.content)}
                 </Typography>

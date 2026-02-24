@@ -137,14 +137,15 @@ const Header: React.FC = () => {
                 color="inherit"
                 onClick={() => navigate(item.path)}
                 sx={{
-                  fontWeight: 500,
+                  fontWeight: 600,
                   fontSize: '0.95rem',
-                  px: 2,
+                  px: 2.5,
                   borderRadius: 2,
-                  color: trigger ? 'text.primary' : 'white',
+                  color: trigger ? '#1A2E1A' : '#FFFFFF',
+                  textShadow: trigger ? 'none' : '0 1px 8px rgba(0,0,0,0.6)',
                   '&:hover': {
-                    bgcolor: 'rgba(134,181,115,0.2)',
-                    color: trigger ? '#86B573' : 'white',
+                    bgcolor: 'rgba(134,181,115,0.18)',
+                    color: '#1A2E1A',
                   },
                   transition: 'all 0.2s ease',
                 }}

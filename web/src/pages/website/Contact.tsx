@@ -68,7 +68,7 @@ const ContactPage: React.FC = () => {
             }}
           >
             <Box>
-              <Paper sx={{ p: 4, bgcolor: 'white', height: '100%', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', borderRadius: 24 }}>
+              <Paper sx={{ p: 4, bgcolor: 'white', height: '100%', boxShadow: '0 4px 20px rgba(0,0,0,0.08)', borderRadius: 4 }}>
                 <Typography variant="h5" fontWeight={700} gutterBottom sx={{ mb: 3, color: '#1A2E1A' }}>
                   معلومات الاتصال
                 </Typography>
