@@ -72,11 +72,11 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, trend }) => {
             width: { xs: 36, sm: 40 },
             height: { xs: 36, sm: 40 },
             borderRadius: 2,
-            bgcolor: '#020617',
+            bgcolor: 'rgba(134,181,115,0.12)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#1A2E1A',
+            color: '#6A9A5A',
             '& svg': {
               fontSize: { xs: 20, sm: 24 },
             },

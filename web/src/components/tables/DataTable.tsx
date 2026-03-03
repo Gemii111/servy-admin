@@ -183,7 +183,7 @@ function DataTable<T extends Record<string, any>>({
             sx={{
               maxWidth: 400,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
@@ -200,7 +200,7 @@ function DataTable<T extends Record<string, any>>({
             height: 8,
           },
           '&::-webkit-scrollbar-track': {
-            bgcolor: '#020617',
+            bgcolor: '#FFFFFF',
           },
           '&::-webkit-scrollbar-thumb': {
             bgcolor: '#374151',
@@ -223,7 +223,7 @@ function DataTable<T extends Record<string, any>>({
         >
           <TableHead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} sx={{ bgcolor: '#020617' }}>
+              <TableRow key={headerGroup.id} sx={{ bgcolor: '#FFFFFF' }}>
                 {headerGroup.headers.map((header) => (
                   <TableCell
                     key={header.id}

@@ -78,10 +78,15 @@ const OrderDetailsPage: React.FC = () => {
 
   const statusConfig: Record<string, { label: string; color: string }> = {
     pending: { label: 'قيد الانتظار', color: '#F59E0B' },
+    accepted: { label: 'مقبول', color: '#38BDF8' },
     confirmed: { label: 'مؤكد', color: '#38BDF8' },
     preparing: { label: 'قيد التحضير', color: '#86B573' },
     ready: { label: 'جاهز', color: '#22C55E' },
+    heading_to_restaurant: { label: 'متجه للمطعم', color: '#8B5CF6' },
+    at_restaurant: { label: 'في المطعم', color: '#8B5CF6' },
     picked_up: { label: 'تم الاستلام', color: '#8B5CF6' },
+    out_for_delivery: { label: 'قيد التوصيل', color: '#86B573' },
+    delivering: { label: 'قيد التوصيل', color: '#86B573' },
     delivered: { label: 'تم التسليم', color: '#22C55E' },
     cancelled: { label: 'ملغي', color: '#EF4444' },
   };
@@ -182,10 +187,15 @@ const OrderDetailsPage: React.FC = () => {
             }}
           >
             <MenuItem value="pending">قيد الانتظار</MenuItem>
+            <MenuItem value="accepted">مقبول</MenuItem>
             <MenuItem value="confirmed">مؤكد</MenuItem>
             <MenuItem value="preparing">قيد التحضير</MenuItem>
             <MenuItem value="ready">جاهز</MenuItem>
+            <MenuItem value="heading_to_restaurant">متجه للمطعم</MenuItem>
+            <MenuItem value="at_restaurant">في المطعم</MenuItem>
             <MenuItem value="picked_up">تم الاستلام</MenuItem>
+            <MenuItem value="out_for_delivery">قيد التوصيل</MenuItem>
+            <MenuItem value="delivering">قيد التوصيل</MenuItem>
             <MenuItem value="delivered">تم التسليم</MenuItem>
             <MenuItem value="cancelled">ملغي</MenuItem>
           </Select>
@@ -268,11 +278,11 @@ const OrderDetailsPage: React.FC = () => {
                 حالة الطلب
               </Typography>
               <Chip
-                label={statusConfig[order.status].label}
+                label={statusConfig[order.status]?.label || order.status}
                 size="small"
                 sx={{
-                  bgcolor: `${statusConfig[order.status].color}20`,
-                  color: statusConfig[order.status].color,
+                  bgcolor: `${statusConfig[order.status]?.color || '#5A6A5A'}20`,
+                  color: statusConfig[order.status]?.color || '#5A6A5A',
                   fontWeight: 500,
                 }}
               />

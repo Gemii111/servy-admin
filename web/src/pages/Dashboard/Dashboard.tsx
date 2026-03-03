@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Paper, Chip } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -19,8 +19,11 @@ import {
   mockGetOrdersByStatus,
   mockGetTopRestaurants,
 } from '../../services/api/dashboard';
+import { mockGetOrders } from '../../services/api/orders';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard', 'statistics'],
     queryFn: mockGetDashboardStatistics,
@@ -45,6 +48,19 @@ const DashboardPage: React.FC = () => {
     queryKey: ['dashboard', 'top-restaurants'],
     queryFn: mockGetTopRestaurants,
   });
+
+  const { data: ordersResponse, isLoading: recentOrdersLoading } = useQuery({
+    queryKey: ['dashboard', 'recent-orders'],
+    queryFn: () => mockGetOrders({ page: 1, limit: 5 }),
+  });
+  const recentOrders = ordersResponse?.orders || [];
+  const statusLabels: Record<string, string> = {
+    pending: 'معلق',
+    accepted: 'مقبول',
+    preparing: 'قيد التحضير',
+    delivered: 'تم التسليم',
+    delivering: 'قيد التوصيل',
+  };
 
   return (
     <Box sx={{ color: '#1A2E1A' }}>
@@ -161,6 +177,67 @@ const DashboardPage: React.FC = () => {
         <OrdersByStatusChart data={ordersByStatusData || []} isLoading={ordersByStatusLoading} />
         <TopRestaurantsChart data={topRestaurantsData || []} isLoading={topRestaurantsLoading} />
       </Box>
+
+      {/* آخر الطلبات */}
+      <Paper
+        sx={{
+          mt: 3,
+          p: 3,
+          borderRadius: 2,
+          border: '1px solid #B1C0B1',
+          bgcolor: '#FFFFFF',
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, color: '#1A2E1A' }}>
+            آخر الطلبات
+          </Typography>
+          <Button size="small" onClick={() => navigate('/orders')} sx={{ color: '#86B573' }}>
+            عرض الكل
+          </Button>
+        </Box>
+        {recentOrdersLoading ? (
+          <Typography sx={{ color: '#5A6A5A' }}>جاري التحميل...</Typography>
+        ) : recentOrders && recentOrders.length > 0 ? (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {recentOrders.map((order: { id: string; orderNumber: string; customerName: string; restaurantName: string; status: string; total: number }) => (
+              <Box
+                key={order.id}
+                onClick={() => navigate(`/orders/${order.id}`)}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  p: 1.5,
+                  borderRadius: 2,
+                  cursor: 'pointer',
+                  '&:hover': { bgcolor: 'rgba(134,181,115,0.08)' },
+                }}
+              >
+                <Box>
+                  <Typography variant="body2" sx={{ fontWeight: 600, color: '#1A2E1A' }}>
+                    {order.orderNumber} • {order.restaurantName}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
+                    {order.customerName} • {order.total} ر.س
+                  </Typography>
+                </Box>
+                <Chip
+                  label={statusLabels[order.status] || order.status}
+                  size="small"
+                  sx={{
+                    bgcolor: order.status === 'delivered' ? 'rgba(34,197,94,0.2)' : 'rgba(245,158,11,0.2)',
+                    color: order.status === 'delivered' ? '#22C55E' : '#F59E0B',
+                    fontSize: 11,
+                  }}
+                />
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          <Typography sx={{ color: '#5A6A5A' }}>لا توجد طلبات حديثة</Typography>
+        )}
+      </Paper>
     </Box>
   );
 };

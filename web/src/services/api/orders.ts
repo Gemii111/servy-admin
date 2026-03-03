@@ -8,7 +8,19 @@ export interface Order {
   restaurantName: string;
   driverId?: string;
   driverName?: string;
-  status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'picked_up' | 'delivered' | 'cancelled';
+  status:
+    | 'pending'
+    | 'accepted'
+    | 'confirmed'
+    | 'preparing'
+    | 'ready'
+    | 'heading_to_restaurant'
+    | 'at_restaurant'
+    | 'picked_up'
+    | 'out_for_delivery'
+    | 'delivering'
+    | 'delivered'
+    | 'cancelled';
   items: OrderItem[];
   subtotal: number;
   deliveryFee: number;
@@ -47,10 +59,14 @@ export interface OrdersResponse {
 const mockOrders: Order[] = Array.from({ length: 50 }, (_, i) => {
   const statuses: Order['status'][] = [
     'pending',
-    'confirmed',
+    'accepted',
     'preparing',
     'ready',
+    'heading_to_restaurant',
+    'at_restaurant',
     'picked_up',
+    'out_for_delivery',
+    'delivering',
     'delivered',
     'cancelled',
   ];
@@ -108,6 +124,7 @@ const mockOrders: Order[] = Array.from({ length: 50 }, (_, i) => {
 export async function mockGetOrders(params?: {
   status?: string;
   paymentStatus?: string;
+  restaurantId?: string;
   search?: string;
   page?: number;
   limit?: number;
@@ -124,6 +141,11 @@ export async function mockGetOrders(params?: {
   // Filter by payment status
   if (params?.paymentStatus && params.paymentStatus !== 'all') {
     filtered = filtered.filter((o) => o.paymentStatus === params.paymentStatus);
+  }
+
+  // Filter by restaurant
+  if (params?.restaurantId && params.restaurantId !== 'all') {
+    filtered = filtered.filter((o) => o.restaurantId === params.restaurantId);
   }
 
   // Search

@@ -184,7 +184,7 @@ const SendNotificationPage: React.FC = () => {
             required
             sx={{
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
@@ -203,7 +203,7 @@ const SendNotificationPage: React.FC = () => {
             required
             sx={{
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
@@ -218,7 +218,7 @@ const SendNotificationPage: React.FC = () => {
               value={notificationType}
               onChange={(e) => setNotificationType(e.target.value as NotificationType)}
               sx={{
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 color: '#1A2E1A',
                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
@@ -238,7 +238,7 @@ const SendNotificationPage: React.FC = () => {
               value={priority}
               onChange={(e) => setPriority(e.target.value as NotificationPriority)}
               sx={{
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 color: '#1A2E1A',
                 '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
@@ -311,7 +311,7 @@ const SendNotificationPage: React.FC = () => {
                     flexWrap: 'wrap',
                     gap: 1,
                     p: 1.5,
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     borderRadius: 1,
                     border: '1px solid #B1C0B1',
                     maxHeight: 150,
@@ -378,7 +378,7 @@ const SendNotificationPage: React.FC = () => {
               InputLabelProps={{ shrink: true }}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },
@@ -444,7 +444,7 @@ const SendNotificationPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -457,7 +457,7 @@ const SendNotificationPage: React.FC = () => {
                   value={userTypeFilter}
                   onChange={(e) => setUserTypeFilter(e.target.value)}
                   sx={{
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     color: '#1A2E1A',
                     '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                   }}
@@ -500,7 +500,7 @@ const SendNotificationPage: React.FC = () => {
                 sx={{
                   maxHeight: 400,
                   overflowY: 'auto',
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 1,
                   border: '1px solid #B1C0B1',
                 }}

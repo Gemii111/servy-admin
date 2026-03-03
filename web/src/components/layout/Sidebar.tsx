@@ -21,6 +21,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import StarIcon from '@mui/icons-material/Star';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
+import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const drawerWidth = 260;
@@ -36,8 +40,12 @@ const navItems: NavItem[] = [
   { label: 'المستخدمون', path: '/users', icon: <PeopleIcon /> },
   { label: 'المطاعم', path: '/restaurants', icon: <RestaurantIcon /> },
   { label: 'الطلبات', path: '/orders', icon: <ReceiptLongIcon /> },
+  { label: 'طلبات التوصيل P2P', path: '/delivery-requests', icon: <LocalShippingIcon /> },
   { label: 'الفئات', path: '/categories', icon: <CategoryIcon /> },
   { label: 'الكوبونات', path: '/coupons', icon: <LocalOfferIcon /> },
+  { label: 'البانرات', path: '/banners', icon: <ViewCarouselIcon /> },
+  { label: 'الحملات', path: '/campaigns', icon: <CampaignIcon /> },
+  { label: 'السائقون', path: '/riders', icon: <TwoWheelerIcon /> },
   { label: 'الإشعارات', path: '/notifications', icon: <NotificationsIcon /> },
   { label: 'الجوائز', path: '/rewards', icon: <CardGiftcardIcon /> },
   { label: 'تقييمات السائقين', path: '/driver-ratings', icon: <StarIcon /> },

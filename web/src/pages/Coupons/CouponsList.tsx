@@ -450,7 +450,7 @@ const CouponsListPage: React.FC = () => {
           sx={{
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
@@ -559,7 +559,7 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -587,7 +587,7 @@ const CouponsListPage: React.FC = () => {
                     '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
                     '& .MuiSvgIcon-root': { color: '#5A6A5A' },
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                   }}
                 >
                   <MenuItem value="percentage">نسبة مئوية</MenuItem>
@@ -605,7 +605,7 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -634,7 +634,7 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -662,7 +662,7 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -690,7 +690,7 @@ const CouponsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -717,7 +717,7 @@ const CouponsListPage: React.FC = () => {
                 InputLabelProps={{ shrink: true }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -744,7 +744,7 @@ const CouponsListPage: React.FC = () => {
                 InputLabelProps={{ shrink: true }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -772,7 +772,7 @@ const CouponsListPage: React.FC = () => {
                     '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
                     '& .MuiSvgIcon-root': { color: '#5A6A5A' },
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                   }}
                 >
                   <MenuItem value="active">نشط</MenuItem>
@@ -793,7 +793,7 @@ const CouponsListPage: React.FC = () => {
                 minRows={2}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },

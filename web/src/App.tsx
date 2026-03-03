@@ -26,6 +26,12 @@ const OrdersListPage = lazy(() => import('./pages/Orders/OrdersList'));
 const OrderDetailsPage = lazy(() => import('./pages/Orders/OrderDetails'));
 const CategoriesListPage = lazy(() => import('./pages/Categories/CategoriesList'));
 const CouponsListPage = lazy(() => import('./pages/Coupons/CouponsList'));
+const BannersListPage = lazy(() => import('./pages/Banners/BannersList'));
+const CampaignsListPage = lazy(() => import('./pages/Campaigns/CampaignsList'));
+const RidersListPage = lazy(() => import('./pages/Riders/RidersList'));
+const RiderDetailsPage = lazy(() => import('./pages/Riders/RiderDetails'));
+const DeliveryRequestsListPage = lazy(() => import('./pages/DeliveryRequests/DeliveryRequestsList'));
+const DeliveryRequestDetailsPage = lazy(() => import('./pages/DeliveryRequests/DeliveryRequestDetails'));
 const ReportsPage = lazy(() => import('./pages/Reports/Reports'));
 const SettingsPage = lazy(() => import('./pages/Settings/Settings'));
 const SendNotificationPage = lazy(() => import('./pages/Notifications/SendNotification'));
@@ -197,6 +203,30 @@ const App: React.FC = () => {
             }
           />
           <Route
+            path="/delivery-requests"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <DeliveryRequestsListPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/delivery-requests/:id"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <DeliveryRequestDetailsPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/categories"
             element={
               <ProtectedRoute>
@@ -215,6 +245,54 @@ const App: React.FC = () => {
                 <Layout>
                   <Suspense fallback={<LoadingFallback />}>
                     <CouponsListPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/banners"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <BannersListPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/campaigns"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <CampaignsListPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/riders"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <RidersListPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/riders/:id"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <RiderDetailsPage />
                   </Suspense>
                 </Layout>
               </ProtectedRoute>

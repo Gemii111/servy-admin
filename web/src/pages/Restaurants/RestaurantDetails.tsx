@@ -246,7 +246,7 @@ const RestaurantDetailsPage: React.FC = () => {
             sx={{
               p: 2,
               borderRadius: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               border: '1px solid #B1C0B1',
             }}
           >
@@ -261,7 +261,7 @@ const RestaurantDetailsPage: React.FC = () => {
             sx={{
               p: 2,
               borderRadius: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               border: '1px solid #B1C0B1',
             }}
           >
@@ -276,7 +276,7 @@ const RestaurantDetailsPage: React.FC = () => {
             sx={{
               p: 2,
               borderRadius: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               border: '1px solid #B1C0B1',
             }}
           >
@@ -291,7 +291,7 @@ const RestaurantDetailsPage: React.FC = () => {
             sx={{
               p: 2,
               borderRadius: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               border: '1px solid #B1C0B1',
             }}
           >

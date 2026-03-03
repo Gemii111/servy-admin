@@ -47,7 +47,7 @@ export const appTheme = createTheme({
       main: '#DC2626',
     },
     info: {
-      main: '#2563EB', // معلومات (بحسب الهوية)
+      main: souqPrimary,
     },
     divider: borderLight,
   },

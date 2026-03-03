@@ -24,11 +24,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           flexGrow: 1,
           width: { xs: '100%', sm: `calc(100% - ${drawerWidth}px)` },
           transition: 'width 0.3s ease',
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
         }}
       >
-        <Toolbar />
+        <Toolbar sx={{ flexShrink: 0 }} />
         <Box
           sx={{
+            flex: 1,
             maxWidth: 1440,
             mx: 'auto',
             px: { xs: 1.5, sm: 2, md: 3 }, // Responsive padding: 12px mobile, 16px tablet, 24px desktop

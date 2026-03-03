@@ -271,7 +271,7 @@ const DriverRatingsStatisticsPage: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   p: 1.5,
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 1,
                   border: '1px solid #B1C0B1',
                 }}
@@ -334,7 +334,7 @@ const DriverRatingsStatisticsPage: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   p: 1.5,
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 1,
                   border: '1px solid #B1C0B1',
                 }}

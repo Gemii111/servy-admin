@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  IconButton,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { ColumnDef } from '@tanstack/react-table';
@@ -27,8 +28,12 @@ import { useSnackbar } from '../../hooks/useSnackbar';
 import {
   mockGetRestaurants,
   mockCreateRestaurant,
+  mockToggleRestaurantFeatured,
   Restaurant,
+  VendorType,
 } from '../../services/api/restaurants';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 
 const RestaurantsListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -36,6 +41,7 @@ const RestaurantsListPage: React.FC = () => {
   const { showSnackbar } = useSnackbar();
 
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [vendorTypeFilter, setVendorTypeFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
 
@@ -51,14 +57,24 @@ const RestaurantsListPage: React.FC = () => {
   const limit = 10;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['restaurants', statusFilter, searchQuery, page, limit],
+    queryKey: ['restaurants', statusFilter, vendorTypeFilter, searchQuery, page, limit],
     queryFn: () =>
       mockGetRestaurants({
         status: statusFilter,
+        vendorType: vendorTypeFilter,
         search: searchQuery,
         page,
         limit,
       }),
+  });
+
+  const toggleFeaturedMutation = useMutation({
+    mutationFn: mockToggleRestaurantFeatured,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['restaurants'] });
+      showSnackbar('تم تحديث حالة التمييز', 'success');
+    },
+    onError: () => showSnackbar('فشل التحديث', 'error'),
   });
 
   const createMutation = useMutation({
@@ -120,6 +136,30 @@ const RestaurantsListPage: React.FC = () => {
         ),
       },
       {
+        accessorKey: 'vendorType',
+        header: 'نوع المتجر',
+        cell: (info) => {
+          const type = info.getValue() as VendorType;
+          const labels: Record<VendorType, string> = {
+            restaurant: 'مطعم',
+            pharmacy: 'صيدلية',
+            supermarket: 'سوبرماركت',
+          };
+          return (
+            <Chip
+              label={labels[type] || type}
+              size="small"
+              sx={{
+                bgcolor: type === 'restaurant' ? '#86B57320' : type === 'pharmacy' ? '#3B82F620' : '#F59E0B20',
+                color: type === 'restaurant' ? '#86B573' : type === 'pharmacy' ? '#3B82F6' : '#F59E0B',
+                fontWeight: 500,
+                fontSize: 12,
+              }}
+            />
+          );
+        },
+      },
+      {
         accessorKey: 'cuisineType',
         header: 'نوع المطبخ',
         cell: (info) => (
@@ -161,6 +201,26 @@ const RestaurantsListPage: React.FC = () => {
         },
       },
       {
+        accessorKey: 'isFeatured',
+        header: 'مميز',
+        cell: (info) => {
+          const restaurant = info.row.original;
+          return (
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFeaturedMutation.mutate(restaurant.id);
+              }}
+              disabled={toggleFeaturedMutation.isPending}
+              sx={{ color: restaurant.isFeatured ? '#F59E0B' : '#5A6A5A' }}
+            >
+              {restaurant.isFeatured ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
+            </IconButton>
+          );
+        },
+      },
+      {
         accessorKey: 'totalOrders',
         header: 'عدد الطلبات',
         cell: (info) => (
@@ -188,7 +248,7 @@ const RestaurantsListPage: React.FC = () => {
         ),
       },
     ],
-    []
+    [toggleFeaturedMutation.isPending]
   );
 
   const handleView = (restaurant: Restaurant) => {
@@ -299,6 +359,28 @@ const RestaurantsListPage: React.FC = () => {
             <MenuItem value="suspended">معطل</MenuItem>
           </Select>
         </FormControl>
+        <FormControl size="small" sx={{ minWidth: 150 }}>
+          <InputLabel sx={{ color: '#5A6A5A' }}>نوع المتجر</InputLabel>
+          <Select
+            value={vendorTypeFilter}
+            onChange={(e) => {
+              setVendorTypeFilter(e.target.value);
+              setPage(1);
+            }}
+            label="نوع المتجر"
+            sx={{
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
+              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
+            }}
+          >
+            <MenuItem value="all">الكل</MenuItem>
+            <MenuItem value="restaurant">مطعم</MenuItem>
+            <MenuItem value="pharmacy">صيدلية</MenuItem>
+            <MenuItem value="supermarket">سوبرماركت</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
 
       {/* Search */}
@@ -322,7 +404,7 @@ const RestaurantsListPage: React.FC = () => {
           sx={{
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
@@ -432,7 +514,7 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -450,7 +532,7 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -469,7 +551,7 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -487,7 +569,7 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -505,7 +587,7 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -523,7 +605,7 @@ const RestaurantsListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -543,7 +625,7 @@ const RestaurantsListPage: React.FC = () => {
                 minRows={2}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },

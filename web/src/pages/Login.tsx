@@ -59,8 +59,6 @@ const LoginPage: React.FC = () => {
         justifyContent: 'center',
         bgcolor: 'background.default',
         px: 2,
-        backgroundImage:
-          'radial-gradient(circle at 10% 0, rgba(56,189,248,0.22) 0, transparent 55%), radial-gradient(circle at 90% 100%, rgba(129,140,248,0.25) 0, transparent 55%)',
       }}
     >
       <Paper
@@ -71,19 +69,29 @@ const LoginPage: React.FC = () => {
           width: '100%',
           maxWidth: 460,
           borderRadius: 3,
-          bgcolor: 'rgba(15,23,42,0.88)',
-          border: '1px solid rgba(148,163,184,0.5)',
-          boxShadow: '0 26px 70px rgba(15,23,42,0.95)',
-          backdropFilter: 'blur(16px)',
+          bgcolor: '#FFFFFF',
+          border: '1px solid #B1C0B1',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
         }}
       >
-        <Typography variant="h5" mb={1} fontWeight={800} textAlign="center" color="white">
+        <Typography
+          variant="h5"
+          mb={1}
+          fontWeight={800}
+          textAlign="center"
+          sx={{
+            background: 'linear-gradient(135deg, #86B573 0%, #6A9A5A 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
           لوحة تحكم سيرفي
         </Typography>
         <Typography
           variant="body1"
           mb={3.5}
-          color="rgba(148,163,184,0.95)"
+          sx={{ color: '#5A6A5A' }}
           textAlign="center"
         >
           من فضلك سجّل دخولك لمتابعة إدارة النظام
@@ -106,13 +114,13 @@ const LoginPage: React.FC = () => {
             fullWidth
             dir="rtl"
             variant="outlined"
-            InputLabelProps={{ sx: { color: 'rgba(148,163,184,0.9)' } }}
+            InputLabelProps={{ sx: { color: '#5A6A5A' } }}
             InputProps={{
               sx: {
-                color: 'white',
-                bgcolor: 'rgba(15,23,42,0.9)',
-                '& fieldset': { borderColor: 'rgba(148,163,184,0.5)' },
-                '&:hover fieldset': { borderColor: 'rgba(129,140,248,0.9)' },
+                color: '#1A2E1A',
+                bgcolor: '#FFFFFF',
+                '& fieldset': { borderColor: '#B1C0B1' },
+                '&:hover fieldset': { borderColor: '#86B573' },
               },
             }}
             {...register('email')}
@@ -123,13 +131,13 @@ const LoginPage: React.FC = () => {
             fullWidth
             dir="rtl"
             variant="outlined"
-            InputLabelProps={{ sx: { color: 'rgba(148,163,184,0.9)' } }}
+            InputLabelProps={{ sx: { color: '#5A6A5A' } }}
             InputProps={{
               sx: {
-                color: 'white',
-                bgcolor: 'rgba(15,23,42,0.9)',
-                '& fieldset': { borderColor: 'rgba(148,163,184,0.5)' },
-                '&:hover fieldset': { borderColor: 'rgba(129,140,248,0.9)' },
+                color: '#1A2E1A',
+                bgcolor: '#FFFFFF',
+                '& fieldset': { borderColor: '#B1C0B1' },
+                '&:hover fieldset': { borderColor: '#86B573' },
               },
             }}
             {...register('password')}
@@ -150,7 +158,7 @@ const LoginPage: React.FC = () => {
               fontWeight: 600,
               fontSize: '0.95rem',
               borderRadius: 999,
-              boxShadow: '0 14px 35px rgba(59,130,246,0.55)',
+              boxShadow: '0 10px 25px rgba(134,181,115,0.35)',
             }}
           >
             {isSubmitting ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}

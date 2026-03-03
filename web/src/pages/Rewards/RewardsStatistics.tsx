@@ -292,7 +292,7 @@ const RewardsStatisticsPage: React.FC = () => {
           <Box
             sx={{
               p: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               borderRadius: 1,
               border: '1px solid #B1C0B1',
             }}
@@ -307,7 +307,7 @@ const RewardsStatisticsPage: React.FC = () => {
           <Box
             sx={{
               p: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               borderRadius: 1,
               border: '1px solid #B1C0B1',
             }}
@@ -325,7 +325,7 @@ const RewardsStatisticsPage: React.FC = () => {
           <Box
             sx={{
               p: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               borderRadius: 1,
               border: '1px solid #B1C0B1',
             }}
@@ -340,7 +340,7 @@ const RewardsStatisticsPage: React.FC = () => {
           <Box
             sx={{
               p: 2,
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               borderRadius: 1,
               border: '1px solid #B1C0B1',
             }}

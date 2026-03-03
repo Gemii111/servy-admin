@@ -244,7 +244,7 @@ const PendingApprovalPage: React.FC = () => {
             placeholder="سبب الرفض..."
             sx={{
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },

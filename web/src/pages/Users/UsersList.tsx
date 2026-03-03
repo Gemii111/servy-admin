@@ -370,7 +370,7 @@ const UsersListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -389,7 +389,7 @@ const UsersListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -407,7 +407,7 @@ const UsersListPage: React.FC = () => {
                 fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                     '& fieldset': { borderColor: '#B1C0B1' },
                     '&:hover fieldset': { borderColor: '#374151' },
                   },
@@ -428,7 +428,7 @@ const UsersListPage: React.FC = () => {
                     '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                     '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
                     '& .MuiSvgIcon-root': { color: '#5A6A5A' },
-                    bgcolor: '#020617',
+                    bgcolor: '#FFFFFF',
                   }}
                 >
                   <MenuItem value="customer">عميل</MenuItem>

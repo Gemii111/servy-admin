@@ -365,7 +365,7 @@ const NotificationTemplatesPage: React.FC = () => {
               required
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 input: { color: '#1A2E1A' },
@@ -382,7 +382,7 @@ const NotificationTemplatesPage: React.FC = () => {
               helperText="يمكنك استخدام متغيرات مثل {{orderId}} أو {{status}}"
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 input: { color: '#1A2E1A' },
@@ -402,7 +402,7 @@ const NotificationTemplatesPage: React.FC = () => {
               helperText="يمكنك استخدام متغيرات مثل {{orderId}} أو {{status}}"
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 textarea: { color: '#1A2E1A' },
@@ -417,7 +417,7 @@ const NotificationTemplatesPage: React.FC = () => {
                 value={notificationType}
                 onChange={(e) => setNotificationType(e.target.value as NotificationType)}
                 sx={{
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   color: '#1A2E1A',
                   '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 }}
@@ -436,7 +436,7 @@ const NotificationTemplatesPage: React.FC = () => {
                 value={targetAudience}
                 onChange={(e) => setTargetAudience(e.target.value as TargetAudience)}
                 sx={{
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   color: '#1A2E1A',
                   '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 }}
@@ -457,7 +457,7 @@ const NotificationTemplatesPage: React.FC = () => {
               helperText="أدخل المتغيرات مفصولة بفواصل (مثال: orderId, status, userName)"
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 input: { color: '#1A2E1A' },

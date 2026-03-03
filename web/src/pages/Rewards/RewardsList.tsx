@@ -494,7 +494,7 @@ const RewardsListPage: React.FC = () => {
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
             sx={{
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               color: '#1A2E1A',
               '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}
@@ -558,7 +558,7 @@ const RewardsListPage: React.FC = () => {
               required
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 input: { color: '#1A2E1A' },
@@ -575,7 +575,7 @@ const RewardsListPage: React.FC = () => {
               rows={2}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 textarea: { color: '#1A2E1A' },
@@ -589,7 +589,7 @@ const RewardsListPage: React.FC = () => {
                 value={rewardType}
                 onChange={(e) => setRewardType(e.target.value as RewardType)}
                 sx={{
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   color: '#1A2E1A',
                   '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                 }}
@@ -617,7 +617,7 @@ const RewardsListPage: React.FC = () => {
               }
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 input: { color: '#1A2E1A' },
@@ -635,7 +635,7 @@ const RewardsListPage: React.FC = () => {
               helperText="اتركه فارغاً إذا لم يكن هناك تاريخ انتهاء"
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 input: { color: '#1A2E1A' },
@@ -653,7 +653,7 @@ const RewardsListPage: React.FC = () => {
               required
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 input: { color: '#1A2E1A' },
@@ -741,7 +741,7 @@ const RewardsListPage: React.FC = () => {
                     fullWidth
                     sx={{
                       '& .MuiOutlinedInput-root': {
-                        bgcolor: '#020617',
+                        bgcolor: '#FFFFFF',
                         '& fieldset': { borderColor: '#B1C0B1' },
                         '&:hover fieldset': { borderColor: '#374151' },
                       },
@@ -754,7 +754,7 @@ const RewardsListPage: React.FC = () => {
                       value={userTypeFilter}
                       onChange={(e) => setUserTypeFilter(e.target.value)}
                       sx={{
-                        bgcolor: '#020617',
+                        bgcolor: '#FFFFFF',
                         color: '#1A2E1A',
                         '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                       }}
@@ -797,7 +797,7 @@ const RewardsListPage: React.FC = () => {
                 sx={{
                   maxHeight: 300,
                   overflowY: 'auto',
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 1,
                   border: '1px solid #B1C0B1',
                 }}
@@ -859,7 +859,7 @@ const RewardsListPage: React.FC = () => {
               <Box
                 sx={{
                   p: 2,
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 1,
                   border: '1px solid #B1C0B1',
                 }}
@@ -883,7 +883,7 @@ const RewardsListPage: React.FC = () => {
                   flexWrap: 'wrap',
                   gap: 1,
                   p: 1.5,
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   borderRadius: 1,
                   border: '1px solid #B1C0B1',
                   maxHeight: 120,
@@ -919,7 +919,7 @@ const RewardsListPage: React.FC = () => {
               rows={2}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                 },
                 textarea: { color: '#1A2E1A' },

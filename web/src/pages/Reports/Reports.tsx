@@ -288,7 +288,7 @@ const ReportsPage: React.FC = () => {
             sx={{
               minWidth: 180,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },
@@ -306,7 +306,7 @@ const ReportsPage: React.FC = () => {
             sx={{
               minWidth: 180,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
                 '&:hover fieldset': { borderColor: '#374151' },
               },

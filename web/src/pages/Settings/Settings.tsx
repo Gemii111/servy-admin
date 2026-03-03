@@ -20,6 +20,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
 import { mockGetSettings, mockUpdateSettings, AppSettings } from '../../services/api/settings';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
@@ -87,6 +88,11 @@ const SettingsPage: React.FC = () => {
       key: 'restaurant' as keyof AppSettings,
       label: 'إعدادات المطاعم',
       icon: <RestaurantIcon />,
+    },
+    {
+      key: 'support' as keyof AppSettings,
+      label: 'الدعم والتواصل',
+      icon: <ContactSupportIcon />,
     },
   ];
 
@@ -218,7 +224,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -234,7 +240,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -250,7 +256,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -267,7 +273,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -284,7 +290,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -301,7 +307,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -356,7 +362,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -375,7 +381,7 @@ const SettingsPage: React.FC = () => {
                       '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                       '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
                       '& .MuiSvgIcon-root': { color: '#5A6A5A' },
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                     }}
                   >
                     <MenuItem value="daily">يومي</MenuItem>
@@ -563,6 +569,64 @@ const SettingsPage: React.FC = () => {
                 }}
               >
                 <TextField
+                  label="الرسوم الأساسية للتوصيل (ج.م)"
+                  type="number"
+                  value={formData.delivery?.deliveryBaseFee ?? 20}
+                  onChange={(e) =>
+                    handleChange('delivery', 'deliveryBaseFee', Number(e.target.value))
+                  }
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
+                  label="كم مجاني (كم)"
+                  type="number"
+                  value={formData.delivery?.deliveryFreeKm ?? 2}
+                  onChange={(e) =>
+                    handleChange('delivery', 'deliveryFreeKm', Number(e.target.value))
+                  }
+                  size="small"
+                  fullWidth
+                  inputProps={{ step: 0.5, min: 0 }}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
+                  label="السعر لكل كم إضافي (ج.م)"
+                  type="number"
+                  value={formData.delivery?.deliveryPricePerKm ?? 10}
+                  onChange={(e) =>
+                    handleChange('delivery', 'deliveryPricePerKm', Number(e.target.value))
+                  }
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
                   label="أقصى مسافة توصيل (كم)"
                   type="number"
                   value={formData.delivery?.maxDeliveryDistance || 0}
@@ -573,7 +637,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -592,7 +656,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -611,7 +675,7 @@ const SettingsPage: React.FC = () => {
                       '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
                       '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
                       '& .MuiSvgIcon-root': { color: '#5A6A5A' },
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                     }}
                   >
                     <MenuItem value="auto">تلقائي</MenuItem>
@@ -685,7 +749,7 @@ const SettingsPage: React.FC = () => {
                   fullWidth
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -703,7 +767,7 @@ const SettingsPage: React.FC = () => {
                   inputProps={{ step: 0.1, min: 0, max: 5 }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      bgcolor: '#020617',
+                      bgcolor: '#FFFFFF',
                       '& fieldset': { borderColor: '#B1C0B1' },
                       '&:hover fieldset': { borderColor: '#374151' },
                     },
@@ -717,6 +781,140 @@ const SettingsPage: React.FC = () => {
                 variant="contained"
                 startIcon={<SaveIcon />}
                 onClick={() => handleSave('restaurant')}
+                disabled={updateMutation.isPending}
+              >
+                حفظ الإعدادات
+              </Button>
+            </Paper>
+          )}
+
+          {/* Support & Contact Settings */}
+          {activeSection === 'support' && (
+            <Paper
+              sx={{
+                bgcolor: '#FFFFFF',
+                borderRadius: 2,
+                border: '1px solid #B1C0B1',
+                p: 3,
+              }}
+            >
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
+                الدعم والتواصل
+              </Typography>
+
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: 'repeat(1, minmax(0, 1fr))',
+                    sm: 'repeat(2, minmax(0, 1fr))',
+                  },
+                  gap: 2,
+                  mb: 3,
+                }}
+              >
+                <TextField
+                  label="البريد الإلكتروني للدعم"
+                  value={formData.support?.supportEmail || ''}
+                  onChange={(e) => handleChange('support', 'supportEmail', e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
+                  label="رقم الهاتف 1"
+                  value={formData.support?.supportPhone1 || ''}
+                  onChange={(e) => handleChange('support', 'supportPhone1', e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
+                  label="رقم الهاتف 2"
+                  value={formData.support?.supportPhone2 || ''}
+                  onChange={(e) => handleChange('support', 'supportPhone2', e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
+                  label="العنوان"
+                  value={formData.support?.supportAddress || ''}
+                  onChange={(e) => handleChange('support', 'supportAddress', e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
+                  label="رابط سياسة الخصوصية"
+                  value={formData.support?.privacyPolicyUrl || ''}
+                  onChange={(e) => handleChange('support', 'privacyPolicyUrl', e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+                <TextField
+                  label="رابط شروط الاستخدام"
+                  value={formData.support?.termsOfServiceUrl || ''}
+                  onChange={(e) => handleChange('support', 'termsOfServiceUrl', e.target.value)}
+                  size="small"
+                  fullWidth
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      bgcolor: '#FFFFFF',
+                      '& fieldset': { borderColor: '#B1C0B1' },
+                      '&:hover fieldset': { borderColor: '#374151' },
+                    },
+                    input: { color: '#1A2E1A' },
+                    '& .MuiInputLabel-root': { color: '#5A6A5A' },
+                  }}
+                />
+              </Box>
+
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                onClick={() => handleSave('support')}
                 disabled={updateMutation.isPending}
               >
                 حفظ الإعدادات

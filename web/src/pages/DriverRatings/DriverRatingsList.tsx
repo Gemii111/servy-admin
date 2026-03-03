@@ -282,7 +282,7 @@ const DriverRatingsListPage: React.FC = () => {
               setPage(1);
             }}
             sx={{
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               color: '#1A2E1A',
               '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
             }}

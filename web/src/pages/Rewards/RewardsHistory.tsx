@@ -340,7 +340,7 @@ const RewardsHistoryPage: React.FC = () => {
         sx={{
           mb: 3,
           p: 2,
-          bgcolor: '#020617',
+          bgcolor: '#FFFFFF',
           borderRadius: 2,
           border: '1px solid #B1C0B1',
           display: 'flex',
@@ -470,7 +470,7 @@ const RewardsHistoryPage: React.FC = () => {
             >
               {/* User Info */}
               <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
+                <Card sx={{ bgcolor: '#FFFFFF', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
@@ -490,7 +490,7 @@ const RewardsHistoryPage: React.FC = () => {
 
               {/* Reward Info */}
               <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
+                <Card sx={{ bgcolor: '#FFFFFF', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
@@ -531,7 +531,7 @@ const RewardsHistoryPage: React.FC = () => {
 
               {/* Status & Dates */}
               <Box>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
+                <Card sx={{ bgcolor: '#FFFFFF', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
@@ -553,7 +553,7 @@ const RewardsHistoryPage: React.FC = () => {
               </Box>
 
               <Box>
-                <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
+                <Card sx={{ bgcolor: '#FFFFFF', border: '1px solid #B1C0B1' }}>
                   <CardContent>
                     <Typography
                       variant="subtitle2"
@@ -584,7 +584,7 @@ const RewardsHistoryPage: React.FC = () => {
 
               {selectedReward.notes && (
                 <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
-                  <Card sx={{ bgcolor: '#020617', border: '1px solid #B1C0B1' }}>
+                  <Card sx={{ bgcolor: '#FFFFFF', border: '1px solid #B1C0B1' }}>
                     <CardContent>
                       <Typography
                         variant="subtitle2"
@@ -673,7 +673,7 @@ const RewardsHistoryPage: React.FC = () => {
             sx={{
               mt: 1,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
               },
               textarea: { color: '#1A2E1A' },
@@ -722,7 +722,7 @@ const RewardsHistoryPage: React.FC = () => {
             sx={{
               mt: 1,
               '& .MuiOutlinedInput-root': {
-                bgcolor: '#020617',
+                bgcolor: '#FFFFFF',
                 '& fieldset': { borderColor: '#B1C0B1' },
               },
               input: { color: '#1A2E1A' },

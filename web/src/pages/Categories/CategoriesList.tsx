@@ -315,7 +315,7 @@ const CategoriesListPage: React.FC = () => {
           sx={{
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
@@ -419,7 +419,7 @@ const CategoriesListPage: React.FC = () => {
               fullWidth
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },
@@ -442,7 +442,7 @@ const CategoriesListPage: React.FC = () => {
               fullWidth
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },
@@ -467,7 +467,7 @@ const CategoriesListPage: React.FC = () => {
               minRows={3}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  bgcolor: '#020617',
+                  bgcolor: '#FFFFFF',
                   '& fieldset': { borderColor: '#B1C0B1' },
                   '&:hover fieldset': { borderColor: '#374151' },
                 },

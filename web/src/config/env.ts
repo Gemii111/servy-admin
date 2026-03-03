@@ -8,6 +8,7 @@
 interface EnvConfig {
   apiBaseUrl: string;
   apiTimeout: number;
+  websocketUrl: string;
   environment: 'development' | 'production' | 'test';
   sentryDsn: string | undefined;
   sentryEnvironment: string;
@@ -59,8 +60,12 @@ const getNumberEnvVar = (key: string, defaultValue: number): number => {
  * Environment configuration
  */
 export const env: EnvConfig = {
-  apiBaseUrl: getEnvVar('REACT_APP_API_BASE_URL', 'http://localhost:3000/api'),
-  apiTimeout: getNumberEnvVar('REACT_APP_API_TIMEOUT', 30000),
+  apiBaseUrl: getEnvVar(
+    'REACT_APP_API_BASE_URL',
+    'https://talabat-ehpd.onrender.com/servy/api/v1'
+  ),
+  apiTimeout: getNumberEnvVar('REACT_APP_API_TIMEOUT', 60000),
+  websocketUrl: getEnvVar('REACT_APP_WEBSOCKET_URL', 'wss://api.servy.app/ws'),
   environment: (getEnvVar('REACT_APP_ENV', process.env.NODE_ENV || 'development') as EnvConfig['environment']) || 'development',
   sentryDsn: getEnvVar('REACT_APP_SENTRY_DSN') || undefined,
   sentryEnvironment: getEnvVar('REACT_APP_SENTRY_ENVIRONMENT', process.env.NODE_ENV || 'development'),

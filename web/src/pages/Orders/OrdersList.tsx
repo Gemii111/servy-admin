@@ -15,11 +15,14 @@ import { ColumnDef } from '@tanstack/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DataTable from '../../components/tables/DataTable';
+import { exportToCsv } from '../../utils/exportCsv';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { mockGetOrders, Order } from '../../services/api/orders';
+import { mockGetRestaurants } from '../../services/api/restaurants';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
@@ -29,17 +32,24 @@ const OrdersListPage: React.FC = () => {
 
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [paymentStatusFilter, setPaymentStatusFilter] = useState<string>('all');
+  const [restaurantFilter, setRestaurantFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
 
   const limit = 10;
 
+  const { data: restaurantsData } = useQuery({
+    queryKey: ['restaurants', 'options'],
+    queryFn: () => mockGetRestaurants({ page: 1, limit: 100 }),
+  });
+
   const { data, isLoading } = useQuery({
-    queryKey: ['orders', statusFilter, paymentStatusFilter, searchQuery, page, limit],
+    queryKey: ['orders', statusFilter, paymentStatusFilter, restaurantFilter, searchQuery, page, limit],
     queryFn: () =>
       mockGetOrders({
         status: statusFilter,
         paymentStatus: paymentStatusFilter,
+        restaurantId: restaurantFilter,
         search: searchQuery,
         page,
         limit,
@@ -82,10 +92,15 @@ const OrdersListPage: React.FC = () => {
           const status = String(info.getValue());
           const labels: Record<string, { label: string; color: string }> = {
             pending: { label: 'قيد الانتظار', color: '#F59E0B' },
+            accepted: { label: 'مقبول', color: '#38BDF8' },
             confirmed: { label: 'مؤكد', color: '#38BDF8' },
             preparing: { label: 'قيد التحضير', color: '#86B573' },
             ready: { label: 'جاهز', color: '#22C55E' },
+            heading_to_restaurant: { label: 'متجه للمطعم', color: '#8B5CF6' },
+            at_restaurant: { label: 'في المطعم', color: '#8B5CF6' },
             picked_up: { label: 'تم الاستلام', color: '#8B5CF6' },
+            out_for_delivery: { label: 'قيد التوصيل', color: '#86B573' },
+            delivering: { label: 'قيد التوصيل', color: '#86B573' },
             delivered: { label: 'تم التسليم', color: '#22C55E' },
             cancelled: { label: 'ملغي', color: '#EF4444' },
           };
@@ -200,6 +215,39 @@ const OrdersListPage: React.FC = () => {
             عرض وإدارة جميع الطلبات في النظام
           </Typography>
         </Box>
+        {data && data.orders.length > 0 && (
+          <Button
+            variant="outlined"
+            startIcon={<FileDownloadIcon />}
+            onClick={() => {
+              const orders = data.orders;
+              const formatted = orders.map((o) => ({
+                ...o,
+                createdAt: new Date(o.createdAt).toLocaleString('ar-EG'),
+              }));
+              exportToCsv(
+                formatted,
+                [
+                  { key: 'orderNumber', label: 'رقم الطلب' },
+                  { key: 'customerName', label: 'العميل' },
+                  { key: 'restaurantName', label: 'المطعم' },
+                  { key: 'status', label: 'الحالة' },
+                  { key: 'total', label: 'الإجمالي' },
+                  { key: 'createdAt', label: 'التاريخ' },
+                ],
+                `orders-${new Date().toISOString().slice(0, 10)}.csv`
+              );
+              showSnackbar('تم تصدير الطلبات بنجاح', 'success');
+            }}
+            sx={{
+              borderColor: '#86B573',
+              color: '#86B573',
+              '&:hover': { borderColor: '#6B9B5E', bgcolor: 'rgba(134,181,115,0.08)' },
+            }}
+          >
+            تصدير CSV
+          </Button>
+        )}
       </Box>
 
       {/* Filters */}
@@ -229,10 +277,15 @@ const OrdersListPage: React.FC = () => {
           >
             <MenuItem value="all">الكل</MenuItem>
             <MenuItem value="pending">قيد الانتظار</MenuItem>
+            <MenuItem value="accepted">مقبول</MenuItem>
             <MenuItem value="confirmed">مؤكد</MenuItem>
             <MenuItem value="preparing">قيد التحضير</MenuItem>
             <MenuItem value="ready">جاهز</MenuItem>
+            <MenuItem value="heading_to_restaurant">متجه للمطعم</MenuItem>
+            <MenuItem value="at_restaurant">في المطعم</MenuItem>
             <MenuItem value="picked_up">تم الاستلام</MenuItem>
+            <MenuItem value="out_for_delivery">قيد التوصيل</MenuItem>
+            <MenuItem value="delivering">قيد التوصيل</MenuItem>
             <MenuItem value="delivered">تم التسليم</MenuItem>
             <MenuItem value="cancelled">ملغي</MenuItem>
           </Select>
@@ -261,6 +314,30 @@ const OrdersListPage: React.FC = () => {
             <MenuItem value="refunded">مسترد</MenuItem>
           </Select>
         </FormControl>
+        <FormControl size="small" sx={{ minWidth: 180 }}>
+          <InputLabel sx={{ color: '#5A6A5A' }}>المتجر</InputLabel>
+          <Select
+            value={restaurantFilter}
+            onChange={(e) => {
+              setRestaurantFilter(e.target.value);
+              setPage(1);
+            }}
+            label="المتجر"
+            sx={{
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
+              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#374151' },
+              '& .MuiSvgIcon-root': { color: '#5A6A5A' },
+            }}
+          >
+            <MenuItem value="all">الكل</MenuItem>
+            {restaurantsData?.restaurants?.map((r) => (
+              <MenuItem key={r.id} value={r.id}>
+                {r.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       {/* Search */}
@@ -284,7 +361,7 @@ const OrdersListPage: React.FC = () => {
           sx={{
             maxWidth: 400,
             '& .MuiOutlinedInput-root': {
-              bgcolor: '#020617',
+              bgcolor: '#FFFFFF',
               '& fieldset': { borderColor: '#B1C0B1' },
               '&:hover fieldset': { borderColor: '#374151' },
             },
