@@ -167,7 +167,7 @@ const DeliveryRequestsListPage: React.FC = () => {
         },
       },
     ],
-    [cancelMutation.isPending]
+    [cancelMutation]
   );
 
   if (isLoading) {

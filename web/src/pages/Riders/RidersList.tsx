@@ -234,7 +234,7 @@ const RidersListPage: React.FC = () => {
         },
       },
     ],
-    [updateStatusMutation.isPending, approveMutation.isPending]
+    [updateStatusMutation, approveMutation]
   );
 
   if (isLoading) {

@@ -248,7 +248,7 @@ const RestaurantsListPage: React.FC = () => {
         ),
       },
     ],
-    [toggleFeaturedMutation.isPending]
+    [toggleFeaturedMutation]
   );
 
   const handleView = (restaurant: Restaurant) => {

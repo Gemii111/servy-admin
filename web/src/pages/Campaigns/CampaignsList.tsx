@@ -147,7 +147,7 @@ const CampaignsListPage: React.FC = () => {
         },
       },
     ],
-    [sendNotificationMutation.isPending]
+    [sendNotificationMutation]
   );
 
   if (isLoading) {
