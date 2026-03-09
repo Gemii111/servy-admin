@@ -37,7 +37,7 @@ const getEnvVar = (key: string, defaultValue?: string): string => {
  * Get boolean environment variable
  */
 const getBooleanEnvVar = (key: string, defaultValue: boolean = false): boolean => {
-  const value = getEnvVar(key);
+  const value = getEnvVar(key, '');
   if (!value) return defaultValue;
   return value.toLowerCase() === 'true';
 };
@@ -46,7 +46,7 @@ const getBooleanEnvVar = (key: string, defaultValue: boolean = false): boolean =
  * Get number environment variable
  */
 const getNumberEnvVar = (key: string, defaultValue: number): number => {
-  const value = getEnvVar(key);
+  const value = getEnvVar(key, '');
   if (!value) return defaultValue;
   const parsed = parseInt(value, 10);
   if (isNaN(parsed)) {
@@ -67,7 +67,7 @@ export const env: EnvConfig = {
   apiTimeout: getNumberEnvVar('REACT_APP_API_TIMEOUT', 60000),
   websocketUrl: getEnvVar('REACT_APP_WEBSOCKET_URL', 'wss://api.servy.app/ws'),
   environment: (getEnvVar('REACT_APP_ENV', process.env.NODE_ENV || 'development') as EnvConfig['environment']) || 'development',
-  sentryDsn: getEnvVar('REACT_APP_SENTRY_DSN') || undefined,
+  sentryDsn: getEnvVar('REACT_APP_SENTRY_DSN', '') || undefined,
   sentryEnvironment: getEnvVar('REACT_APP_SENTRY_ENVIRONMENT', process.env.NODE_ENV || 'development'),
   enableAnalytics: getBooleanEnvVar('REACT_APP_ENABLE_ANALYTICS', false),
   enableSentry: getBooleanEnvVar('REACT_APP_ENABLE_SENTRY', false),
