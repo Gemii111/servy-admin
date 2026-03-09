@@ -761,15 +761,32 @@
 
 ## 20. تشغيل الفرونت إند ببيانات حقيقية
 
-لتفعيل الاتصال بالباك إند بدلاً من الـ Mock:
+### ما تم تنفيذه (متوافق مع ADMIN_API_DOCS)
+الفرونت إند مربوط بالباك إند الحقيقي للـ endpoints التالية:
+- **Auth:** `POST /admin/auth/login`
+- **Dashboard:** statistics, orders-over-time, revenue-over-time, orders-by-status, top-restaurants
+- **Users:** GET, POST, PUT status, DELETE
+- **Orders:** GET list, GET :id, PUT status, POST assign-driver
+- **Delivery Requests (P2P):** GET list, GET :id, PUT cancel
 
-1. تأكد من وجود الـ endpoints أعلاه في الباك إند.
-2. في ملف `.env` اضف أو عدّل:
-   ```
-   REACT_APP_USE_MOCK_API=false
-   REACT_APP_API_BASE_URL=https://your-api.com/servy/api/v1
-   ```
-3. سيحتاج تعديل ملفات الـ services في `web/src/services/api/` لاستخدام `apiClient` بدلاً من دوال الـ mock عند `REACT_APP_USE_MOCK_API=false`.
+### التفعيل
+في ملف `web/.env`:
+```
+REACT_APP_USE_MOCK_API=false
+REACT_APP_API_BASE_URL=https://talabat-ehpd.onrender.com/servy/api/v1
+```
+
+- `REACT_APP_USE_MOCK_API=false` → استخدم API الحقيقي
+- `REACT_APP_USE_MOCK_API=true` أو غير معرّف في development → Mock
+
+### ما لم يُنفّذ بعد في الباك إند (Phase 2 & 3)
+- Restaurant management
+- Coupon management
+- Rider/driver management & ratings
+- Settings management
+- Reports & export
+- Push notifications
+- Rewards/loyalty
 
 ---
 

@@ -1,7 +1,71 @@
 /**
  * Delivery Requests (P2P) API Service
- * طلبات التوصيل المباشرة حسب ADMIN_APPLICATION_REQUIREMENTS.md
+ * الباك إند يعيد orders بنفس الشكل - نحوّلها لـ DeliveryRequest
  */
+
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
+
+interface ApiP2POrder {
+  id: string;
+  customerId: string;
+  customerName: string;
+  customerPhone: string;
+  deliveryAddress: string;
+  notes?: string;
+  total: number;
+  paymentMethod: string;
+  status: string;
+  createdAt: string;
+  pickup_address?: { address_line: string; city: string; label: string; latitude: number; longitude: number };
+  delivery_address?: { address_line: string; city: string; label: string; latitude: number; longitude: number };
+  receiver_name?: string;
+  receiver_phone?: string;
+  item_description?: string;
+}
+
+const defaultAddress = (line: string, label: string): DeliveryAddress => ({
+  label,
+  address_line: line || '-',
+  city: '',
+  latitude: 0,
+  longitude: 0,
+});
+
+function mapApiOrderToDeliveryRequest(api: ApiP2POrder): DeliveryRequest {
+  return {
+    id: api.id,
+    user_id: api.customerId,
+    pickup_address: api.pickup_address || defaultAddress(api.notes || 'غير محدد', 'Pickup'),
+    delivery_address: api.delivery_address || defaultAddress(api.deliveryAddress, 'Delivery'),
+    receiver_name: api.receiver_name || api.customerName,
+    receiver_phone: api.receiver_phone || api.customerPhone,
+    item_description: api.item_description || api.notes || '-',
+    payment_method: (api.paymentMethod === 'card' ? 'card' : api.paymentMethod === 'online' ? 'wallet' : 'cash') as DeliveryRequest['payment_method'],
+    status: api.status as DeliveryRequest['status'],
+    fee: api.total,
+    notes: api.notes,
+    created_at: api.createdAt,
+  };
+}
+
+async function realGetDeliveryRequests(params?: { status?: string }): Promise<DeliveryRequest[]> {
+  const { data } = await apiClient.get<{ orders: ApiP2POrder[] }>('/admin/delivery-requests', { params });
+  return (data.orders || []).map(mapApiOrderToDeliveryRequest);
+}
+
+async function realGetDeliveryRequestById(id: string): Promise<DeliveryRequest | null> {
+  const { data } = await apiClient.get<ApiP2POrder>(`/admin/delivery-requests/${id}`);
+  return data ? mapApiOrderToDeliveryRequest(data) : null;
+}
+
+async function realCancelDeliveryRequest(id: string): Promise<DeliveryRequest> {
+  await apiClient.put(`/admin/delivery-requests/${id}/cancel`);
+  const req = await realGetDeliveryRequestById(id);
+  if (!req) throw new Error('طلب غير موجود');
+  return { ...req, status: 'cancelled' as const };
+}
 
 export interface DeliveryAddress {
   label: string;
@@ -92,7 +156,31 @@ const mockDeliveryRequests: DeliveryRequest[] = [
 export const getDeliveryRequestStatusLabel = (status: string) =>
   STATUS_LABELS[status] || status;
 
-export async function mockGetDeliveryRequests(params?: {
+export async function getDeliveryRequests(params?: { status?: string }): Promise<DeliveryRequest[]> {
+  try {
+    return shouldUseMock() ? mockGetDeliveryRequests(params) : realGetDeliveryRequests(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getDeliveryRequestById(id: string): Promise<DeliveryRequest | null> {
+  try {
+    return shouldUseMock() ? mockGetDeliveryRequestById(id) : realGetDeliveryRequestById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function cancelDeliveryRequest(id: string): Promise<DeliveryRequest> {
+  try {
+    return shouldUseMock() ? mockCancelDeliveryRequest(id) : realCancelDeliveryRequest(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+async function mockGetDeliveryRequests(params?: {
   status?: string;
 }): Promise<DeliveryRequest[]> {
   await new Promise((r) => setTimeout(r, 300));
@@ -103,12 +191,12 @@ export async function mockGetDeliveryRequests(params?: {
   return result;
 }
 
-export async function mockGetDeliveryRequestById(id: string): Promise<DeliveryRequest | null> {
+async function mockGetDeliveryRequestById(id: string): Promise<DeliveryRequest | null> {
   await new Promise((r) => setTimeout(r, 200));
   return mockDeliveryRequests.find((d) => d.id === id) || null;
 }
 
-export async function mockCancelDeliveryRequest(id: string): Promise<DeliveryRequest> {
+async function mockCancelDeliveryRequest(id: string): Promise<DeliveryRequest> {
   await new Promise((r) => setTimeout(r, 300));
   const idx = mockDeliveryRequests.findIndex((d) => d.id === id);
   if (idx === -1) throw new Error('طلب التوصيل غير موجود');

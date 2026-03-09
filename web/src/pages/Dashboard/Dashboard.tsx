@@ -13,45 +13,45 @@ import RevenueChart from '../../components/charts/RevenueChart';
 import OrdersByStatusChart from '../../components/charts/OrdersByStatusChart';
 import TopRestaurantsChart from '../../components/charts/TopRestaurantsChart';
 import {
-  mockGetDashboardStatistics,
-  mockGetOrdersOverTime,
-  mockGetRevenueOverTime,
-  mockGetOrdersByStatus,
-  mockGetTopRestaurants,
+  getDashboardStatistics,
+  getOrdersOverTime,
+  getRevenueOverTime,
+  getOrdersByStatus,
+  getTopRestaurants,
 } from '../../services/api/dashboard';
-import { mockGetOrders } from '../../services/api/orders';
+import { getOrders } from '../../services/api/orders';
 import { useNavigate } from 'react-router-dom';
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard', 'statistics'],
-    queryFn: mockGetDashboardStatistics,
+    queryFn: getDashboardStatistics,
   });
 
   const { data: ordersData, isLoading: ordersLoading } = useQuery({
     queryKey: ['dashboard', 'orders-over-time'],
-    queryFn: mockGetOrdersOverTime,
+    queryFn: getOrdersOverTime,
   });
 
   const { data: revenueData, isLoading: revenueLoading } = useQuery({
     queryKey: ['dashboard', 'revenue-over-time'],
-    queryFn: mockGetRevenueOverTime,
+    queryFn: getRevenueOverTime,
   });
 
   const { data: ordersByStatusData, isLoading: ordersByStatusLoading } = useQuery({
     queryKey: ['dashboard', 'orders-by-status'],
-    queryFn: mockGetOrdersByStatus,
+    queryFn: getOrdersByStatus,
   });
 
   const { data: topRestaurantsData, isLoading: topRestaurantsLoading } = useQuery({
     queryKey: ['dashboard', 'top-restaurants'],
-    queryFn: mockGetTopRestaurants,
+    queryFn: getTopRestaurants,
   });
 
   const { data: ordersResponse, isLoading: recentOrdersLoading } = useQuery({
     queryKey: ['dashboard', 'recent-orders'],
-    queryFn: () => mockGetOrders({ page: 1, limit: 5 }),
+    queryFn: () => getOrders({ page: 1, limit: 5 }),
   });
   const recentOrders = ordersResponse?.orders || [];
   const statusLabels: Record<string, string> = {

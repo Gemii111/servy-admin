@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { Admin } from '../services/api/auth';
-import { mockLogin, type LoginPayload } from '../services/api/auth';
+import { login as apiLogin, type LoginPayload } from '../services/api/auth';
 import { setUserContext, clearUserContext } from '../config/sentry';
 
 type AuthContextValue = {
@@ -35,10 +35,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (payload: LoginPayload) => {
+  const login = useCallback(async (payload: LoginPayload) => {
     setIsLoading(true);
     try {
-      const res = await mockLogin(payload);
+      const res = await apiLogin(payload);
       if (!res.success || !res.data) {
         throw new Error(res.message || 'Login failed');
       }
@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const logout = () => {
     setAdmin(null);
@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       login,
       logout,
     }),
-    [admin, token, isLoading]
+    [admin, token, isLoading, login]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -22,7 +22,7 @@ import { ar } from 'date-fns/locale';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
-import { mockGetOrderById, mockUpdateOrderStatus, Order } from '../../services/api/orders';
+import { getOrderById, updateOrderStatus, Order } from '../../services/api/orders';
 
 const OrderDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -36,7 +36,7 @@ const OrderDetailsPage: React.FC = () => {
     isLoading,
   } = useQuery<Order, Error>({
     queryKey: ['order', id],
-    queryFn: () => mockGetOrderById(id!),
+    queryFn: () => getOrderById(id!),
     enabled: !!id,
   });
 
@@ -47,7 +47,7 @@ const OrderDetailsPage: React.FC = () => {
   }, [order]);
 
   const updateStatusMutation = useMutation({
-    mutationFn: (newStatus: Order['status']) => mockUpdateOrderStatus(id!, newStatus),
+    mutationFn: (newStatus: Order['status']) => updateOrderStatus(id!, newStatus),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['order', id] });
       queryClient.invalidateQueries({ queryKey: ['orders'] });

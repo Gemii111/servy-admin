@@ -47,7 +47,7 @@ import {
   RewardType,
   RewardCriteriaType,
 } from '../../services/api/rewards';
-import { mockGetUsers } from '../../services/api/users';
+import { getUsers } from '../../services/api/users';
 
 const RewardsListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -125,7 +125,7 @@ const RewardsListPage: React.FC = () => {
   const { data: usersData, isLoading: usersLoading } = useQuery({
     queryKey: ['users', 'assign', userTypeFilter, userSearchQuery],
     queryFn: () =>
-      mockGetUsers({
+      getUsers({
         userType: userTypeFilter !== 'all' ? userTypeFilter : undefined,
         search: userSearchQuery || undefined,
         limit: 100,

@@ -17,8 +17,8 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetDeliveryRequests,
-  mockCancelDeliveryRequest,
+  getDeliveryRequests,
+  cancelDeliveryRequest,
   DeliveryRequest,
   getDeliveryRequestStatusLabel,
 } from '../../services/api/deliveryRequests';
@@ -35,13 +35,13 @@ const DeliveryRequestsListPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['delivery-requests', statusFilter],
     queryFn: () =>
-      mockGetDeliveryRequests({
+      getDeliveryRequests({
         status: statusFilter === 'all' ? undefined : statusFilter,
       }),
   });
 
   const cancelMutation = useMutation({
-    mutationFn: mockCancelDeliveryRequest,
+    mutationFn: cancelDeliveryRequest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['delivery-requests'] });
       showSnackbar('تم إلغاء طلب التوصيل', 'success');

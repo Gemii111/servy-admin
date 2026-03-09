@@ -23,9 +23,9 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetUsers,
-  mockDeleteUser,
-  mockCreateUser,
+  getUsers,
+  deleteUser,
+  createUser,
   User,
 } from '../../services/api/users';
 
@@ -50,7 +50,7 @@ const UsersListPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['users', userTypeFilter, statusFilter, searchQuery, page, limit],
     queryFn: () =>
-      mockGetUsers({
+      getUsers({
         userType: userTypeFilter,
         status: statusFilter,
         search: searchQuery,
@@ -60,7 +60,7 @@ const UsersListPage: React.FC = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => mockDeleteUser(id),
+    mutationFn: (id: string) => deleteUser(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       showSnackbar('تم حذف المستخدم بنجاح', 'success');
@@ -72,7 +72,7 @@ const UsersListPage: React.FC = () => {
 
   const createMutation = useMutation({
     mutationFn: () =>
-      mockCreateUser({
+      createUser({
         name,
         email,
         phone,

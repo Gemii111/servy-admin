@@ -5,7 +5,7 @@
  * mock data (for development) and real API calls (for production).
  */
 
-import { apiClient, ApiResponse, PaginatedResponse, handleApiError } from './client';
+import { apiClient, ApiResponse, handleApiError } from './client';
 import { env } from '../../config/env';
 
 /**
@@ -121,10 +121,12 @@ export class BaseApiService {
 
 /**
  * Helper function to switch between mock and real API
- * Set REACT_APP_USE_MOCK_API=true in .env to use mock data
+ * - REACT_APP_USE_MOCK_API=false → استخدم API الحقيقي دائماً
+ * - REACT_APP_USE_MOCK_API=true أو غير معرّف في development → Mock
  */
 export const shouldUseMock = (): boolean => {
-  const useMock = process.env.REACT_APP_USE_MOCK_API === 'true';
-  return useMock || env.environment === 'development';
+  if (process.env.REACT_APP_USE_MOCK_API === 'false') return false;
+  if (process.env.REACT_APP_USE_MOCK_API === 'true') return true;
+  return env.environment === 'development';
 };
 

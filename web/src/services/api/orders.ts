@@ -1,3 +1,7 @@
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
+
 export interface Order {
   id: string;
   orderNumber: string;
@@ -53,6 +57,107 @@ export interface OrdersResponse {
     total: number;
     totalPages: number;
   };
+}
+
+interface ApiOrder {
+  id: string;
+  orderNumber: string;
+  customerId: string;
+  customerName: string;
+  customerPhone: string;
+  restaurantId?: string;
+  restaurantName?: string;
+  driverId?: string;
+  driverName?: string;
+  status: string;
+  subtotal: number;
+  deliveryFee: number;
+  discount?: number;
+  total: number;
+  paymentMethod: string;
+  deliveryAddress: string;
+  notes?: string;
+  orderType?: string;
+  createdAt: string;
+  updatedAt?: string;
+  items?: OrderItem[];
+}
+
+function mapApiOrderToOrder(api: ApiOrder): Order {
+  return {
+    ...api,
+    status: api.status as Order['status'],
+    paymentMethod: (api.paymentMethod || 'cash') as Order['paymentMethod'],
+    restaurantId: api.restaurantId || '',
+    restaurantName: api.restaurantName || '-',
+    items: api.items || [],
+    tax: api.discount ?? 0,
+    paymentStatus: 'pending' as const,
+    updatedAt: api.updatedAt || api.createdAt,
+  };
+}
+
+async function realGetOrders(params?: {
+  status?: string;
+  paymentStatus?: string;
+  restaurantId?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<OrdersResponse> {
+  const { data } = await apiClient.get<{ orders: ApiOrder[]; pagination: OrdersResponse['pagination'] }>(
+    '/admin/orders',
+    { params }
+  );
+  return {
+    orders: (data.orders || []).map(mapApiOrderToOrder),
+    pagination: data.pagination,
+  };
+}
+
+async function realGetOrderById(id: string): Promise<Order> {
+  const { data } = await apiClient.get<ApiOrder>(`/admin/orders/${id}`);
+  return mapApiOrderToOrder(data);
+}
+
+async function realUpdateOrderStatus(id: string, status: Order['status']): Promise<void> {
+  await apiClient.put(`/admin/orders/${id}/status`, { status });
+}
+
+async function realAssignDriver(orderId: string, driverId: string): Promise<void> {
+  await apiClient.post(`/admin/orders/${orderId}/assign-driver`, { driverId });
+}
+
+export async function getOrders(params?: Parameters<typeof realGetOrders>[0]): Promise<OrdersResponse> {
+  try {
+    return shouldUseMock() ? mockGetOrders(params) : realGetOrders(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getOrderById(id: string): Promise<Order> {
+  try {
+    return shouldUseMock() ? mockGetOrderById(id) : realGetOrderById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function updateOrderStatus(id: string, status: Order['status']): Promise<void> {
+  try {
+    return shouldUseMock() ? mockUpdateOrderStatus(id, status) : realUpdateOrderStatus(id, status);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function assignDriver(orderId: string, driverId: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockAssignDriver(orderId, driverId) : realAssignDriver(orderId, driverId);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
 }
 
 // Mock orders data
@@ -121,7 +226,7 @@ const mockOrders: Order[] = Array.from({ length: 50 }, (_, i) => {
   };
 });
 
-export async function mockGetOrders(params?: {
+async function mockGetOrders(params?: {
   status?: string;
   paymentStatus?: string;
   restaurantId?: string;
@@ -180,14 +285,14 @@ export async function mockGetOrders(params?: {
   };
 }
 
-export async function mockGetOrderById(id: string): Promise<Order> {
+async function mockGetOrderById(id: string): Promise<Order> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const order = mockOrders.find((o) => o.id === id);
   if (!order) throw new Error('Order not found');
   return order;
 }
 
-export async function mockUpdateOrderStatus(
+async function mockUpdateOrderStatus(
   id: string,
   status: Order['status']
 ): Promise<void> {
@@ -199,7 +304,7 @@ export async function mockUpdateOrderStatus(
   }
 }
 
-export async function mockAssignDriver(orderId: string, driverId: string): Promise<void> {
+async function mockAssignDriver(orderId: string, driverId: string): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const order = mockOrders.find((o) => o.id === orderId);
   if (order) {

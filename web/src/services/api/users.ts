@@ -1,3 +1,7 @@
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
+
 export interface User {
   id: string;
   name: string;
@@ -20,6 +24,87 @@ export interface UsersResponse {
   };
 }
 
+async function realGetUsers(params?: {
+  userType?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<UsersResponse> {
+  const { data } = await apiClient.get<UsersResponse>('/admin/users', { params });
+  return data;
+}
+
+async function realGetUserById(id: string): Promise<User> {
+  const { data } = await apiClient.get<User>(`/admin/users/${id}`);
+  return data;
+}
+
+async function realUpdateUserStatus(id: string, status: 'active' | 'suspended'): Promise<void> {
+  await apiClient.put(`/admin/users/${id}/status`, { status });
+}
+
+async function realDeleteUser(id: string): Promise<void> {
+  await apiClient.delete(`/admin/users/${id}`);
+}
+
+async function realCreateUser(payload: {
+  name: string;
+  email: string;
+  phone: string;
+  userType: 'customer' | 'driver' | 'restaurant';
+  status?: 'active' | 'suspended';
+}): Promise<User> {
+  const { data } = await apiClient.post<{ id: string; message: string }>('/admin/users', payload);
+  return realGetUserById(data.id);
+}
+
+export async function getUsers(params?: Parameters<typeof realGetUsers>[0]): Promise<UsersResponse> {
+  try {
+    return shouldUseMock() ? mockGetUsers(params) : realGetUsers(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getUserById(id: string): Promise<User> {
+  try {
+    return shouldUseMock() ? mockGetUserById(id) : realGetUserById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function updateUserStatus(id: string, status: 'active' | 'suspended'): Promise<void> {
+  try {
+    return shouldUseMock() ? mockUpdateUserStatus(id, status) : realUpdateUserStatus(id, status);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function deleteUser(id: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockDeleteUser(id) : realDeleteUser(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function createUser(payload: {
+  name: string;
+  email: string;
+  phone: string;
+  userType: 'customer' | 'driver' | 'restaurant';
+  status?: 'active' | 'suspended';
+}): Promise<User> {
+  try {
+    return shouldUseMock() ? mockCreateUser(payload) : realCreateUser(payload);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
 // Mock users data
 const mockUsers: User[] = Array.from({ length: 50 }, (_, i) => ({
   id: `user-${i + 1}`,
@@ -33,7 +118,7 @@ const mockUsers: User[] = Array.from({ length: 50 }, (_, i) => ({
   createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
 }));
 
-export async function mockGetUsers(params?: {
+async function mockGetUsers(params?: {
   userType?: string;
   status?: string;
   search?: string;
@@ -82,14 +167,14 @@ export async function mockGetUsers(params?: {
   };
 }
 
-export async function mockGetUserById(id: string): Promise<User> {
+async function mockGetUserById(id: string): Promise<User> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const user = mockUsers.find((u) => u.id === id);
   if (!user) throw new Error('User not found');
   return user;
 }
 
-export async function mockUpdateUserStatus(
+async function mockUpdateUserStatus(
   id: string,
   status: 'active' | 'suspended'
 ): Promise<void> {
@@ -98,13 +183,13 @@ export async function mockUpdateUserStatus(
   if (user) user.status = status;
 }
 
-export async function mockDeleteUser(id: string): Promise<void> {
+async function mockDeleteUser(id: string): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 300));
   const index = mockUsers.findIndex((u) => u.id === id);
   if (index > -1) mockUsers.splice(index, 1);
 }
 
-export async function mockCreateUser(payload: {
+async function mockCreateUser(payload: {
   name: string;
   email: string;
   phone: string;

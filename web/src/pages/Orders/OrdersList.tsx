@@ -21,7 +21,7 @@ import { exportToCsv } from '../../utils/exportCsv';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
-import { mockGetOrders, Order } from '../../services/api/orders';
+import { getOrders, Order } from '../../services/api/orders';
 import { mockGetRestaurants } from '../../services/api/restaurants';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
@@ -46,7 +46,7 @@ const OrdersListPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['orders', statusFilter, paymentStatusFilter, restaurantFilter, searchQuery, page, limit],
     queryFn: () =>
-      mockGetOrders({
+      getOrders({
         status: statusFilter,
         paymentStatus: paymentStatusFilter,
         restaurantId: restaurantFilter,

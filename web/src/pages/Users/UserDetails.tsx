@@ -6,7 +6,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
-import { mockGetUserById } from '../../services/api/users';
+import { getUserById } from '../../services/api/users';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
@@ -16,7 +16,7 @@ const UserDetailsPage: React.FC = () => {
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['user', id],
-    queryFn: () => mockGetUserById(id!),
+    queryFn: () => getUserById(id!),
     enabled: !!id,
   });
 

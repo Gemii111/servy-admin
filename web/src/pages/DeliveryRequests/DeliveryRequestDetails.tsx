@@ -14,8 +14,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import {
-  mockGetDeliveryRequestById,
-  mockCancelDeliveryRequest,
+  getDeliveryRequestById,
+  cancelDeliveryRequest,
   getDeliveryRequestStatusLabel,
 } from '../../services/api/deliveryRequests';
 import { useSnackbar } from '../../hooks/useSnackbar';
@@ -30,12 +30,12 @@ const DeliveryRequestDetailsPage: React.FC = () => {
 
   const { data: request, isLoading } = useQuery({
     queryKey: ['delivery-request', id],
-    queryFn: () => mockGetDeliveryRequestById(id!),
+    queryFn: () => getDeliveryRequestById(id!),
     enabled: !!id,
   });
 
   const cancelMutation = useMutation({
-    mutationFn: () => mockCancelDeliveryRequest(id!),
+    mutationFn: () => cancelDeliveryRequest(id!),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['delivery-request', id] });
       queryClient.invalidateQueries({ queryKey: ['delivery-requests'] });

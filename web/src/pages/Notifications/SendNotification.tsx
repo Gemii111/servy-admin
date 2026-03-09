@@ -35,7 +35,7 @@ import {
   NotificationPriority,
   TargetAudience,
 } from '../../services/api/notifications';
-import { mockGetUsers } from '../../services/api/users';
+import { getUsers } from '../../services/api/users';
 
 const SendNotificationPage: React.FC = () => {
   const location = useLocation();
@@ -65,7 +65,7 @@ const SendNotificationPage: React.FC = () => {
   const { data: usersData, isLoading: usersLoading } = useQuery({
     queryKey: ['users', 'selector', userTypeFilter, userSearchQuery],
     queryFn: () =>
-      mockGetUsers({
+      getUsers({
         userType: userTypeFilter !== 'all' ? userTypeFilter : undefined,
         search: userSearchQuery || undefined,
         limit: 100,
