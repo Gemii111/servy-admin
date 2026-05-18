@@ -16,7 +16,6 @@ import {
   getDriverReports,
   getRevenueByDay,
   getRevenueByRestaurant,
-  exportReportToCsv,
   ReportFilters,
   RestaurantReport,
   DriverReport,

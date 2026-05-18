@@ -4,8 +4,7 @@
  * Centralized error handling for the application
  */
 
-import { captureException, captureMessage } from '../config/sentry';
-import { useSnackbar } from '../hooks/useSnackbar';
+import { captureException } from '../config/sentry';
 
 /**
  * Error types

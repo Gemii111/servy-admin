@@ -4,10 +4,6 @@ import {
   Typography,
   Card,
   CardContent,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
   TextField,
   InputAdornment,
   Button,
@@ -19,9 +15,7 @@ import {
 import { ColumnDef } from '@tanstack/react-table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SearchIcon from '@mui/icons-material/Search';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
 import DataTable from '../../components/tables/DataTable';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
@@ -41,7 +35,7 @@ const LoyaltyAccountsPage: React.FC = () => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
   const [limit] = useState(10);
   const [adjustDialogOpen, setAdjustDialogOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<LoyaltyAccount | null>(null);

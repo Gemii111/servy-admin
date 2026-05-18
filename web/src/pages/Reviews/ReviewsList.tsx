@@ -9,7 +9,6 @@ import {
   InputLabel,
   TextField,
   InputAdornment,
-  Button,
   IconButton,
 } from '@mui/material';
 import { ColumnDef } from '@tanstack/react-table';
@@ -44,7 +43,7 @@ const ReviewsListPage: React.FC = () => {
   const [targetTypeFilter, setTargetTypeFilter] = useState<string>('all');
   const [ratingFilter, setRatingFilter] = useState<string>('0');
   const [searchQuery, setSearchQuery] = useState('');
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
 
   const { data, isLoading } = useQuery({
     queryKey: ['reviews', targetTypeFilter, ratingFilter, searchQuery, page],

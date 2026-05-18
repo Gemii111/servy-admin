@@ -97,37 +97,6 @@ const appStatusToApi = (s: Restaurant['status']): string => {
   return s;
 };
 
-interface ApiRestaurant {
-  id: string;
-  name: string;
-  ownerEmail: string;
-  ownerName: string;
-  phone: string;
-  cuisineType: string;
-  status: string;
-  vendorType: string;
-  totalOrders: number;
-  totalRevenue: number;
-  rating: number;
-  address?: string;
-  description?: string;
-  createdAt: string;
-  city?: string;
-  latitude?: number;
-  longitude?: number;
-  minOrderAmount?: number;
-  deliveryFee?: number;
-  deliveryTime?: number;
-  imageUrl?: string;
-  isVerifiedSeller?: boolean;
-  returnPolicySummary?: string;
-  returnPolicyUrl?: string;
-  supportsSecurePayment?: boolean;
-  deliveryBadgeLabel?: string;
-  deliveryGuarantee?: string;
-  acceptedPaymentMethods?: string[];
-}
-
 function mapApiRestaurant(r: Record<string, unknown>): Restaurant {
   return {
     id: String(r.id),

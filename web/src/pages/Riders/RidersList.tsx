@@ -36,7 +36,7 @@ const RidersListPage: React.FC = () => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [vehicleTypeFilter, setVehicleTypeFilter] = useState<string>('all');
+  const [vehicleTypeFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading } = useQuery({
@@ -59,16 +59,17 @@ const RidersListPage: React.FC = () => {
     onError: (err: Error) => showSnackbar(err.message || 'فشل تحديث الحالة', 'error'),
   });
 
-  const statusColors: Record<string, string> = {
-    available: '#22C55E',
-    heading_to_restaurant: '#3B82F6',
-    at_restaurant: '#8B5CF6',
-    delivering: '#F59E0B',
-    offline: '#5A6A5A',
-  };
-
   const columns = useMemo<ColumnDef<Rider>[]>(
-    () => [
+    () => {
+      const statusColors: Record<string, string> = {
+        available: '#22C55E',
+        heading_to_restaurant: '#3B82F6',
+        at_restaurant: '#8B5CF6',
+        delivering: '#F59E0B',
+        offline: '#5A6A5A',
+      };
+
+      return [
       {
         accessorKey: 'name',
         header: 'الاسم',
@@ -193,8 +194,9 @@ const RidersListPage: React.FC = () => {
           );
         },
       },
-    ],
-    [updateStatusMutation, statusColors]
+    ];
+    },
+    [updateStatusMutation]
   );
 
   if (isLoading) {
