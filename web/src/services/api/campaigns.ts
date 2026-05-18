@@ -1,7 +1,10 @@
 /**
- * Campaigns API Service
- * إدارة الحملات حسب ADMIN_APPLICATION_REQUIREMENTS.md
+ * Campaigns API Service — Handoff §11
  */
+
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
 
 export type UserSegment = 'new_user' | 'loyal_user' | 'all';
 
@@ -120,4 +123,77 @@ export async function mockSendCampaignNotification(id: string): Promise<void> {
   await new Promise((r) => setTimeout(r, 300));
   const idx = mockCampaigns.findIndex((c) => c.id === id);
   if (idx !== -1) mockCampaigns[idx].notification_sent = true;
+}
+
+function mapCampaign(raw: Record<string, unknown>): Campaign {
+  return {
+    id: String(raw.id ?? ''),
+    name: String(raw.name ?? ''),
+    description: String(raw.description ?? ''),
+    status: (raw.status ?? 'active') as Campaign['status'],
+    start_date: String(raw.start_date ?? raw.startDate ?? ''),
+    end_date: String(raw.end_date ?? raw.endDate ?? ''),
+    user_segment: (raw.user_segment ?? raw.userSegment ?? 'all') as UserSegment,
+    restaurant_id: raw.restaurant_id != null ? String(raw.restaurant_id) : undefined,
+    banner_id: raw.banner_id != null ? String(raw.banner_id) : undefined,
+    coupon_id: raw.coupon_id != null ? String(raw.coupon_id) : undefined,
+    loyalty_bonus_points: raw.loyalty_bonus_points != null ? Number(raw.loyalty_bonus_points) : undefined,
+    loyalty_multiplier: raw.loyalty_multiplier != null ? Number(raw.loyalty_multiplier) : undefined,
+    notification_title: raw.notification_title != null ? String(raw.notification_title) : undefined,
+    notification_body: raw.notification_body != null ? String(raw.notification_body) : undefined,
+    notification_sent: Boolean(raw.notification_sent ?? raw.notificationSent ?? false),
+    created_at: String(raw.created_at ?? raw.createdAt ?? ''),
+  };
+}
+
+async function realGetCampaigns(params?: { status?: string }): Promise<Campaign[]> {
+  const { data } = await apiClient.get<{ campaigns?: unknown[] }>('/admin/campaigns', { params });
+  const list = data.campaigns ?? (Array.isArray(data) ? data : []);
+  return (list as Record<string, unknown>[]).map(mapCampaign);
+}
+
+async function realCreateCampaign(payload: Partial<Campaign>): Promise<Campaign> {
+  const { data } = await apiClient.post('/admin/campaigns', payload);
+  return mapCampaign((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+}
+
+async function realUpdateCampaign(id: string, payload: Partial<Campaign>): Promise<Campaign> {
+  const { data } = await apiClient.put(`/admin/campaigns/${id}`, payload);
+  return mapCampaign((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+}
+
+async function realSendCampaignNotification(id: string): Promise<void> {
+  await apiClient.post(`/admin/campaigns/${id}/send-notification`);
+}
+
+export async function getCampaigns(params?: { status?: string }): Promise<Campaign[]> {
+  try {
+    return shouldUseMock() ? mockGetCampaigns(params) : realGetCampaigns(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function createCampaign(data: Partial<Campaign>): Promise<Campaign> {
+  try {
+    return shouldUseMock() ? mockCreateCampaign(data) : realCreateCampaign(data);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function updateCampaign(id: string, data: Partial<Campaign>): Promise<Campaign> {
+  try {
+    return shouldUseMock() ? mockUpdateCampaign(id, data) : realUpdateCampaign(id, data);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function sendCampaignNotification(id: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockSendCampaignNotification(id) : realSendCampaignNotification(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
 }

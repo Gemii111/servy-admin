@@ -16,8 +16,8 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetCampaigns,
-  mockSendCampaignNotification,
+  getCampaigns,
+  sendCampaignNotification,
   Campaign,
   getCampaignStatusLabel,
   getCampaignUserSegmentLabel,
@@ -33,11 +33,11 @@ const CampaignsListPage: React.FC = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['campaigns', statusFilter],
-    queryFn: () => mockGetCampaigns({ status: statusFilter === 'all' ? undefined : statusFilter }),
+    queryFn: () => getCampaigns({ status: statusFilter === 'all' ? undefined : statusFilter }),
   });
 
   const sendNotificationMutation = useMutation({
-    mutationFn: mockSendCampaignNotification,
+    mutationFn: sendCampaignNotification,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['campaigns'] });
       showSnackbar('تم إرسال الإشعار بنجاح', 'success');

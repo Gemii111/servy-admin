@@ -22,7 +22,7 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { getOrders, Order } from '../../services/api/orders';
-import { mockGetRestaurants } from '../../services/api/restaurants';
+import { getRestaurants } from '../../services/api/restaurants';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
@@ -33,6 +33,7 @@ const OrdersListPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [paymentStatusFilter, setPaymentStatusFilter] = useState<string>('all');
   const [restaurantFilter, setRestaurantFilter] = useState<string>('all');
+  const [orderTypeFilter, setOrderTypeFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
 
@@ -40,16 +41,17 @@ const OrdersListPage: React.FC = () => {
 
   const { data: restaurantsData } = useQuery({
     queryKey: ['restaurants', 'options'],
-    queryFn: () => mockGetRestaurants({ page: 1, limit: 100 }),
+    queryFn: () => getRestaurants({ page: 1, limit: 100 }),
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['orders', statusFilter, paymentStatusFilter, restaurantFilter, searchQuery, page, limit],
+    queryKey: ['orders', statusFilter, paymentStatusFilter, restaurantFilter, orderTypeFilter, searchQuery, page, limit],
     queryFn: () =>
       getOrders({
         status: statusFilter,
         paymentStatus: paymentStatusFilter,
         restaurantId: restaurantFilter,
+        orderType: orderTypeFilter === 'all' ? undefined : orderTypeFilter,
         search: searchQuery,
         page,
         limit,
@@ -314,6 +316,26 @@ const OrdersListPage: React.FC = () => {
             <MenuItem value="refunded">مسترد</MenuItem>
           </Select>
         </FormControl>
+        <FormControl size="small" sx={{ minWidth: 140 }}>
+          <InputLabel sx={{ color: '#5A6A5A' }}>نوع الطلب</InputLabel>
+          <Select
+            value={orderTypeFilter}
+            onChange={(e) => {
+              setOrderTypeFilter(e.target.value);
+              setPage(1);
+            }}
+            label="نوع الطلب"
+            sx={{
+              color: '#1A2E1A',
+              '& .MuiOutlinedInput-notchedOutline': { borderColor: '#B1C0B1' },
+            }}
+          >
+            <MenuItem value="all">الكل</MenuItem>
+            <MenuItem value="vendor">متجر</MenuItem>
+            <MenuItem value="p2p">توصيل P2P</MenuItem>
+          </Select>
+        </FormControl>
+
         <FormControl size="small" sx={{ minWidth: 180 }}>
           <InputLabel sx={{ color: '#5A6A5A' }}>المتجر</InputLabel>
           <Select

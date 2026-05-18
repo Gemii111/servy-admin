@@ -25,7 +25,20 @@ try {
   }
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // تقليل إعادة المحاولات لتجنب 429 والطلبات المتكررة عند أخطاء السيرفر
+      retry: (failureCount, error: unknown) => {
+        if (failureCount >= 1) return false;
+        const status = (error as { response?: { status?: number } })?.response?.status;
+        if (status === 429 || (status && status >= 500)) return false;
+        if (status && status >= 400) return false;
+        return true;
+      },
+    },
+  },
+});
 
 // إعداد cache خاص بالـ RTL لـ MUI
 const rtlCache = createCache({

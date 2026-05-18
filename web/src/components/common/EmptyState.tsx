@@ -7,6 +7,8 @@ interface EmptyStateProps {
   description?: string;
   actionLabel?: string;
   onAction?: () => void;
+  /** عنصر مخصص (مثل زر) بدل actionLabel + onAction */
+  action?: React.ReactNode;
   icon?: React.ReactNode;
 }
 

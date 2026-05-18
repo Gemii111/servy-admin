@@ -21,7 +21,12 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import { mockGetSettings, mockUpdateSettings, AppSettings } from '../../services/api/settings';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
+import SystemUpdateIcon from '@mui/icons-material/SystemUpdate';
+import MapIcon from '@mui/icons-material/Map';
+import GeofenceSettingsPanel from './GeofenceSettingsPanel';
+import { getVersionConfig, updateVersionConfig } from '../../services/api/versionConfig';
+import { getSettings, updateSettings, AppSettings } from '../../services/api/settings';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 
@@ -31,10 +36,11 @@ const SettingsPage: React.FC = () => {
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ['settings'],
-    queryFn: mockGetSettings,
+    queryFn: getSettings,
   });
 
-  const [activeSection, setActiveSection] = useState<keyof AppSettings>('general');
+  type SettingsSection = keyof AppSettings | 'version' | 'geofence';
+  const [activeSection, setActiveSection] = useState<SettingsSection>('general');
   const [formData, setFormData] = useState<Partial<AppSettings>>({});
 
   React.useEffect(() => {
@@ -45,7 +51,7 @@ const SettingsPage: React.FC = () => {
 
   const updateMutation = useMutation({
     mutationFn: ({ section, data }: { section: keyof AppSettings; data: any }) =>
-      mockUpdateSettings(section, data),
+      updateSettings(section, data),
     onSuccess: (data, variables) => {
       queryClient.setQueryData(['settings'], data);
       showSnackbar('تم حفظ الإعدادات بنجاح', 'success');
@@ -71,30 +77,44 @@ const SettingsPage: React.FC = () => {
     }));
   };
 
-  const sections = [
-    { key: 'general' as keyof AppSettings, label: 'الإعدادات العامة', icon: <SettingsIcon /> },
-    { key: 'payment' as keyof AppSettings, label: 'إعدادات الدفع', icon: <PaymentIcon /> },
-    {
-      key: 'notifications' as keyof AppSettings,
-      label: 'الإشعارات',
-      icon: <NotificationsIcon />,
-    },
-    {
-      key: 'delivery' as keyof AppSettings,
-      label: 'إعدادات التوصيل',
-      icon: <LocalShippingIcon />,
-    },
-    {
-      key: 'restaurant' as keyof AppSettings,
-      label: 'إعدادات المطاعم',
-      icon: <RestaurantIcon />,
-    },
-    {
-      key: 'support' as keyof AppSettings,
-      label: 'الدعم والتواصل',
-      icon: <ContactSupportIcon />,
-    },
+  const sections: { key: SettingsSection; label: string; icon: React.ReactElement }[] = [
+    { key: 'general', label: 'الإعدادات العامة', icon: <SettingsIcon /> },
+    { key: 'payment', label: 'إعدادات الدفع', icon: <PaymentIcon /> },
+    { key: 'notifications', label: 'الإشعارات', icon: <NotificationsIcon /> },
+    { key: 'delivery', label: 'إعدادات التوصيل', icon: <LocalShippingIcon /> },
+    { key: 'restaurant', label: 'إعدادات المطاعم', icon: <RestaurantIcon /> },
+    { key: 'support', label: 'الدعم والتواصل', icon: <ContactSupportIcon /> },
+    { key: 'loyalty', label: 'نقاط الولاء', icon: <LoyaltyIcon /> },
+    { key: 'version', label: 'إصدارات التطبيق', icon: <SystemUpdateIcon /> },
+    { key: 'geofence', label: 'منطقة التوصيل', icon: <MapIcon /> },
   ];
+
+  const { data: versionConfig } = useQuery({
+    queryKey: ['version-config'],
+    queryFn: getVersionConfig,
+  });
+
+  const [versionForm, setVersionForm] = useState({
+    min_version_android: '1.0.0',
+    min_version_ios: '1.0.0',
+    force_update: false,
+  });
+
+  React.useEffect(() => {
+    if (versionConfig) {
+      setVersionForm({
+        min_version_android: versionConfig.min_version_android,
+        min_version_ios: versionConfig.min_version_ios,
+        force_update: versionConfig.force_update,
+      });
+    }
+  }, [versionConfig]);
+
+  const versionMutation = useMutation({
+    mutationFn: () => updateVersionConfig(versionForm),
+    onSuccess: () => showSnackbar('تم حفظ إعدادات الإصدار', 'success'),
+    onError: (e: Error) => showSnackbar(e.message, 'error'),
+  });
 
   if (isLoading) {
     return <SkeletonLoader variant="cards" count={3} />;
@@ -299,7 +319,7 @@ const SettingsPage: React.FC = () => {
                   }}
                 />
                 <TextField
-                  label="أقل قيمة طلب (ر.س)"
+                  label="أقل قيمة طلب (ج.م)"
                   type="number"
                   value={formData.general?.minOrderAmount || 0}
                   onChange={(e) => handleChange('general', 'minOrderAmount', Number(e.target.value))}
@@ -314,6 +334,24 @@ const SettingsPage: React.FC = () => {
                     input: { color: '#1A2E1A' },
                     '& .MuiInputLabel-root': { color: '#5A6A5A' },
                   }}
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.general?.maintenanceMode || false}
+                      onChange={(e) =>
+                        handleChange('general', 'maintenanceMode', e.target.checked)
+                      }
+                      sx={{
+                        '& .MuiSwitch-switchBase.Mui-checked': { color: '#86B573' },
+                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                          backgroundColor: '#86B573',
+                        },
+                      }}
+                    />
+                  }
+                  label="وضع الصيانة (إيقاف الطلبات مؤقتاً)"
+                  sx={{ color: '#1A2E1A', gridColumn: { sm: '1 / -1' } }}
                 />
               </Box>
 
@@ -784,6 +822,114 @@ const SettingsPage: React.FC = () => {
                 disabled={updateMutation.isPending}
               >
                 حفظ الإعدادات
+              </Button>
+            </Paper>
+          )}
+
+          {/* Loyalty Settings */}
+          {activeSection === 'loyalty' && (
+            <Paper
+              sx={{
+                bgcolor: '#FFFFFF',
+                borderRadius: 2,
+                border: '1px solid #B1C0B1',
+                p: 3,
+              }}
+            >
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
+                قواعد نقاط الولاء
+              </Typography>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: 'repeat(1, minmax(0, 1fr))',
+                    sm: 'repeat(2, minmax(0, 1fr))',
+                  },
+                  gap: 2,
+                  mb: 3,
+                }}
+              >
+                <TextField
+                  label="نقاط لكل جنيه مصروف"
+                  type="number"
+                  value={formData.loyalty?.earnRate ?? 1}
+                  onChange={(e) => handleChange('loyalty', 'earnRate', Number(e.target.value))}
+                  size="small"
+                  fullWidth
+                />
+                <TextField
+                  label="قيمة النقطة بالجنيه (استبدال)"
+                  type="number"
+                  inputProps={{ step: 0.01 }}
+                  value={formData.loyalty?.redeemRate ?? 0.1}
+                  onChange={(e) => handleChange('loyalty', 'redeemRate', Number(e.target.value))}
+                  size="small"
+                  fullWidth
+                />
+                <TextField
+                  label="مدة صلاحية النقاط (يوم)"
+                  type="number"
+                  value={formData.loyalty?.expiryDays ?? 90}
+                  onChange={(e) => handleChange('loyalty', 'expiryDays', Number(e.target.value))}
+                  size="small"
+                  fullWidth
+                />
+              </Box>
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                onClick={() => handleSave('loyalty')}
+                disabled={updateMutation.isPending}
+              >
+                حفظ الإعدادات
+              </Button>
+            </Paper>
+          )}
+
+          {activeSection === 'geofence' && <GeofenceSettingsPanel />}
+
+          {activeSection === 'version' && (
+            <Paper sx={{ bgcolor: '#FFFFFF', borderRadius: 2, border: '1px solid #B1C0B1', p: 3 }}>
+              <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 3, fontWeight: 600 }}>
+                إصدارات التطبيق (Force Update)
+              </Typography>
+              <Box sx={{ display: 'grid', gap: 2, maxWidth: 480 }}>
+                <TextField
+                  label="أقل إصدار أندرويد"
+                  value={versionForm.min_version_android}
+                  onChange={(e) =>
+                    setVersionForm((p) => ({ ...p, min_version_android: e.target.value }))
+                  }
+                  size="small"
+                />
+                <TextField
+                  label="أقل إصدار iOS"
+                  value={versionForm.min_version_ios}
+                  onChange={(e) =>
+                    setVersionForm((p) => ({ ...p, min_version_ios: e.target.value }))
+                  }
+                  size="small"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={versionForm.force_update}
+                      onChange={(e) =>
+                        setVersionForm((p) => ({ ...p, force_update: e.target.checked }))
+                      }
+                    />
+                  }
+                  label="إجبار التحديث"
+                />
+              </Box>
+              <Button
+                variant="contained"
+                startIcon={<SaveIcon />}
+                sx={{ mt: 2 }}
+                onClick={() => versionMutation.mutate()}
+              >
+                حفظ
               </Button>
             </Paper>
           )}

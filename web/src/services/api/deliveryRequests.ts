@@ -60,6 +60,16 @@ async function realGetDeliveryRequestById(id: string): Promise<DeliveryRequest |
   return data ? mapApiOrderToDeliveryRequest(data) : null;
 }
 
+async function realUpdateDeliveryRequestStatus(
+  id: string,
+  status: DeliveryRequest['status']
+): Promise<DeliveryRequest> {
+  await apiClient.put(`/admin/delivery-requests/${id}/status`, { status });
+  const req = await realGetDeliveryRequestById(id);
+  if (!req) throw new Error('طلب غير موجود');
+  return { ...req, status };
+}
+
 async function realCancelDeliveryRequest(id: string): Promise<DeliveryRequest> {
   await apiClient.put(`/admin/delivery-requests/${id}/cancel`);
   const req = await realGetDeliveryRequestById(id);
@@ -167,6 +177,24 @@ export async function getDeliveryRequests(params?: { status?: string }): Promise
 export async function getDeliveryRequestById(id: string): Promise<DeliveryRequest | null> {
   try {
     return shouldUseMock() ? mockGetDeliveryRequestById(id) : realGetDeliveryRequestById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function updateDeliveryRequestStatus(
+  id: string,
+  status: DeliveryRequest['status']
+): Promise<DeliveryRequest> {
+  try {
+    if (shouldUseMock()) {
+      const req = await mockGetDeliveryRequestById(id);
+      if (!req) throw new Error('طلب غير موجود');
+      const idx = mockDeliveryRequests.findIndex((d) => d.id === id);
+      if (idx !== -1) mockDeliveryRequests[idx].status = status;
+      return { ...req, status };
+    }
+    return realUpdateDeliveryRequestStatus(id, status);
   } catch (err) {
     throw new Error(handleApiError(err));
   }

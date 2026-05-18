@@ -122,11 +122,25 @@ export class BaseApiService {
 /**
  * Helper function to switch between mock and real API
  * - REACT_APP_USE_MOCK_API=false → استخدم API الحقيقي دائماً
- * - REACT_APP_USE_MOCK_API=true أو غير معرّف في development → Mock
+ * - REACT_APP_USE_MOCK_API=true → استخدم Mock دائماً
+ * - غير معرّف: في production نستخدم Real، في development نستخدم Mock
  */
 export const shouldUseMock = (): boolean => {
   if (process.env.REACT_APP_USE_MOCK_API === 'false') return false;
   if (process.env.REACT_APP_USE_MOCK_API === 'true') return true;
-  return env.environment === 'development';
+  return env.environment !== 'production';
 };
+
+/** Omit empty values and literal "all" so backends do not treat them as UUIDs/enums. */
+export function cleanListQueryParams(
+  params: Record<string, string | number | boolean | undefined | null>
+): Record<string, string | number> {
+  return Object.fromEntries(
+    Object.entries(params).filter(([, v]) => {
+      if (v === undefined || v === null || v === '') return false;
+      if (typeof v === 'string' && v.trim().toLowerCase() === 'all') return false;
+      return true;
+    })
+  ) as Record<string, string | number>;
+}
 

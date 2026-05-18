@@ -25,6 +25,10 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import TwoWheelerIcon from '@mui/icons-material/TwoWheeler';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import LoyaltyIcon from '@mui/icons-material/Loyalty';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import HistoryIcon from '@mui/icons-material/History';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const drawerWidth = 260;
@@ -46,7 +50,11 @@ const navItems: NavItem[] = [
   { label: 'البانرات', path: '/banners', icon: <ViewCarouselIcon /> },
   { label: 'الحملات', path: '/campaigns', icon: <CampaignIcon /> },
   { label: 'السائقون', path: '/riders', icon: <TwoWheelerIcon /> },
+  { label: 'التقييمات', path: '/reviews', icon: <RateReviewIcon /> },
+  { label: 'نقاط الولاء', path: '/loyalty', icon: <LoyaltyIcon /> },
+  { label: 'إشراف المنيو', path: '/menu', icon: <MenuBookIcon /> },
   { label: 'الإشعارات', path: '/notifications', icon: <NotificationsIcon /> },
+  { label: 'سجل التدقيق', path: '/audit-log', icon: <HistoryIcon /> },
   { label: 'الجوائز', path: '/rewards', icon: <CardGiftcardIcon /> },
   { label: 'تقييمات السائقين', path: '/driver-ratings', icon: <StarIcon /> },
   { label: 'التقارير', path: '/reports', icon: <AssessmentIcon /> },

@@ -21,6 +21,7 @@ const UsersListPage = lazy(() => import('./pages/Users/UsersList'));
 const UserDetailsPage = lazy(() => import('./pages/Users/UserDetails'));
 const RestaurantsListPage = lazy(() => import('./pages/Restaurants/RestaurantsList'));
 const RestaurantDetailsPage = lazy(() => import('./pages/Restaurants/RestaurantDetails'));
+const RestaurantFormPage = lazy(() => import('./pages/Restaurants/RestaurantForm'));
 const PendingApprovalPage = lazy(() => import('./pages/Restaurants/PendingApproval'));
 const OrdersListPage = lazy(() => import('./pages/Orders/OrdersList'));
 const OrderDetailsPage = lazy(() => import('./pages/Orders/OrderDetails'));
@@ -43,6 +44,11 @@ const RewardsStatisticsPage = lazy(() => import('./pages/Rewards/RewardsStatisti
 const RewardsHistoryPage = lazy(() => import('./pages/Rewards/RewardsHistory'));
 const DriverRatingsListPage = lazy(() => import('./pages/DriverRatings/DriverRatingsList'));
 const DriverRatingsStatisticsPage = lazy(() => import('./pages/DriverRatings/DriverRatingsStatistics'));
+const ReviewsListPage = lazy(() => import('./pages/Reviews/ReviewsList'));
+const LoyaltyAccountsPage = lazy(() => import('./pages/Loyalty/LoyaltyAccounts'));
+const LoyaltyAccountDetailsPage = lazy(() => import('./pages/Loyalty/LoyaltyAccountDetails'));
+const MenuOversightPage = lazy(() => import('./pages/Menu/MenuOversight'));
+const AuditLogListPage = lazy(() => import('./pages/AuditLog/AuditLogList'));
 
 const App: React.FC = () => {
   return (
@@ -149,6 +155,30 @@ const App: React.FC = () => {
                 <Layout>
                   <Suspense fallback={<LoadingFallback />}>
                     <RestaurantsListPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/restaurants/new"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <RestaurantFormPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/restaurants/:id/edit"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <RestaurantFormPage />
                   </Suspense>
                 </Layout>
               </ProtectedRoute>
@@ -293,6 +323,66 @@ const App: React.FC = () => {
                 <Layout>
                   <Suspense fallback={<LoadingFallback />}>
                     <RiderDetailsPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reviews"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <ReviewsListPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/loyalty"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <LoyaltyAccountsPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/loyalty/:userId"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <LoyaltyAccountDetailsPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/menu"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <MenuOversightPage />
+                  </Suspense>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/audit-log"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <AuditLogListPage />
                   </Suspense>
                 </Layout>
               </ProtectedRoute>

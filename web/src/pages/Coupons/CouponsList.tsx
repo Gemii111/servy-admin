@@ -25,11 +25,11 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetCoupons,
-  mockCreateCoupon,
-  mockUpdateCoupon,
-  mockDeleteCoupon,
-  mockToggleCouponStatus,
+  getCoupons,
+  createCoupon,
+  updateCoupon,
+  deleteCoupon,
+  toggleCouponStatus,
   Coupon,
   CouponStatus,
   CouponType,
@@ -64,7 +64,7 @@ const CouponsListPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['coupons', statusFilter, typeFilter, searchQuery, page, limit],
     queryFn: () =>
-      mockGetCoupons({
+      getCoupons({
         status: statusFilter,
         type: typeFilter,
         search: searchQuery,
@@ -109,7 +109,7 @@ const CouponsListPage: React.FC = () => {
 
   const createMutation = useMutation({
     mutationFn: () =>
-      mockCreateCoupon({
+      createCoupon({
         code,
         description: description || undefined,
         type,
@@ -135,7 +135,7 @@ const CouponsListPage: React.FC = () => {
   const updateMutation = useMutation({
     mutationFn: () =>
       editingCoupon
-        ? mockUpdateCoupon(editingCoupon.id, {
+        ? updateCoupon(editingCoupon.id, {
             code,
             description: description || undefined,
             type,
@@ -160,7 +160,7 @@ const CouponsListPage: React.FC = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (coupon: Coupon) => mockDeleteCoupon(coupon.id),
+    mutationFn: (coupon: Coupon) => deleteCoupon(coupon.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
       showSnackbar('تم حذف الكوبون', 'success');
@@ -171,7 +171,7 @@ const CouponsListPage: React.FC = () => {
   });
 
   const toggleStatusMutation = useMutation({
-    mutationFn: (coupon: Coupon) => mockToggleCouponStatus(coupon.id),
+    mutationFn: (coupon: Coupon) => toggleCouponStatus(coupon.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
       showSnackbar('تم تحديث حالة الكوبون', 'success');

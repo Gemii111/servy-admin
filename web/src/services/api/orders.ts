@@ -1,6 +1,6 @@
 import apiClient from './client';
 import { handleApiError } from './client';
-import { shouldUseMock } from './base';
+import { shouldUseMock, cleanListQueryParams } from './base';
 
 export interface Order {
   id: string;
@@ -34,6 +34,7 @@ export interface Order {
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   deliveryAddress: string;
   notes?: string;
+  orderType?: OrderType;
   createdAt: string;
   updatedAt: string;
   estimatedDeliveryTime?: string;
@@ -83,6 +84,39 @@ interface ApiOrder {
   items?: OrderItem[];
 }
 
+export type OrderType = 'vendor' | 'p2p';
+
+export interface OrderTrackingTimelineItem {
+  status: string;
+  label?: string;
+  timestamp: string;
+  note?: string;
+}
+
+export interface OrderTrackingDetail {
+  order_id: string;
+  status: string;
+  estimated_time?: {
+    min_minutes: number;
+    max_minutes: number;
+    is_delayed?: boolean;
+  };
+  status_timeline: OrderTrackingTimelineItem[];
+  rider_info?: {
+    rider_id: string;
+    name: string;
+    phone: string;
+    vehicle?: string;
+    latitude?: number;
+    longitude?: number;
+  } | null;
+  delivery_address?: {
+    address_line?: string;
+    latitude?: number;
+    longitude?: number;
+  };
+}
+
 function mapApiOrderToOrder(api: ApiOrder): Order {
   return {
     ...api,
@@ -94,6 +128,7 @@ function mapApiOrderToOrder(api: ApiOrder): Order {
     tax: api.discount ?? 0,
     paymentStatus: 'pending' as const,
     updatedAt: api.updatedAt || api.createdAt,
+    orderType: (api.orderType as OrderType) || 'vendor',
   };
 }
 
@@ -101,13 +136,24 @@ async function realGetOrders(params?: {
   status?: string;
   paymentStatus?: string;
   restaurantId?: string;
+  orderType?: string;
   search?: string;
   page?: number;
   limit?: number;
 }): Promise<OrdersResponse> {
+  const cleaned = cleanListQueryParams({
+    status: params?.status,
+    paymentStatus: params?.paymentStatus,
+    restaurantId: params?.restaurantId,
+    orderType: params?.orderType,
+    search: params?.search,
+    page: params?.page ?? 1,
+    limit: params?.limit ?? 10,
+  });
+
   const { data } = await apiClient.get<{ orders: ApiOrder[]; pagination: OrdersResponse['pagination'] }>(
     '/admin/orders',
-    { params }
+    { params: cleaned }
   );
   return {
     orders: (data.orders || []).map(mapApiOrderToOrder),
@@ -126,6 +172,58 @@ async function realUpdateOrderStatus(id: string, status: Order['status']): Promi
 
 async function realAssignDriver(orderId: string, driverId: string): Promise<void> {
   await apiClient.post(`/admin/orders/${orderId}/assign-driver`, { driverId });
+}
+
+async function realCancelOrder(id: string, reason?: string): Promise<void> {
+  const body = reason?.trim() ? { reason: reason.trim() } : {};
+  await apiClient.post(`/admin/orders/${id}/cancel`, body);
+}
+
+async function realGetOrderTracking(id: string): Promise<OrderTrackingDetail> {
+  const { data } = await apiClient.get<OrderTrackingDetail>(`/admin/orders/${id}/tracking`);
+  const body = (data as { data?: OrderTrackingDetail }).data ?? data;
+  return {
+    ...body,
+    status_timeline: body.status_timeline ?? [],
+    rider_info: body.rider_info ?? null,
+  };
+}
+
+async function mockCancelOrder(id: string, reason?: string): Promise<void> {
+  await new Promise((r) => setTimeout(r, 200));
+  const order = mockOrders.find((o) => o.id === id);
+  if (order) {
+    order.status = 'cancelled';
+    order.notes = reason;
+  }
+}
+
+async function mockGetOrderTracking(id: string): Promise<OrderTrackingDetail> {
+  await new Promise((r) => setTimeout(r, 200));
+  const order = mockOrders.find((o) => o.id === id);
+  if (!order) {
+    return { order_id: id, status: 'unknown', status_timeline: [], rider_info: null };
+  }
+  return {
+    order_id: id,
+    status: order.status,
+    estimated_time: { min_minutes: 15, max_minutes: 25, is_delayed: false },
+    status_timeline: [
+      { status: 'pending', label: 'قيد الانتظار', timestamp: order.createdAt },
+      { status: order.status, label: order.status, timestamp: order.updatedAt },
+    ],
+    rider_info: order.driverName
+      ? {
+          rider_id: order.driverId || 'r1',
+          name: order.driverName,
+          phone: '+201000000000',
+          vehicle: 'motorcycle',
+          latitude: 30.05,
+          longitude: 31.23,
+        }
+      : null,
+    delivery_address: { address_line: order.deliveryAddress },
+  };
 }
 
 export async function getOrders(params?: Parameters<typeof realGetOrders>[0]): Promise<OrdersResponse> {
@@ -155,6 +253,22 @@ export async function updateOrderStatus(id: string, status: Order['status']): Pr
 export async function assignDriver(orderId: string, driverId: string): Promise<void> {
   try {
     return shouldUseMock() ? mockAssignDriver(orderId, driverId) : realAssignDriver(orderId, driverId);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function cancelOrder(id: string, reason?: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockCancelOrder(id, reason) : realCancelOrder(id, reason);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getOrderTracking(id: string): Promise<OrderTrackingDetail> {
+  try {
+    return shouldUseMock() ? mockGetOrderTracking(id) : realGetOrderTracking(id);
   } catch (err) {
     throw new Error(handleApiError(err));
   }

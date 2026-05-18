@@ -26,7 +26,7 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetRestaurants,
+  getRestaurants,
   mockCreateRestaurant,
   mockToggleRestaurantFeatured,
   Restaurant,
@@ -56,10 +56,10 @@ const RestaurantsListPage: React.FC = () => {
 
   const limit = 10;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['restaurants', statusFilter, vendorTypeFilter, searchQuery, page, limit],
     queryFn: () =>
-      mockGetRestaurants({
+      getRestaurants({
         status: statusFilter,
         vendorType: vendorTypeFilter,
         search: searchQuery,
@@ -319,7 +319,7 @@ const RestaurantsListPage: React.FC = () => {
             variant="contained"
             color="primary"
             startIcon={<AddIcon />}
-            onClick={() => setDialogOpen(true)}
+            onClick={() => navigate('/restaurants/new')}
             size="small"
             sx={{ width: { xs: '100%', sm: 'auto' } }}
           >
@@ -416,6 +416,13 @@ const RestaurantsListPage: React.FC = () => {
       {/* Table */}
       {isLoading ? (
         <SkeletonLoader variant="table" count={5} />
+      ) : isError ? (
+        <EmptyState
+          title="حدث خطأ في تحميل المطاعم"
+          description={error instanceof Error ? error.message : 'تعذر الاتصال بالخادم.'}
+          actionLabel="إعادة المحاولة"
+          onAction={() => refetch()}
+        />
       ) : !data || data.restaurants.length === 0 ? (
         <EmptyState
           title="لا يوجد مطاعم"

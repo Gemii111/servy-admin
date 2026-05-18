@@ -12,6 +12,11 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from '@mui/material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import EditIcon from '@mui/icons-material/Edit';
@@ -22,7 +27,14 @@ import { ar } from 'date-fns/locale';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
-import { getOrderById, updateOrderStatus, Order } from '../../services/api/orders';
+import {
+  getOrderById,
+  updateOrderStatus,
+  cancelOrder,
+  getOrderTracking,
+  Order,
+} from '../../services/api/orders';
+import OrderTrackingPanel from '../../components/orders/OrderTrackingPanel';
 
 const OrderDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,6 +42,8 @@ const OrderDetailsPage: React.FC = () => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const [status, setStatus] = useState<Order['status'] | ''>('');
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
 
   const {
     data: order,
@@ -45,6 +59,22 @@ const OrderDetailsPage: React.FC = () => {
       setStatus(order.status);
     }
   }, [order]);
+
+  const { data: tracking } = useQuery({
+    queryKey: ['order', id, 'tracking'],
+    queryFn: () => getOrderTracking(id!),
+    enabled: !!id,
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: () => cancelOrder(id!, cancelReason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['order', id] });
+      showSnackbar('تم إلغاء الطلب', 'success');
+      setCancelOpen(false);
+    },
+    onError: (e: Error) => showSnackbar(e.message, 'error'),
+  });
 
   const updateStatusMutation = useMutation({
     mutationFn: (newStatus: Order['status']) => updateOrderStatus(id!, newStatus),
@@ -144,18 +174,16 @@ const OrderDetailsPage: React.FC = () => {
           >
             تعديل
           </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={() => {
-              if (window.confirm(`هل أنت متأكد من حذف الطلب "${order.orderNumber}"؟`)) {
-                navigate('/orders');
-              }
-            }}
-          >
-            حذف
-          </Button>
+          {order.status !== 'cancelled' && order.status !== 'delivered' && (
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => setCancelOpen(true)}
+            >
+              إلغاء الطلب
+            </Button>
+          )}
         </Box>
       </Box>
 
@@ -469,6 +497,34 @@ const OrderDetailsPage: React.FC = () => {
           </Box>
         </Box>
       </Paper>
+
+      {tracking && <OrderTrackingPanel tracking={tracking} />}
+
+      <Dialog open={cancelOpen} onClose={() => setCancelOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle>إلغاء الطلب</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="سبب الإلغاء (اختياري)"
+            fullWidth
+            multiline
+            rows={3}
+            margin="normal"
+            value={cancelReason}
+            onChange={(e) => setCancelReason(e.target.value)}
+            helperText="يُرسل للعميل والمطعم والسائق. الطلبات المُسلّمة أو الملغاة مسبقاً تُرفض (409)."
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCancelOpen(false)}>تراجع</Button>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={() => cancelMutation.mutate()}
+          >
+            تأكيد الإلغاء
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

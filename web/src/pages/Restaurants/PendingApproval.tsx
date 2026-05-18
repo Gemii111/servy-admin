@@ -19,9 +19,8 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetRestaurants,
-  mockApproveRestaurant,
-  mockRejectRestaurant,
+  getRestaurants,
+  updateRestaurantStatus,
   Restaurant,
 } from '../../services/api/restaurants';
 
@@ -35,11 +34,11 @@ const PendingApprovalPage: React.FC = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['restaurants', 'pending'],
-    queryFn: () => mockGetRestaurants({ status: 'pending', limit: 100 }),
+    queryFn: () => getRestaurants({ status: 'pending', limit: 100 }),
   });
 
   const approveMutation = useMutation({
-    mutationFn: (id: string) => mockApproveRestaurant(id),
+    mutationFn: (id: string) => updateRestaurantStatus(id, 'approved'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['restaurants'] });
       showSnackbar('تم الموافقة على المطعم بنجاح', 'success');
@@ -50,8 +49,8 @@ const PendingApprovalPage: React.FC = () => {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
-      mockRejectRestaurant(id, reason),
+    mutationFn: ({ id }: { id: string; reason: string }) =>
+      updateRestaurantStatus(id, 'suspended'),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['restaurants'] });
       showSnackbar('تم رفض المطعم', 'success');
@@ -129,7 +128,7 @@ const PendingApprovalPage: React.FC = () => {
             gap: 2,
           }}
         >
-          {restaurants.map((restaurant) => (
+          {restaurants.map((restaurant: Restaurant) => (
             <Paper
               key={restaurant.id}
               sx={{

@@ -45,8 +45,8 @@ const TopRestaurantsChart: React.FC<TopRestaurantsChartProps> = ({ data, isLoadi
       <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
         أفضل المطاعم
       </Typography>
-      <Box sx={{ width: '100%', height: 300 }}>
-        <ResponsiveContainer>
+      <Box sx={{ width: '100%', height: 300, minHeight: 300, minWidth: 1 }}>
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#B1C0B1" />
             <XAxis

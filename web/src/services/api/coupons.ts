@@ -1,3 +1,7 @@
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
+
 export type CouponType = 'percentage' | 'fixed';
 export type CouponStatus = 'active' | 'scheduled' | 'expired' | 'disabled';
 
@@ -26,6 +30,124 @@ export interface CouponsResponse {
     total: number;
     totalPages: number;
   };
+}
+
+interface ApiCoupon {
+  id: string;
+  code: string;
+  description?: string;
+  discount_type: string;
+  discount_value: number;
+  min_order_amount?: number;
+  max_discount?: number;
+  usage_limit?: number;
+  usage_count?: number;
+  valid_from: string;
+  valid_until?: string;
+  is_active: boolean;
+}
+
+function unwrap<T>(data: unknown): T {
+  const d = data as { data?: T };
+  return d?.data != null ? d.data : (data as T);
+}
+
+function mapApiCouponToCoupon(c: ApiCoupon): Coupon {
+  const type: CouponType = c.discount_type === 'fixed_amount' ? 'fixed' : 'percentage';
+  const now = new Date().toISOString();
+  let status: CouponStatus = c.is_active ? 'active' : 'disabled';
+  if (c.valid_until && new Date(c.valid_until) < new Date()) status = 'expired';
+  return {
+    id: c.id,
+    code: c.code,
+    description: c.description,
+    type,
+    value: c.discount_value,
+    maxDiscount: c.max_discount,
+    minOrderAmount: c.min_order_amount,
+    usageLimit: c.usage_limit,
+    usedCount: c.usage_count ?? 0,
+    startDate: c.valid_from,
+    endDate: c.valid_until,
+    status,
+    createdAt: c.valid_from,
+    updatedAt: now,
+  };
+}
+
+async function realGetCoupons(params?: {
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<CouponsResponse> {
+  const res = await apiClient.get<{ coupons?: ApiCoupon[]; pagination: CouponsResponse['pagination'] }>(
+    '/admin/coupons',
+    { params }
+  );
+  const body = unwrap<{ coupons?: ApiCoupon[]; pagination: CouponsResponse['pagination'] }>(res.data) ?? res.data;
+  const list = body.coupons ?? [];
+  return {
+    coupons: list.map(mapApiCouponToCoupon),
+    pagination: body.pagination ?? { page: 1, limit: 10, total: 0, totalPages: 0 },
+  };
+}
+
+async function realGetCouponById(id: string): Promise<Coupon> {
+  const res = await apiClient.get<ApiCoupon>(`/admin/coupons/${id}`);
+  const data = unwrap<ApiCoupon>(res.data) ?? res.data;
+  return mapApiCouponToCoupon(data);
+}
+
+async function realCreateCoupon(payload: {
+  code: string;
+  description?: string;
+  type: CouponType;
+  value: number;
+  maxDiscount?: number;
+  minOrderAmount?: number;
+  usageLimit?: number;
+  startDate: string;
+  endDate?: string;
+  status: CouponStatus;
+}): Promise<Coupon> {
+  const res = await apiClient.post<ApiCoupon>('/admin/coupons', {
+    code: payload.code,
+    description: payload.description,
+    discount_type: payload.type === 'fixed' ? 'fixed_amount' : 'percentage',
+    discount_value: payload.value,
+    min_order_amount: payload.minOrderAmount,
+    max_discount: payload.maxDiscount,
+    usage_limit: payload.usageLimit,
+    valid_from: payload.startDate,
+    valid_until: payload.endDate,
+    is_active: payload.status === 'active',
+  });
+  const data = unwrap<ApiCoupon>(res.data) ?? res.data;
+  return mapApiCouponToCoupon(data);
+}
+
+async function realUpdateCoupon(
+  id: string,
+  payload: Partial<Omit<Coupon, 'id' | 'createdAt' | 'usedCount'>>
+): Promise<void> {
+  const body: Record<string, unknown> = {};
+  if (payload.value !== undefined) body.discount_value = payload.value;
+  if (payload.minOrderAmount !== undefined) body.min_order_amount = payload.minOrderAmount;
+  if (payload.maxDiscount !== undefined) body.max_discount = payload.maxDiscount;
+  if (payload.usageLimit !== undefined) body.usage_limit = payload.usageLimit;
+  if (payload.startDate !== undefined) body.valid_from = payload.startDate;
+  if (payload.endDate !== undefined) body.valid_until = payload.endDate;
+  if (payload.status !== undefined) body.is_active = payload.status === 'active';
+  await apiClient.put(`/admin/coupons/${id}`, body);
+}
+
+async function realDeleteCoupon(id: string): Promise<void> {
+  await apiClient.delete(`/admin/coupons/${id}`);
+}
+
+async function realToggleCouponStatus(id: string): Promise<void> {
+  await apiClient.put(`/admin/coupons/${id}/toggle`);
 }
 
 // Mock coupons data
@@ -198,4 +320,85 @@ export async function mockToggleCouponStatus(id: string): Promise<Coupon> {
   return updated;
 }
 
+// ——— Unified API (mock vs real) ———
+
+export type GetCouponsParams = {
+  status?: CouponStatus | 'all';
+  type?: CouponType | 'all';
+  search?: string;
+  page?: number;
+  limit?: number;
+};
+
+export async function getCoupons(params?: GetCouponsParams): Promise<CouponsResponse> {
+  try {
+    return shouldUseMock() ? mockGetCoupons(params) : realGetCoupons(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getCouponById(id: string): Promise<Coupon> {
+  try {
+    if (shouldUseMock()) {
+      const list = await mockGetCoupons({ limit: 1000 });
+      const c = list.coupons.find((x) => x.id === id);
+      if (!c) throw new Error('Coupon not found');
+      return c;
+    }
+    return realGetCouponById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function createCoupon(payload: {
+  code: string;
+  description?: string;
+  type: CouponType;
+  value: number;
+  maxDiscount?: number;
+  minOrderAmount?: number;
+  usageLimit?: number;
+  startDate: string;
+  endDate?: string;
+  status: CouponStatus;
+}): Promise<Coupon> {
+  try {
+    return shouldUseMock() ? mockCreateCoupon(payload) : realCreateCoupon(payload);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function updateCoupon(
+  id: string,
+  payload: Partial<Omit<Coupon, 'id' | 'createdAt' | 'usedCount'>>
+): Promise<Coupon> {
+  try {
+    if (shouldUseMock()) return mockUpdateCoupon(id, payload);
+    await realUpdateCoupon(id, payload);
+    return realGetCouponById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function deleteCoupon(id: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockDeleteCoupon(id) : realDeleteCoupon(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function toggleCouponStatus(id: string): Promise<Coupon> {
+  try {
+    if (shouldUseMock()) return mockToggleCouponStatus(id);
+    await realToggleCouponStatus(id);
+    return realGetCouponById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
 

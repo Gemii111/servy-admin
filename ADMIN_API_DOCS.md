@@ -1,58 +1,70 @@
-# Admin Panel API Documentation
+# Servy Admin Panel API Documentation
 
-Base URL: `/servy/api/v1`
-
-## Authentication
-
-All admin endpoints (except login) require one of:
-- **JWT Bearer Token**: `Authorization: Bearer <accessToken>` (obtained from login)
-- **API Key**: `X-API-Key: <key>`
+Base URL: `{{baseUrl}}/servy/api/v1`  
+(في التطبيق: `REACT_APP_API_BASE_URL` — مثال: `https://talabat-ehpd.onrender.com/servy/api/v1`)
 
 ---
 
-## 1. Admin Auth
+## حالة التنفيذ في لوحة الأدمن
 
-### POST `/servy/api/v1/admin/auth/login`
+| القسم | الحالة | ملاحظات |
+|--------|--------|---------|
+| **Auth** | مُنفَّذ | تسجيل الدخول، حفظ `accessToken` وتمريره في `Authorization: Bearer` |
+| **Dashboard** | مُنفَّذ | إحصائيات، طلبات عبر الزمن، إيرادات، طلبات حسب الحالة، أفضل المطاعم |
+| **Users** | مُنفَّذ | قائمة، تفاصيل، إنشاء، تحديث الحالة، حذف |
+| **Orders** | مُنفَّذ | قائمة، تفاصيل، تحديث الحالة، تعيين سائق |
+| **P2P Delivery Requests** | مُنفَّذ | قائمة، تفاصيل، تحديث الحالة، إلغاء |
+| **Restaurants** | مُنفَّذ | قائمة، تفاصيل، تحديث الحالة، حذف (مع Mock عند التطوير) |
+| **Categories** | مُنفَّذ | قائمة، إنشاء، تحديث، حذف، تفعيل/إيقاف (مع Mock عند التطوير) |
+| **Coupons** | مُنفَّذ | قائمة، تفاصيل، إنشاء، تحديث، حذف، تفعيل/إيقاف (مع Mock عند التطوير) |
 
-Login as admin. No auth header required.
+**تبديل Mock/API:** `REACT_APP_USE_MOCK_API=false` لاستخدام الـ API الحقيقي دائماً؛ إن لم يُضبط يُستخدم Mock في التطوير والـ API في الإنتاج.
 
-**Request Body:**
+---
+
+## Authentication
+
+All admin endpoints (except login) require:
+- `Authorization: Bearer <accessToken>` (obtained from login)
+
+---
+
+## 1. Auth
+
+### POST `/admin/auth/login`
+No auth needed.
+
+**Request:**
 ```json
 {
-  "email": "admin@example.com",
-  "password": "your-password"
+  "email": "admin@servy.com",
+  "password": "admin123"
 }
 ```
 
-**Success Response (200):**
+**Response (200):**
 ```json
 {
   "success": true,
   "data": {
     "admin": {
       "id": "uuid",
-      "email": "admin@example.com",
-      "name": "John Doe",
-      "role": "admin"
+      "email": "admin@servy.com",
+      "name": "Admin User",
+      "role": "super_admin"
     },
     "accessToken": "eyJ..."
   }
 }
 ```
 
-**Error Responses:**
-- `401` - Invalid credentials: `{ "success": false, "message": "invalid admin credentials" }`
-- `403` - Not an admin: `{ "success": false, "message": "user is not an admin" }`
+**Errors:** `401` invalid credentials, `403` not admin
 
 ---
 
 ## 2. Dashboard
 
-All dashboard endpoints require admin auth.
-
-### GET `/servy/api/v1/admin/dashboard/statistics`
-
-**Response (200):**
+### GET `/admin/dashboard/statistics`
 ```json
 {
   "totalUsers": 1500,
@@ -64,79 +76,57 @@ All dashboard endpoints require admin auth.
 }
 ```
 
-### GET `/servy/api/v1/admin/dashboard/orders-over-time`
-
-Returns daily order counts for the last 7 days.
-
-**Response (200):**
+### GET `/admin/dashboard/orders-over-time`
+Returns last 7 days.
 ```json
 [
-  { "date": "2026-02-26", "value": 45 },
-  { "date": "2026-02-27", "value": 52 },
-  { "date": "2026-02-28", "value": 38 }
+  { "date": "2026-03-03", "value": 45 },
+  { "date": "2026-03-04", "value": 52 }
 ]
 ```
 
-### GET `/servy/api/v1/admin/dashboard/revenue-over-time`
-
-Returns daily revenue for the last 7 days.
-
-**Response (200):**
+### GET `/admin/dashboard/revenue-over-time`
+Returns last 7 days.
 ```json
 [
-  { "date": "2026-02-26", "value": 5200.00 },
-  { "date": "2026-02-27", "value": 6100.50 },
-  { "date": "2026-02-28", "value": 4800.75 }
+  { "date": "2026-03-03", "value": 5200.00 },
+  { "date": "2026-03-04", "value": 6100.50 }
 ]
 ```
 
-### GET `/servy/api/v1/admin/dashboard/orders-by-status`
-
-Returns order counts grouped by status (last 30 days).
-
-**Response (200):**
+### GET `/admin/dashboard/orders-by-status`
+Returns last 30 days.
 ```json
 [
   { "status": "pending", "count": 12 },
-  { "status": "accepted", "count": 8 },
-  { "status": "preparing", "count": 5 },
-  { "status": "ready", "count": 3 },
-  { "status": "out_for_delivery", "count": 7 },
   { "status": "delivered", "count": 3100 },
   { "status": "cancelled", "count": 65 }
 ]
 ```
 
-### GET `/servy/api/v1/admin/dashboard/top-restaurants`
-
-Returns top restaurants by revenue (last 30 days).
-
-**Response (200):**
+### GET `/admin/dashboard/top-restaurants`
+Returns last 30 days.
 ```json
 [
-  { "name": "Pizza Palace", "orders": 320, "revenue": 15000.00 },
-  { "name": "Burger House", "orders": 280, "revenue": 12500.00 }
+  { "name": "Pizza Palace", "orders": 320, "revenue": 15000.00 }
 ]
 ```
 
 ---
 
-## 3. User Management
+## 3. Users
 
-### GET `/servy/api/v1/admin/users`
+### GET `/admin/users`
 
-List users with filtering and pagination.
+| Query Param | Type   | Values                                     |
+|-------------|--------|--------------------------------------------|
+| `userType`  | string | `customer`, `driver`, `restaurant`, `admin` |
+| `status`    | string | `active`, `suspended`                      |
+| `search`    | string | Search name, email, phone                  |
+| `page`      | int    | Default: 1                                 |
+| `limit`     | int    | Default: 10, max: 100                      |
 
-**Query Parameters:**
-| Param      | Type   | Description                                         |
-|------------|--------|-----------------------------------------------------|
-| `userType` | string | Filter by type: `customer`, `driver`, `restaurant`, `admin` |
-| `status`   | string | Filter by status: `active`, `suspended`             |
-| `search`   | string | Search by name, email, or phone (ILIKE)             |
-| `page`     | int    | Page number (default: 1)                            |
-| `limit`    | int    | Items per page (default: 10, max: 100)              |
-
-**Response (200):**
+**Response:**
 ```json
 {
   "users": [
@@ -152,41 +142,14 @@ List users with filtering and pagination.
       "createdAt": "2026-01-15 10:30:00"
     }
   ],
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "total": 150,
-    "totalPages": 15
-  }
+  "pagination": { "page": 1, "limit": 10, "total": 150, "totalPages": 15 }
 }
 ```
 
-### GET `/servy/api/v1/admin/users/:id`
+### GET `/admin/users/:id`
+Returns single user object (same shape as list item).
 
-Get a single user's details.
-
-**Response (200):**
-```json
-{
-  "id": "uuid",
-  "name": "John Doe",
-  "email": "john@example.com",
-  "phone": "01000000000",
-  "userType": "customer",
-  "status": "active",
-  "totalOrders": 15,
-  "totalSpent": 2500.00,
-  "createdAt": "2026-01-15 10:30:00"
-}
-```
-
-**Error:** `404` if user not found.
-
-### POST `/servy/api/v1/admin/users`
-
-Create a new user.
-
-**Request Body:**
+### POST `/admin/users`
 ```json
 {
   "name": "Jane Smith",
@@ -196,68 +159,38 @@ Create a new user.
   "status": "active"
 }
 ```
+**Response (201):** `{ "message": "User created successfully", "id": "uuid" }`
 
-**Response (201):**
+### PUT `/admin/users/:id/status`
 ```json
-{
-  "message": "User created successfully",
-  "id": "uuid"
-}
+{ "status": "suspended" }
 ```
+Values: `"active"` or `"suspended"`
 
-Note: Password defaults to `"password"` and the user's `name` is split into `first_name` / `last_name` on the first space.
+**Response:** `{ "message": "User status updated successfully" }`
 
-### PUT `/servy/api/v1/admin/users/:id/status`
+### DELETE `/admin/users/:id`
+Soft-delete (sets inactive).
 
-Update a user's status (activate or suspend).
-
-**Request Body:**
-```json
-{
-  "status": "suspended"
-}
-```
-
-Values: `"active"` or `"suspended"`.
-
-**Response (200):**
-```json
-{
-  "message": "User status updated successfully"
-}
-```
-
-### DELETE `/servy/api/v1/admin/users/:id`
-
-Soft-delete a user (sets `is_active = false`).
-
-**Response (200):**
-```json
-{
-  "message": "User deleted successfully"
-}
-```
+**Response:** `{ "message": "User deleted successfully" }`
 
 ---
 
-## 4. Order Management
+## 4. Orders
 
-### GET `/servy/api/v1/admin/orders`
+### GET `/admin/orders`
 
-List all orders with filtering and pagination.
+| Query Param     | Type   | Values                                                              |
+|-----------------|--------|---------------------------------------------------------------------|
+| `status`        | string | `pending`, `accepted`, `preparing`, `ready`, `out_for_delivery`, `delivered`, `cancelled`, `all` |
+| `paymentStatus` | string | Payment status filter                                               |
+| `restaurantId`  | string | Restaurant UUID                                                     |
+| `orderType`     | string | `food`, `p2p`, `all`                                                |
+| `search`        | string | Search by order ID, customer name/phone                             |
+| `page`          | int    | Default: 1                                                          |
+| `limit`         | int    | Default: 10, max: 100                                               |
 
-**Query Parameters:**
-| Param          | Type   | Description                                                     |
-|----------------|--------|-----------------------------------------------------------------|
-| `status`       | string | Filter by status: `pending`, `accepted`, `preparing`, `ready`, `out_for_delivery`, `delivered`, `cancelled`, or `all` |
-| `paymentStatus`| string | Filter by payment status                                        |
-| `restaurantId` | string | Filter by restaurant UUID                                       |
-| `orderType`    | string | Filter by order type: `food`, `p2p`, or `all`                   |
-| `search`       | string | Search by order ID, customer name, or customer phone            |
-| `page`         | int    | Page number (default: 1)                                        |
-| `limit`        | int    | Items per page (default: 10, max: 100)                          |
-
-**Response (200):**
+**Response:**
 ```json
 {
   "orders": [
@@ -284,150 +217,310 @@ List all orders with filtering and pagination.
       "updatedAt": null
     }
   ],
-  "pagination": {
-    "page": 1,
-    "limit": 10,
-    "total": 3200,
-    "totalPages": 320
-  }
+  "pagination": { "page": 1, "limit": 10, "total": 3200, "totalPages": 320 }
 }
 ```
 
-### GET `/servy/api/v1/admin/orders/:id`
+### GET `/admin/orders/:id`
+Returns single order object.
 
-Get a single order's full details.
-
-**Response (200):** Same shape as a single order object above.
-
-**Error:** `404` if order not found.
-
-### PUT `/servy/api/v1/admin/orders/:id/status`
-
-Update an order's status.
-
-**Request Body:**
+### PUT `/admin/orders/:id/status`
 ```json
-{
-  "status": "accepted"
-}
+{ "status": "accepted" }
 ```
+**Response:** `{ "message": "Order status updated successfully" }`
 
-Valid statuses: `pending`, `accepted`, `preparing`, `ready`, `out_for_delivery`, `delivered`, `cancelled`.
-
-Each status update also sets the corresponding timestamp column (e.g. `accepted_at`, `preparing_at`, `delivered_at`, `cancelled_at`).
-
-**Response (200):**
+### POST `/admin/orders/:id/assign-driver`
 ```json
-{
-  "message": "Order status updated successfully"
-}
+{ "driverId": "rider-uuid" }
 ```
-
-### POST `/servy/api/v1/admin/orders/:id/assign-driver`
-
-Assign a driver/rider to an order.
-
-**Request Body:**
-```json
-{
-  "driverId": "rider-uuid"
-}
-```
-
-Note: `driverId` maps to `rider_id` in the database. Sets `assigned_at` timestamp.
-
-**Response (200):**
-```json
-{
-  "message": "Driver assigned successfully"
-}
-```
+**Response:** `{ "message": "Driver assigned successfully" }`
 
 ---
 
 ## 5. P2P Delivery Requests
 
-These endpoints are identical to order management but automatically filter by `order_type = 'p2p'`.
+Same as orders but filtered to `order_type = 'p2p'` automatically.
 
-### GET `/servy/api/v1/admin/delivery-requests`
+### GET `/admin/delivery-requests`
+Same query params as orders (except `orderType` forced to `p2p`).
 
-List P2P delivery requests. Same query params as orders (except `orderType` is forced to `p2p`).
+### GET `/admin/delivery-requests/:id`
 
-**Response (200):** Same shape as order list response.
+### PUT `/admin/delivery-requests/:id/status`
+```json
+{ "status": "accepted" }
+```
 
-### GET `/servy/api/v1/admin/delivery-requests/:id`
+### PUT `/admin/delivery-requests/:id/cancel`
+No body needed.
 
-Get a single P2P delivery request detail.
+**Response:** `{ "message": "Delivery request cancelled successfully" }`
 
-**Response (200):** Same shape as single order object.
+---
 
-### PUT `/servy/api/v1/admin/delivery-requests/:id/status`
+## 6. Restaurants
 
-Update a P2P delivery request status.
+### GET `/admin/restaurants`
 
-**Request Body:**
+| Query Param  | Type   | Values                                    |
+|--------------|--------|-------------------------------------------|
+| `status`     | string | `open`, `closed`, `pending`, `suspended`, `all` |
+| `vendorType` | string | `restaurant`, `pharmacy`, `supermarket`, `all`  |
+| `search`     | string | Search by name, owner email, phone        |
+| `page`       | int    | Default: 1                                |
+| `limit`      | int    | Default: 10, max: 100                     |
+
+**Response:**
 ```json
 {
-  "status": "accepted"
+  "restaurants": [
+    {
+      "id": "uuid",
+      "name": "Pizza Palace",
+      "ownerEmail": "owner@example.com",
+      "ownerName": "Mohamed Ali",
+      "phone": "01000000000",
+      "cuisineType": "Italian",
+      "status": "open",
+      "vendorType": "restaurant",
+      "totalOrders": 320,
+      "totalRevenue": 15000.00,
+      "rating": 4.5,
+      "address": "123 Food Street",
+      "description": "Best pizza in town",
+      "createdAt": "2026-01-10 08:00:00"
+    }
+  ],
+  "pagination": { "page": 1, "limit": 10, "total": 45, "totalPages": 5 }
 }
 ```
 
-**Response (200):**
+### GET `/admin/restaurants/:id`
+Returns single restaurant object (same shape as list item).
+
+### PUT `/admin/restaurants/:id/status`
+```json
+{ "status": "suspended" }
+```
+Values: `"open"`, `"closed"`, `"pending"`, `"suspended"`
+
+**Response:** `{ "message": "Restaurant status updated successfully" }`
+
+### DELETE `/admin/restaurants/:id`
+Soft-delete (sets status to `deleted`).
+
+**Response:** `{ "message": "Restaurant deleted successfully" }`
+
+---
+
+## 7. Categories (Vendor Categories)
+
+These are the global vendor categories (e.g., "Fast Food", "Pharmacy", "Groceries").
+
+### GET `/admin/categories`
+
+| Query Param | Type   | Values                        |
+|-------------|--------|-------------------------------|
+| `status`    | string | `active`, `inactive`, `all`   |
+| `search`    | string | Search by name                |
+| `page`      | int    | Default: 1                    |
+| `limit`     | int    | Default: 10, max: 100         |
+
+**Response:**
 ```json
 {
-  "message": "Order status updated successfully"
+  "categories": [
+    {
+      "id": "uuid",
+      "name": "Fast Food",
+      "imageUrl": "https://...",
+      "sortOrder": 1,
+      "isActive": true,
+      "createdAt": "2026-01-01 00:00:00"
+    }
+  ],
+  "pagination": { "page": 1, "limit": 10, "total": 8, "totalPages": 1 }
 }
 ```
 
-### PUT `/servy/api/v1/admin/delivery-requests/:id/cancel`
-
-Cancel a P2P delivery request (sets status to `cancelled`). No request body needed.
-
-**Response (200):**
+### POST `/admin/categories`
 ```json
 {
-  "message": "Delivery request cancelled successfully"
+  "name": "Healthy Food",
+  "imageUrl": "https://...",
+  "sortOrder": 5,
+  "isActive": true
 }
 ```
+**Response (201):** Returns created category object.
+
+### PUT `/admin/categories/:id`
+All fields optional -- only send what needs updating.
+```json
+{
+  "name": "Updated Name",
+  "sortOrder": 3
+}
+```
+**Response:** `{ "message": "Category updated successfully" }`
+
+### DELETE `/admin/categories/:id`
+Hard delete.
+
+**Response:** `{ "message": "Category deleted successfully" }`
+
+### PUT `/admin/categories/:id/toggle`
+Toggles `isActive` between true/false. No body needed.
+
+**Response:** `{ "message": "Category toggled successfully" }`
+
+---
+
+## 8. Coupons
+
+### GET `/admin/coupons`
+
+| Query Param | Type   | Values                                 |
+|-------------|--------|----------------------------------------|
+| `status`    | string | `active`, `expired`, `disabled`, `all` |
+| `search`    | string | Search by code or description          |
+| `page`      | int    | Default: 1                             |
+| `limit`     | int    | Default: 10, max: 100                  |
+
+**Response:**
+```json
+{
+  "coupons": [
+    {
+      "id": "uuid",
+      "code": "WELCOME20",
+      "description": "20% off first order",
+      "discount_type": "percentage",
+      "discount_value": 20,
+      "min_order_amount": 100,
+      "max_discount": 50,
+      "usage_limit": 1000,
+      "usage_count": 150,
+      "per_user_limit": 1,
+      "valid_from": "2026-01-01T00:00:00Z",
+      "valid_until": "2026-12-31T23:59:59Z",
+      "is_active": true,
+      "restaurant_id": null
+    }
+  ],
+  "pagination": { "page": 1, "limit": 10, "total": 25, "totalPages": 3 }
+}
+```
+
+### GET `/admin/coupons/:id`
+Returns single coupon object.
+
+### POST `/admin/coupons`
+```json
+{
+  "code": "SUMMER30",
+  "description": "Summer 30% off",
+  "discount_type": "percentage",
+  "discount_value": 30,
+  "min_order_amount": 50,
+  "max_discount": 100,
+  "usage_limit": 500,
+  "per_user_limit": 2,
+  "valid_from": "2026-06-01T00:00:00Z",
+  "valid_until": "2026-08-31T23:59:59Z",
+  "is_active": true,
+  "restaurant_id": null
+}
+```
+`discount_type` values: `"percentage"`, `"fixed_amount"`, `"free_delivery"`
+
+**Response (201):** `{ "data": { ...coupon object } }`
+
+### PUT `/admin/coupons/:id`
+All fields optional.
+```json
+{
+  "discount_value": 25,
+  "is_active": false
+}
+```
+**Response:** `{ "message": "Coupon updated successfully" }`
+
+### DELETE `/admin/coupons/:id`
+Hard delete.
+
+**Response:** `{ "message": "Coupon deleted successfully" }`
+
+### PUT `/admin/coupons/:id/toggle`
+Toggles `is_active`. No body needed.
+
+**Response:** `{ "message": "Coupon toggled successfully" }`
 
 ---
 
 ## Common Error Responses
 
-All endpoints may return:
+| Status | Description                    |
+|--------|--------------------------------|
+| `400`  | Bad request (invalid params)   |
+| `401`  | Unauthorized (missing auth)    |
+| `403`  | Forbidden (not admin)          |
+| `404`  | Resource not found             |
+| `409`  | Conflict (duplicate)           |
+| `500`  | Internal server error          |
 
-| Status | Description |
-|--------|-------------|
-| `400`  | Bad request (invalid params or body) |
-| `401`  | Unauthorized (missing or invalid auth) |
-| `403`  | Forbidden (not an admin) |
-| `404`  | Resource not found |
-| `500`  | Internal server error |
-
-Error format:
 ```json
-{
-  "error": "error message here"
-}
-```
-
-Or for auth endpoints:
-```json
-{
-  "success": false,
-  "message": "error message here"
-}
+{ "error": "error message here" }
 ```
 
 ---
 
-## Not Yet Implemented (Phase 2 & 3)
+## Dart/Flutter Integration Notes
 
-The following admin features are planned but not yet available:
-- Restaurant management (CRUD, approval, menu categories)
-- Coupon management
-- Rider/driver management & ratings
-- Settings management
-- Reports & export
-- Push notification management
-- Rewards/loyalty management
+### Base Setup
+```dart
+const baseUrl = 'https://your-server.com/servy/api/v1';
+
+// After login, store token
+final token = loginResponse['data']['accessToken'];
+
+// Use for all subsequent requests
+headers: {
+  'Authorization': 'Bearer $token',
+  'Content-Type': 'application/json',
+}
+```
+
+### Pagination Pattern
+All list endpoints return the same pagination structure:
+```dart
+class PaginatedResponse<T> {
+  final List<T> items;
+  final int page;
+  final int limit;
+  final int total;
+  final int totalPages;
+}
+```
+
+### Status Values Reference
+- **User status:** `active`, `suspended`
+- **Order status:** `pending`, `accepted`, `preparing`, `ready`, `out_for_delivery`, `delivered`, `cancelled`
+- **Restaurant status:** `open`, `closed`, `pending`, `suspended`
+- **Vendor type:** `restaurant`, `pharmacy`, `supermarket`
+- **Coupon discount type:** `percentage`, `fixed_amount`, `free_delivery`
+- **Coupon status filter:** `active`, `expired`, `disabled`
+- **Category status filter:** `active`, `inactive`
+
+---
+
+## Not Yet Implemented (Phase 3)
+
+هذه الأقسام **غير موثّقة في هذا الملف** ولا توجد لها endpoints محددة أعلاه. لوحة الأدمن قد تحتوي على واجهات أو Mock لها لاحقاً:
+
+- Rider/Driver management & ratings — إدارة السائقين وتقييماتهم
+- Settings management — إعدادات النظام
+- Reports & export — التقارير والتصدير
+- Push notification management — إدارة الإشعارات
+- Rewards/loyalty management — المكافآت والولاء

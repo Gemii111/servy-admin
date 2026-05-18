@@ -21,9 +21,11 @@ import {
 } from '../../services/api/dashboard';
 import { getOrders } from '../../services/api/orders';
 import { useNavigate } from 'react-router-dom';
+import { useLiveOrders } from '../../hooks/useLiveOrders';
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
+  useLiveOrders(true);
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard', 'statistics'],
     queryFn: getDashboardStatistics,

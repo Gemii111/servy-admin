@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Typography, Paper, Button, Chip, IconButton } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -7,12 +7,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import { getUserById } from '../../services/api/users';
+import ResetPasswordDialog from './ResetPasswordDialog';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 
 const UserDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [resetOpen, setResetOpen] = useState(false);
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['user', id],
@@ -72,7 +74,10 @@ const UserDetailsPage: React.FC = () => {
             </Typography>
           </Box>
         </Box>
-        <Box sx={{ display: 'flex', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+          <Button variant="outlined" onClick={() => setResetOpen(true)}>
+            إعادة تعيين كلمة المرور
+          </Button>
           <Button
             variant="outlined"
             startIcon={<EditIcon />}
@@ -238,6 +243,13 @@ const UserDetailsPage: React.FC = () => {
           </Box>
         </Box>
       </Paper>
+
+      <ResetPasswordDialog
+        open={resetOpen}
+        userId={user.id}
+        userName={user.name}
+        onClose={() => setResetOpen(false)}
+      />
     </Box>
   );
 };

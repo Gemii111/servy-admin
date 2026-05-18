@@ -39,8 +39,8 @@ const RevenueChart: React.FC<RevenueChartProps> = ({ data, isLoading }) => {
       <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
         الإيرادات عبر الزمن
       </Typography>
-      <Box sx={{ width: '100%', height: 300 }}>
-        <ResponsiveContainer>
+      <Box sx={{ width: '100%', height: 300, minHeight: 300, minWidth: 1 }}>
+        <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">

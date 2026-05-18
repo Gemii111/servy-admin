@@ -1,3 +1,7 @@
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
+
 export interface ReportFilters {
   startDate?: string;
   endDate?: string;
@@ -174,5 +178,139 @@ export async function mockGetRevenueByRestaurant(
     orders: r.orders,
     percentage: Number(((r.revenue / totalRevenue) * 100).toFixed(1)),
   }));
+}
+
+function reportParams(filters?: ReportFilters): Record<string, string> {
+  const p: Record<string, string> = {};
+  if (filters?.startDate) p.date_from = filters.startDate;
+  if (filters?.endDate) p.date_to = filters.endDate;
+  if (filters?.restaurantId) p.restaurant_id = filters.restaurantId;
+  if (filters?.status) p.status = filters.status;
+  return p;
+}
+
+async function realGetSalesReport(filters?: ReportFilters): Promise<SalesReport> {
+  const { data } = await apiClient.get<SalesReport>('/admin/reports/orders', {
+    params: reportParams(filters),
+  });
+  return (data as { data?: SalesReport }).data ?? data;
+}
+
+async function realGetRestaurantReports(filters?: ReportFilters): Promise<RestaurantReport[]> {
+  const { data } = await apiClient.get<{ restaurants?: RestaurantReport[] }>(
+    '/admin/reports/revenue',
+    { params: reportParams(filters) }
+  );
+  return data.restaurants ?? (Array.isArray(data) ? (data as RestaurantReport[]) : []);
+}
+
+async function realGetDriverReports(filters?: ReportFilters): Promise<DriverReport[]> {
+  const { data } = await apiClient.get<{ drivers?: DriverReport[] }>('/admin/reports/drivers', {
+    params: reportParams(filters),
+  });
+  return data.drivers ?? [];
+}
+
+async function realGetRevenueByDay(filters?: ReportFilters): Promise<RevenueByDay[]> {
+  const { data } = await apiClient.get<{ days?: RevenueByDay[] }>('/admin/reports/revenue-by-day', {
+    params: reportParams(filters),
+  });
+  return data.days ?? [];
+}
+
+async function realGetRevenueByRestaurant(
+  filters?: ReportFilters
+): Promise<RevenueByRestaurant[]> {
+  const reports = await realGetRestaurantReports(filters);
+  const total = reports.reduce((s, r) => s + r.totalRevenue, 0) || 1;
+  return reports.map((r) => ({
+    restaurantName: r.restaurantName,
+    revenue: r.totalRevenue,
+    orders: r.totalOrders,
+    percentage: Number(((r.totalRevenue / total) * 100).toFixed(1)),
+  }));
+}
+
+export async function getSalesReport(filters?: ReportFilters): Promise<SalesReport> {
+  try {
+    return shouldUseMock() ? mockGetSalesReport(filters) : realGetSalesReport(filters);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getRestaurantReports(filters?: ReportFilters): Promise<RestaurantReport[]> {
+  try {
+    return shouldUseMock() ? mockGetRestaurantReports(filters) : realGetRestaurantReports(filters);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getDriverReports(filters?: ReportFilters): Promise<DriverReport[]> {
+  try {
+    return shouldUseMock() ? mockGetDriverReports(filters) : realGetDriverReports(filters);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getRevenueByDay(filters?: ReportFilters): Promise<RevenueByDay[]> {
+  try {
+    return shouldUseMock() ? mockGetRevenueByDay(filters) : realGetRevenueByDay(filters);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getRevenueByRestaurant(
+  filters?: ReportFilters
+): Promise<RevenueByRestaurant[]> {
+  try {
+    return shouldUseMock()
+      ? mockGetRevenueByRestaurant(filters)
+      : realGetRevenueByRestaurant(filters);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function downloadReportExport(
+  type: 'orders' | 'revenue' | 'drivers',
+  filters?: ReportFilters
+): Promise<void> {
+  const res = await apiClient.get('/admin/reports/export', {
+    params: {
+      type,
+      format: 'csv',
+      ...reportParams(filters),
+    },
+    responseType: 'blob',
+  });
+  const blob = new Blob([res.data], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `report-${type}-${filters?.startDate ?? 'all'}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function exportReportToCsv(filename: string, rows: Record<string, string | number>[]): void {
+  if (!rows.length) return;
+  const headers = Object.keys(rows[0]);
+  const csv = [
+    headers.join(','),
+    ...rows.map((row) =>
+      headers.map((h) => `"${String(row[h] ?? '').replace(/"/g, '""')}"`).join(',')
+    ),
+  ].join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 

@@ -7,22 +7,37 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PeopleIcon from '@mui/icons-material/People';
 import StatCard from '../../components/common/StatCard';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
-import { mockGetNotificationStatistics } from '../../services/api/notifications';
+import {
+  getFcmTokenStats,
+  getNotificationStatistics,
+} from '../../services/api/notifications';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 const NotificationStatisticsPage: React.FC = () => {
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['notifications', 'statistics'],
-    queryFn: () => mockGetNotificationStatistics(),
+    queryFn: () => getNotificationStatistics(),
   });
 
-  if (statsLoading) {
+  const { data: fcmStats, isLoading: fcmLoading } = useQuery({
+    queryKey: ['notifications', 'fcm-stats'],
+    queryFn: getFcmTokenStats,
+  });
+
+  if (statsLoading || fcmLoading) {
     return <SkeletonLoader variant="chart" />;
   }
 
   if (!stats) {
     return null;
   }
+
+  const fcmByPlatformData =
+    fcmStats?.byPlatform.map((p) => ({
+      name: p.platform === 'android' ? 'أندرويد' : p.platform === 'ios' ? 'iOS' : p.platform,
+      value: p.count,
+      color: p.platform === 'android' ? '#22C55E' : p.platform === 'ios' ? '#3B82F6' : '#86B573',
+    })) ?? [];
 
   // Prepare data for charts
   const notificationsByTypeData = [
@@ -111,11 +126,46 @@ const NotificationStatisticsPage: React.FC = () => {
           icon={<TrendingUpIcon />}
         />
         <StatCard
-          title="الإشعارات الأخيرة"
-          value={stats.recentNotifications.length}
+          title="أجهزة FCM مسجّلة"
+          value={(fcmStats?.totalTokens ?? 0).toLocaleString()}
           icon={<PeopleIcon />}
         />
       </Box>
+
+      {fcmByPlatformData.length > 0 && (
+        <Paper
+          sx={{
+            bgcolor: '#FFFFFF',
+            borderRadius: 2,
+            border: '1px solid #B1C0B1',
+            p: 3,
+            mb: 3,
+          }}
+        >
+          <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
+            توزيع أجهزة FCM حسب المنصة
+          </Typography>
+          <ResponsiveContainer width="100%" height={260}>
+            <PieChart>
+              <Pie
+                data={fcmByPlatformData}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={90}
+                label={({ name, value }) => `${name}: ${value}`}
+              >
+                {fcmByPlatformData.map((entry, index) => (
+                  <Cell key={`fcm-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </Paper>
+      )}
 
       {/* Charts Section */}
       <Box

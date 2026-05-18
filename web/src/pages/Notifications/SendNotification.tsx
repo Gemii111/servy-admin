@@ -30,7 +30,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockSendNotification,
+  sendNotification,
   NotificationType,
   NotificationPriority,
   TargetAudience,
@@ -74,7 +74,7 @@ const SendNotificationPage: React.FC = () => {
   });
 
   const sendMutation = useMutation({
-    mutationFn: mockSendNotification,
+    mutationFn: sendNotification,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       showSnackbar('تم إرسال الإشعار بنجاح', 'success');

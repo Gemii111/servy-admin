@@ -14,7 +14,7 @@ import DataTable from '../../components/tables/DataTable';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import {
-  mockGetBanners,
+  getBanners,
   Banner,
   BannerType,
   getBannerTypeLabel,
@@ -30,7 +30,7 @@ const BannersListPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['banners', activeFilter, typeFilter],
     queryFn: () =>
-      mockGetBanners({
+      getBanners({
         is_active:
           activeFilter === 'all'
             ? undefined

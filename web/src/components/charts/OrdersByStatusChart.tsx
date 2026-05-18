@@ -49,8 +49,8 @@ const OrdersByStatusChart: React.FC<OrdersByStatusChartProps> = ({ data, isLoadi
       <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2.5, fontWeight: 600, fontSize: 16 }}>
         الطلبات حسب الحالة
       </Typography>
-      <Box sx={{ width: '100%', height: 300 }}>
-        <ResponsiveContainer>
+      <Box sx={{ width: '100%', height: 300, minHeight: 300, minWidth: 1 }}>
+        <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
               data={data}

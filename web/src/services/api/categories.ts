@@ -1,3 +1,7 @@
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
+
 export interface Category {
   id: string;
   name: string;
@@ -17,6 +21,81 @@ export interface CategoriesResponse {
     total: number;
     totalPages: number;
   };
+}
+
+interface ApiCategory {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  sortOrder: number;
+  isActive: boolean;
+  createdAt: string;
+}
+
+function unwrap<T>(data: unknown): T {
+  const d = data as { data?: T };
+  return d?.data != null ? d.data : (data as T);
+}
+
+function mapApiCategory(c: ApiCategory): Category {
+  return {
+    id: c.id,
+    name: c.name,
+    slug: c.id,
+    isActive: c.isActive,
+    sortOrder: c.sortOrder ?? 0,
+    createdAt: c.createdAt,
+    updatedAt: c.createdAt,
+  };
+}
+
+async function realGetCategories(params?: {
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<CategoriesResponse> {
+  const res = await apiClient.get<{ categories?: ApiCategory[]; pagination: CategoriesResponse['pagination'] }>(
+    '/admin/categories',
+    { params }
+  );
+  const body = unwrap<{ categories?: ApiCategory[]; pagination: CategoriesResponse['pagination'] }>(res.data) ?? res.data;
+  const list = body.categories ?? [];
+  return {
+    categories: list.map(mapApiCategory),
+    pagination: body.pagination ?? { page: 1, limit: 10, total: 0, totalPages: 0 },
+  };
+}
+
+async function realCreateCategory(payload: {
+  name: string;
+  imageUrl?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+}): Promise<Category> {
+  const res = await apiClient.post<ApiCategory>('/admin/categories', {
+    name: payload.name,
+    imageUrl: payload.imageUrl,
+    sortOrder: payload.sortOrder ?? 0,
+    isActive: payload.isActive ?? true,
+  });
+  const data = unwrap<ApiCategory>(res.data) ?? res.data;
+  return mapApiCategory(data);
+}
+
+async function realUpdateCategory(
+  id: string,
+  payload: Partial<{ name: string; imageUrl: string; sortOrder: number; isActive: boolean }>
+): Promise<void> {
+  await apiClient.put(`/admin/categories/${id}`, payload);
+}
+
+async function realDeleteCategory(id: string): Promise<void> {
+  await apiClient.delete(`/admin/categories/${id}`);
+}
+
+async function realToggleCategoryStatus(id: string): Promise<void> {
+  await apiClient.put(`/admin/categories/${id}/toggle`);
 }
 
 // Mock categories data
@@ -160,4 +239,80 @@ export async function mockToggleCategoryStatus(id: string): Promise<Category> {
   return updated;
 }
 
+// ——— Unified API (mock vs real) ———
 
+export type GetCategoriesParams = {
+  status?: 'all' | 'active' | 'inactive';
+  search?: string;
+  page?: number;
+  limit?: number;
+};
+
+export async function getCategories(params?: GetCategoriesParams): Promise<CategoriesResponse> {
+  try {
+    return shouldUseMock() ? mockGetCategories(params) : realGetCategories(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function createCategory(payload: {
+  name: string;
+  slug: string;
+  description?: string;
+  isActive?: boolean;
+  sortOrder?: number;
+}): Promise<Category> {
+  try {
+    return shouldUseMock()
+      ? mockCreateCategory(payload)
+      : realCreateCategory({
+          name: payload.name,
+          sortOrder: payload.sortOrder,
+          isActive: payload.isActive,
+        });
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function updateCategory(
+  id: string,
+  payload: Partial<Omit<Category, 'id' | 'createdAt'>>
+): Promise<Category> {
+  try {
+    if (shouldUseMock()) return mockUpdateCategory(id, payload);
+    await realUpdateCategory(id, {
+      name: payload.name,
+      sortOrder: payload.sortOrder,
+      isActive: payload.isActive,
+    });
+    const list = await realGetCategories({ limit: 100 });
+    const found = list.categories.find((c) => c.id === id);
+    if (!found) throw new Error('Category not found');
+    return { ...found, ...payload, updatedAt: new Date().toISOString() };
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockDeleteCategory(id) : realDeleteCategory(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function toggleCategoryStatus(id: string): Promise<Category> {
+  try {
+    if (shouldUseMock()) return mockToggleCategoryStatus(id);
+    await realToggleCategoryStatus(id);
+    const list = await realGetCategories({ limit: 100 });
+    const found = list.categories.find((c) => c.id === id);
+    if (!found) throw new Error('Category not found');
+    return { ...found, isActive: !found.isActive, updatedAt: new Date().toISOString() };
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}

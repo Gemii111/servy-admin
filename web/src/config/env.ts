@@ -14,6 +14,8 @@ interface EnvConfig {
   sentryEnvironment: string;
   enableAnalytics: boolean;
   enableSentry: boolean;
+  /** Admin live orders WebSocket (P2 — off until backend exposes /ws/orders) */
+  enableLiveWebSocket: boolean;
 }
 
 /**
@@ -62,15 +64,19 @@ const getNumberEnvVar = (key: string, defaultValue: number): number => {
 export const env: EnvConfig = {
   apiBaseUrl: getEnvVar(
     'REACT_APP_API_BASE_URL',
-    'https://talabat-ehpd.onrender.com/servy/api/v1'
+    'https://souq-917s.onrender.com/servy/api/v1'
   ),
   apiTimeout: getNumberEnvVar('REACT_APP_API_TIMEOUT', 60000),
-  websocketUrl: getEnvVar('REACT_APP_WEBSOCKET_URL', 'wss://api.servy.app/ws'),
+  websocketUrl: getEnvVar(
+    'REACT_APP_WEBSOCKET_URL',
+    'wss://souq-917s.onrender.com/servy/api/v1'
+  ),
   environment: (getEnvVar('REACT_APP_ENV', process.env.NODE_ENV || 'development') as EnvConfig['environment']) || 'development',
   sentryDsn: getEnvVar('REACT_APP_SENTRY_DSN', '') || undefined,
   sentryEnvironment: getEnvVar('REACT_APP_SENTRY_ENVIRONMENT', process.env.NODE_ENV || 'development'),
   enableAnalytics: getBooleanEnvVar('REACT_APP_ENABLE_ANALYTICS', false),
   enableSentry: getBooleanEnvVar('REACT_APP_ENABLE_SENTRY', false),
+  enableLiveWebSocket: getBooleanEnvVar('REACT_APP_ENABLE_LIVE_WS', false),
 };
 
 /**

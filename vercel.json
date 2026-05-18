@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/proxy/:path*",
-      "destination": "https://talabat-ehpd.onrender.com/servy/api/v1/:path*"
+      "destination": "https://souq-917s.onrender.com/servy/api/v1/:path*"
     },
     {
       "source": "/((?!api/).*)",

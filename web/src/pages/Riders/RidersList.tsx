@@ -20,11 +20,11 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetRiders,
-  mockUpdateRiderStatus,
-  mockApproveRider,
+  getRiders,
+  updateRiderStatus,
   Rider,
   getRiderStatusLabel,
+  getVehicleLabel,
 } from '../../services/api/riders';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
@@ -36,44 +36,45 @@ const RidersListPage: React.FC = () => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [vehicleTypeFilter, setVehicleTypeFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading } = useQuery({
-    queryKey: ['riders', statusFilter, searchQuery],
+    queryKey: ['riders', statusFilter, vehicleTypeFilter, searchQuery],
     queryFn: () =>
-      mockGetRiders({
+      getRiders({
         status: statusFilter === 'all' ? undefined : statusFilter,
+        vehicleType: vehicleTypeFilter === 'all' ? undefined : vehicleTypeFilter,
         search: searchQuery || undefined,
       }),
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'active' | 'inactive' }) =>
-      mockUpdateRiderStatus(id, status),
+    mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
+      updateRiderStatus(id, { isActive }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['riders'] });
       showSnackbar('تم تحديث حالة السائق', 'success');
     },
-    onError: () => showSnackbar('فشل تحديث الحالة', 'error'),
+    onError: (err: Error) => showSnackbar(err.message || 'فشل تحديث الحالة', 'error'),
   });
 
-  const approveMutation = useMutation({
-    mutationFn: mockApproveRider,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['riders'] });
-      showSnackbar('تم الموافقة على السائق', 'success');
-    },
-    onError: () => showSnackbar('فشل الموافقة', 'error'),
-  });
+  const statusColors: Record<string, string> = {
+    available: '#22C55E',
+    heading_to_restaurant: '#3B82F6',
+    at_restaurant: '#8B5CF6',
+    delivering: '#F59E0B',
+    offline: '#5A6A5A',
+  };
 
   const columns = useMemo<ColumnDef<Rider>[]>(
     () => [
       {
-        accessorKey: 'first_name',
+        accessorKey: 'name',
         header: 'الاسم',
         cell: ({ row }) => (
           <Typography sx={{ color: '#1A2E1A', fontWeight: 600, fontSize: 14 }}>
-            {row.original.first_name} {row.original.last_name}
+            {row.original.name}
           </Typography>
         ),
       },
@@ -82,7 +83,7 @@ const RidersListPage: React.FC = () => {
         header: 'البريد الإلكتروني',
         cell: (info) => (
           <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
-            {String(info.getValue())}
+            {String(info.getValue() || '')}
           </Typography>
         ),
       },
@@ -96,22 +97,26 @@ const RidersListPage: React.FC = () => {
         ),
       },
       {
+        accessorKey: 'vehicleType',
+        header: 'نوع المركبة',
+        cell: (info) => (
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
+            {getVehicleLabel(String(info.getValue()))}
+          </Typography>
+        ),
+      },
+      {
         accessorKey: 'status',
         header: 'الحالة',
         cell: (info) => {
           const status = String(info.getValue());
-          const colors: Record<string, string> = {
-            active: '#22C55E',
-            inactive: '#5A6A5A',
-            pending: '#F59E0B',
-          };
           return (
             <Chip
               label={getRiderStatusLabel(status)}
               size="small"
               sx={{
-                bgcolor: `${colors[status] || '#5A6A5A'}20`,
-                color: colors[status] || '#5A6A5A',
+                bgcolor: `${statusColors[status] || '#5A6A5A'}20`,
+                color: statusColors[status] || '#5A6A5A',
                 fontSize: 12,
               }}
             />
@@ -119,8 +124,8 @@ const RidersListPage: React.FC = () => {
         },
       },
       {
-        accessorKey: 'is_approved',
-        header: 'موافق عليه',
+        accessorKey: 'isActive',
+        header: 'نشط',
         cell: (info) => (
           <Chip
             label={info.getValue() ? 'نعم' : 'لا'}
@@ -134,20 +139,11 @@ const RidersListPage: React.FC = () => {
         ),
       },
       {
-        accessorKey: 'total_orders',
-        header: 'عدد الطلبات',
+        accessorKey: 'totalDeliveries',
+        header: 'عدد التوصيلات',
         cell: (info) => (
           <Typography sx={{ color: '#1A2E1A', fontSize: 14, fontWeight: 500 }}>
             {Number(info.getValue())}
-          </Typography>
-        ),
-      },
-      {
-        accessorKey: 'total_earnings',
-        header: 'الأرباح',
-        cell: (info) => (
-          <Typography sx={{ color: '#86B573', fontSize: 14, fontWeight: 500 }}>
-            {Number(info.getValue())} ج.م
           </Typography>
         ),
       },
@@ -161,7 +157,7 @@ const RidersListPage: React.FC = () => {
         ),
       },
       {
-        accessorKey: 'created_at',
+        accessorKey: 'createdAt',
         header: 'تاريخ الانضمام',
         cell: (info) => (
           <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
@@ -174,74 +170,38 @@ const RidersListPage: React.FC = () => {
         header: 'الإجراءات',
         cell: ({ row }) => {
           const rider = row.original;
-          if (rider.status === 'pending' && !rider.is_approved) {
-            return (
-              <Box onClick={(e) => e.stopPropagation()}>
-              <Button
-                size="small"
-                variant="contained"
-                startIcon={<CheckCircleIcon />}
-                onClick={() => approveMutation.mutate(rider.id)}
-                disabled={approveMutation.isPending}
-                sx={{ bgcolor: '#86B573', '&:hover': { bgcolor: '#6B9B5E' } }}
-              >
-                موافقة
-              </Button>
-              </Box>
-            );
-          }
-          if (rider.status === 'active') {
-            return (
-              <Box onClick={(e) => e.stopPropagation()}>
+          return (
+            <Box onClick={(e) => e.stopPropagation()}>
               <Button
                 size="small"
                 variant="outlined"
-                startIcon={<BlockIcon />}
-                onClick={() => updateStatusMutation.mutate({ id: rider.id, status: 'inactive' })}
+                startIcon={rider.isActive ? <BlockIcon /> : <CheckCircleIcon />}
+                onClick={() => updateStatusMutation.mutate({ id: rider.id, isActive: !rider.isActive })}
                 disabled={updateStatusMutation.isPending}
                 sx={{
-                  borderColor: '#EF4444',
-                  color: '#EF4444',
-                  '&:hover': { borderColor: '#DC2626', bgcolor: 'rgba(239, 68, 68, 0.08)' },
+                  borderColor: rider.isActive ? '#EF4444' : '#86B573',
+                  color: rider.isActive ? '#EF4444' : '#86B573',
+                  '&:hover': {
+                    borderColor: rider.isActive ? '#DC2626' : '#6B9B5E',
+                    bgcolor: rider.isActive ? 'rgba(239, 68, 68, 0.08)' : 'rgba(134, 181, 115, 0.08)',
+                  },
                 }}
               >
-                تعطيل
+                {rider.isActive ? 'تعطيل' : 'تفعيل'}
               </Button>
-              </Box>
-            );
-          }
-          if (rider.status === 'inactive') {
-            return (
-              <Box onClick={(e) => e.stopPropagation()}>
-              <Button
-                size="small"
-                variant="outlined"
-                startIcon={<CheckCircleIcon />}
-                onClick={() => updateStatusMutation.mutate({ id: rider.id, status: 'active' })}
-                disabled={updateStatusMutation.isPending}
-                sx={{
-                  borderColor: '#86B573',
-                  color: '#86B573',
-                  '&:hover': { borderColor: '#6B9B5E', bgcolor: 'rgba(134, 181, 115, 0.08)' },
-                }}
-              >
-                تفعيل
-              </Button>
-              </Box>
-            );
-          }
-          return null;
+            </Box>
+          );
         },
       },
     ],
-    [updateStatusMutation, approveMutation]
+    [updateStatusMutation, statusColors]
   );
 
   if (isLoading) {
     return <SkeletonLoader variant="cards" count={3} />;
   }
 
-  const riders = data || [];
+  const riders = data?.riders ?? [];
 
   return (
     <Box sx={{ color: '#1A2E1A' }}>
@@ -297,9 +257,11 @@ const RidersListPage: React.FC = () => {
               }}
             >
               <MenuItem value="all">الكل</MenuItem>
-              <MenuItem value="active">نشط</MenuItem>
-              <MenuItem value="inactive">غير نشط</MenuItem>
-              <MenuItem value="pending">معلق</MenuItem>
+              <MenuItem value="available">متاح</MenuItem>
+              <MenuItem value="heading_to_restaurant">في الطريق للمطعم</MenuItem>
+              <MenuItem value="at_restaurant">في المطعم</MenuItem>
+              <MenuItem value="delivering">يوصّل</MenuItem>
+              <MenuItem value="offline">غير متصل</MenuItem>
             </Select>
           </FormControl>
         </Box>

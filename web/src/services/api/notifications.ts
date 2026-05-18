@@ -1,3 +1,7 @@
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
+
 export type NotificationType = 'info' | 'warning' | 'success' | 'error' | 'promotion';
 export type NotificationPriority = 'low' | 'medium' | 'high';
 export type TargetAudience = 'all' | 'customers' | 'drivers' | 'restaurants' | 'specific';
@@ -360,5 +364,262 @@ export async function mockDeleteNotification(id: string): Promise<void> {
   }
 
   mockNotifications.splice(index, 1);
+}
+
+// ——— Phase 3 real API ———
+
+export interface FcmTokenStats {
+  totalTokens: number;
+  byPlatform: { platform: string; count: number }[];
+}
+
+export interface SendNotificationPayload {
+  title: string;
+  message: string;
+  notificationType: NotificationType;
+  priority: NotificationPriority;
+  targetAudience: TargetAudience;
+  userIds?: string[];
+  scheduledAt?: string;
+  sendNow: boolean;
+}
+
+function audienceToTopic(audience: TargetAudience): string {
+  switch (audience) {
+    case 'customers':
+      return 'customers';
+    case 'drivers':
+      return 'drivers';
+    case 'restaurants':
+      return 'all';
+    default:
+      return 'all';
+  }
+}
+
+async function realSendToUser(userId: string, title: string, body: string): Promise<void> {
+  await apiClient.post('/admin/notifications/send', {
+    user_id: userId,
+    title,
+    body,
+    data: { type: 'ADMIN' },
+  });
+}
+
+async function realSendBulk(title: string, body: string, topic: string): Promise<void> {
+  await apiClient.post('/admin/notifications/send-bulk', {
+    title,
+    body,
+    topic,
+    data: { type: 'ADMIN' },
+  });
+}
+
+async function realSendNotification(data: SendNotificationPayload): Promise<void> {
+  if (!data.sendNow) {
+    throw new Error('جدولة الإشعارات غير مدعومة من الباك إند حالياً');
+  }
+
+  if (data.targetAudience === 'specific' && data.userIds?.length) {
+    await Promise.all(
+      data.userIds.map((userId) => realSendToUser(userId, data.title, data.message))
+    );
+    return;
+  }
+
+  await realSendBulk(data.title, data.message, audienceToTopic(data.targetAudience));
+}
+
+async function realGetFcmTokenStats(): Promise<FcmTokenStats> {
+  const res = await apiClient.get('/admin/notifications/stats');
+  const body = res.data as { data?: FcmTokenStats };
+  const stats = body?.data ?? (res.data as FcmTokenStats);
+  return {
+    totalTokens: stats.totalTokens ?? 0,
+    byPlatform: stats.byPlatform ?? [],
+  };
+}
+
+export async function sendNotification(data: SendNotificationPayload): Promise<Notification> {
+  try {
+    if (shouldUseMock()) {
+      return mockSendNotification(data);
+    }
+    await realSendNotification(data);
+    return {
+      id: `sent-${Date.now()}`,
+      adminId: '',
+      adminName: '',
+      title: data.title,
+      message: data.message,
+      notificationType: data.notificationType,
+      priority: data.priority,
+      targetAudience: data.targetAudience,
+      userIds: data.userIds,
+      sentAt: new Date().toISOString(),
+      sentCount: data.userIds?.length ?? 1,
+      deliveryStatus: { sent: 1, delivered: 0, failed: 0, pending: 0 },
+      isDraft: false,
+      status: 'sent',
+      createdAt: new Date().toISOString(),
+    };
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getFcmTokenStats(): Promise<FcmTokenStats> {
+  try {
+    return shouldUseMock()
+      ? {
+          totalTokens: 1200,
+          byPlatform: [
+            { platform: 'android', count: 800 },
+            { platform: 'ios', count: 350 },
+            { platform: 'web', count: 50 },
+          ],
+        }
+      : realGetFcmTokenStats();
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getNotificationStatistics(params?: {
+  period?: 'today' | 'week' | 'month' | 'year';
+}): Promise<NotificationStatistics> {
+  try {
+    return shouldUseMock() ? mockGetNotificationStatistics(params) : mockGetNotificationStatistics(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+// ——— P1: notification dispatch history ———
+
+export interface NotificationHistoryItem {
+  id: string;
+  targetType: 'user' | 'topic';
+  targetValue: string;
+  title: string;
+  body: string;
+  data?: string;
+  sentByAdmin: string;
+  success: boolean;
+  errorMessage?: string;
+  createdAt: string;
+}
+
+export interface NotificationHistoryResponse {
+  items: NotificationHistoryItem[];
+  pagination: { page: number; limit: number; total: number; totalPages: number };
+}
+
+const mockHistoryItems: NotificationHistoryItem[] = [
+  {
+    id: 'nh-1',
+    targetType: 'topic',
+    targetValue: 'customers',
+    title: 'عرض خاص!',
+    body: 'احصل على خصم 20%',
+    sentByAdmin: 'admin-1',
+    success: true,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'nh-2',
+    targetType: 'user',
+    targetValue: 'user-uuid-1',
+    title: 'تحديث الطلب',
+    body: 'تم شحن طلبك',
+    sentByAdmin: 'api_key',
+    success: false,
+    errorMessage: 'FCM token invalid',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+];
+
+function mapHistoryItem(raw: Record<string, unknown>): NotificationHistoryItem {
+  return {
+    id: String(raw.id ?? ''),
+    targetType: (raw.target_type ?? raw.targetType ?? 'user') as 'user' | 'topic',
+    targetValue: String(raw.target_value ?? raw.targetValue ?? ''),
+    title: String(raw.title ?? ''),
+    body: String(raw.body ?? ''),
+    data: raw.data != null ? String(raw.data) : undefined,
+    sentByAdmin: String(raw.sent_by_admin ?? raw.sentByAdmin ?? ''),
+    success: Boolean(raw.success ?? true),
+    errorMessage:
+      raw.error_message != null
+        ? String(raw.error_message)
+        : raw.errorMessage != null
+          ? String(raw.errorMessage)
+          : undefined,
+    createdAt: String(raw.created_at ?? raw.createdAt ?? ''),
+  };
+}
+
+async function realGetNotificationHistory(params?: {
+  targetType?: 'user' | 'topic';
+  page?: number;
+  limit?: number;
+}): Promise<NotificationHistoryResponse> {
+  const res = await apiClient.get('/admin/notifications/history', {
+    params: {
+      targetType: params?.targetType,
+      page: params?.page ?? 1,
+      limit: params?.limit ?? 20,
+    },
+  });
+  const body = (res.data as { data?: { items?: unknown[]; pagination?: NotificationHistoryResponse['pagination'] } })
+    .data ?? res.data;
+  const rawItems = (body as { items?: unknown[] }).items ?? [];
+  return {
+    items: (rawItems as Record<string, unknown>[]).map(mapHistoryItem),
+    pagination: (body as NotificationHistoryResponse).pagination ?? {
+      page: params?.page ?? 1,
+      limit: params?.limit ?? 20,
+      total: rawItems.length,
+      totalPages: 1,
+    },
+  };
+}
+
+async function mockGetNotificationHistory(params?: {
+  targetType?: 'user' | 'topic';
+  page?: number;
+  limit?: number;
+}): Promise<NotificationHistoryResponse> {
+  await new Promise((r) => setTimeout(r, 300));
+  let items = [...mockHistoryItems];
+  if (params?.targetType) {
+    items = items.filter((i) => i.targetType === params.targetType);
+  }
+  const page = params?.page ?? 1;
+  const limit = params?.limit ?? 20;
+  const start = (page - 1) * limit;
+  return {
+    items: items.slice(start, start + limit),
+    pagination: {
+      page,
+      limit,
+      total: items.length,
+      totalPages: Math.ceil(items.length / limit) || 1,
+    },
+  };
+}
+
+export async function getNotificationHistory(params?: {
+  targetType?: 'user' | 'topic';
+  page?: number;
+  limit?: number;
+}): Promise<NotificationHistoryResponse> {
+  try {
+    return shouldUseMock()
+      ? mockGetNotificationHistory(params)
+      : realGetNotificationHistory(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
 }
 

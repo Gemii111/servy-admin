@@ -11,11 +11,12 @@ import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import {
-  mockGetSalesReport,
-  mockGetRestaurantReports,
-  mockGetDriverReports,
-  mockGetRevenueByDay,
-  mockGetRevenueByRestaurant,
+  getSalesReport,
+  getRestaurantReports,
+  getDriverReports,
+  getRevenueByDay,
+  getRevenueByRestaurant,
+  exportReportToCsv,
   ReportFilters,
   RestaurantReport,
   DriverReport,
@@ -49,27 +50,27 @@ const ReportsPage: React.FC = () => {
 
   const { data: salesReport, isLoading: salesLoading } = useQuery({
     queryKey: ['reports', 'sales', filters],
-    queryFn: () => mockGetSalesReport(filters),
+    queryFn: () => getSalesReport(filters),
   });
 
   const { data: restaurantReports, isLoading: restaurantsLoading } = useQuery({
     queryKey: ['reports', 'restaurants', filters],
-    queryFn: () => mockGetRestaurantReports(filters),
+    queryFn: () => getRestaurantReports(filters),
   });
 
   const { data: driverReports, isLoading: driversLoading } = useQuery({
     queryKey: ['reports', 'drivers', filters],
-    queryFn: () => mockGetDriverReports(filters),
+    queryFn: () => getDriverReports(filters),
   });
 
   const { data: revenueByDay, isLoading: revenueByDayLoading } = useQuery({
     queryKey: ['reports', 'revenue-by-day', filters],
-    queryFn: () => mockGetRevenueByDay(filters),
+    queryFn: () => getRevenueByDay(filters),
   });
 
   const { data: revenueByRestaurant, isLoading: revenueByRestaurantLoading } = useQuery({
     queryKey: ['reports', 'revenue-by-restaurant', filters],
-    queryFn: () => mockGetRevenueByRestaurant(filters),
+    queryFn: () => getRevenueByRestaurant(filters),
   });
 
   const handleFilterChange = (key: keyof ReportFilters, value: string) => {

@@ -1,7 +1,11 @@
 /**
  * Banners API Service
- * إدارة البانرات حسب ADMIN_APPLICATION_REQUIREMENTS.md
+ * إدارة البانرات — Handoff §10
  */
+
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock } from './base';
 
 export type BannerType = 'restaurant_promo' | 'platform_offer' | 'campaign' | 'custom';
 export type UserSegment = 'new_user' | 'loyal_user' | 'all';
@@ -118,4 +122,80 @@ export async function mockDeleteBanner(id: string): Promise<void> {
   await new Promise((r) => setTimeout(r, 300));
   const idx = mockBanners.findIndex((b) => b.id === id);
   if (idx !== -1) mockBanners.splice(idx, 1);
+}
+
+function mapBanner(raw: Record<string, unknown>): Banner {
+  return {
+    id: String(raw.id ?? ''),
+    title: String(raw.title ?? ''),
+    description: String(raw.description ?? ''),
+    banner_type: (raw.banner_type ?? raw.bannerType ?? 'custom') as BannerType,
+    image_url: String(raw.image_url ?? raw.imageUrl ?? ''),
+    action_url: raw.action_url != null ? String(raw.action_url) : undefined,
+    restaurant_id: raw.restaurant_id != null ? String(raw.restaurant_id) : undefined,
+    priority: Number(raw.priority ?? 0),
+    user_segment: (raw.user_segment ?? raw.userSegment ?? 'all') as UserSegment,
+    is_active: Boolean(raw.is_active ?? raw.isActive ?? true),
+    start_date: String(raw.start_date ?? raw.startDate ?? ''),
+    end_date: String(raw.end_date ?? raw.endDate ?? ''),
+    created_at: String(raw.created_at ?? raw.createdAt ?? ''),
+  };
+}
+
+async function realGetBanners(params?: {
+  is_active?: boolean;
+  banner_type?: BannerType;
+}): Promise<Banner[]> {
+  const { data } = await apiClient.get<{ banners?: unknown[] }>('/admin/banners', { params });
+  const list = data.banners ?? (Array.isArray(data) ? data : []);
+  return (list as Record<string, unknown>[]).map(mapBanner);
+}
+
+async function realCreateBanner(payload: Partial<Banner>): Promise<Banner> {
+  const { data } = await apiClient.post('/admin/banners', payload);
+  return mapBanner((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+}
+
+async function realUpdateBanner(id: string, payload: Partial<Banner>): Promise<Banner> {
+  const { data } = await apiClient.put(`/admin/banners/${id}`, payload);
+  return mapBanner((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+}
+
+async function realDeleteBanner(id: string): Promise<void> {
+  await apiClient.delete(`/admin/banners/${id}`);
+}
+
+export async function getBanners(params?: {
+  is_active?: boolean;
+  banner_type?: BannerType;
+}): Promise<Banner[]> {
+  try {
+    return shouldUseMock() ? mockGetBanners(params) : realGetBanners(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function createBanner(data: Partial<Banner>): Promise<Banner> {
+  try {
+    return shouldUseMock() ? mockCreateBanner(data) : realCreateBanner(data);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function updateBanner(id: string, data: Partial<Banner>): Promise<Banner> {
+  try {
+    return shouldUseMock() ? mockUpdateBanner(id, data) : realUpdateBanner(id, data);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function deleteBanner(id: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockDeleteBanner(id) : realDeleteBanner(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
 }

@@ -11,15 +11,15 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StarIcon from '@mui/icons-material/Star';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import {
-  mockGetRiderById,
-  mockGetRiderEarnings,
-  mockGetRiderReviews,
-  mockUpdateRiderStatus,
+  getRiderById,
+  updateRiderStatus,
+  approveRider,
   getRiderStatusLabel,
+  getVehicleLabel,
 } from '../../services/api/riders';
+import { getReviews } from '../../services/api/reviews';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { format } from 'date-fns';
@@ -33,31 +33,40 @@ const RiderDetailsPage: React.FC = () => {
 
   const { data: rider, isLoading } = useQuery({
     queryKey: ['rider', id],
-    queryFn: () => mockGetRiderById(id!),
+    queryFn: () => getRiderById(id!),
     enabled: !!id,
   });
 
-  const { data: earnings } = useQuery({
-    queryKey: ['rider', id, 'earnings'],
-    queryFn: () => mockGetRiderEarnings(id!),
+  const { data: reviewsData } = useQuery({
+    queryKey: ['reviews', 'rider', id, rider?.user_id],
+    queryFn: () => getReviews({ targetType: 'rider', page: 1, limit: 50 }),
     enabled: !!id && !!rider,
   });
 
-  const { data: reviews } = useQuery({
-    queryKey: ['rider', id, 'reviews'],
-    queryFn: () => mockGetRiderReviews(id!),
-    enabled: !!id && !!rider,
-  });
+  const reviews =
+    reviewsData?.reviews?.filter(
+      (r) => r.targetId === rider?.user_id || r.targetId === id
+    ) ?? [];
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ status }: { status: 'active' | 'inactive' }) =>
-      mockUpdateRiderStatus(id!, status),
+    mutationFn: (payload: { isActive?: boolean; status?: string }) =>
+      updateRiderStatus(id!, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rider', id] });
       queryClient.invalidateQueries({ queryKey: ['riders'] });
       showSnackbar('تم تحديث حالة السائق', 'success');
     },
     onError: () => showSnackbar('فشل تحديث الحالة', 'error'),
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: () => approveRider(id!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['rider', id] });
+      queryClient.invalidateQueries({ queryKey: ['riders'] });
+      showSnackbar('تمت الموافقة على السائق', 'success');
+    },
+    onError: (e: Error) => showSnackbar(e.message, 'error'),
   });
 
   if (isLoading) {
@@ -78,9 +87,11 @@ const RiderDetailsPage: React.FC = () => {
   }
 
   const statusColors: Record<string, string> = {
-    active: '#22C55E',
-    inactive: '#5A6A5A',
-    pending: '#F59E0B',
+    available: '#22C55E',
+    heading_to_restaurant: '#3B82F6',
+    at_restaurant: '#8B5CF6',
+    delivering: '#F59E0B',
+    offline: '#5A6A5A',
   };
 
   return (
@@ -92,30 +103,39 @@ const RiderDetailsPage: React.FC = () => {
           </IconButton>
           <Box>
             <Typography variant="h5" fontWeight={700}>
-              {rider.first_name} {rider.last_name}
+              {rider.rider_name}
             </Typography>
             <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
-              تفاصيل السائق والأرباح والتقييمات
+              تفاصيل السائق والتقييمات
             </Typography>
           </Box>
         </Box>
-        {rider.status !== 'pending' && (
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          {!rider.is_active && (
+            <Button
+              variant="contained"
+              onClick={() => approveMutation.mutate()}
+              disabled={approveMutation.isPending}
+            >
+              موافقة
+            </Button>
+          )}
           <Button
             variant="outlined"
             onClick={() =>
               updateStatusMutation.mutate({
-                status: rider.status === 'active' ? 'inactive' : 'active',
+                isActive: !rider.is_active,
               })
             }
             disabled={updateStatusMutation.isPending}
             sx={{
-              borderColor: rider.status === 'active' ? '#EF4444' : '#86B573',
-              color: rider.status === 'active' ? '#EF4444' : '#86B573',
+              borderColor: rider.is_active ? '#EF4444' : '#86B573',
+              color: rider.is_active ? '#EF4444' : '#86B573',
             }}
           >
-            {rider.status === 'active' ? 'تعطيل' : 'تفعيل'}
+            {rider.is_active ? 'تعطيل' : 'تفعيل'}
           </Button>
-        )}
+        </Box>
       </Box>
 
       <Box
@@ -138,11 +158,16 @@ const RiderDetailsPage: React.FC = () => {
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             <Typography variant="body2">
-              <strong>البريد:</strong> {rider.email}
-            </Typography>
-            <Typography variant="body2">
               <strong>الهاتف:</strong> {rider.phone}
             </Typography>
+            <Typography variant="body2">
+              <strong>نوع المركبة:</strong> {getVehicleLabel(rider.vehicle_type)}
+            </Typography>
+            {rider.vehicle_plate && (
+              <Typography variant="body2">
+                <strong>لوحة المركبة:</strong> {rider.vehicle_plate}
+              </Typography>
+            )}
             <Typography variant="body2">
               <strong>الحالة:</strong>{' '}
               <Chip
@@ -155,10 +180,13 @@ const RiderDetailsPage: React.FC = () => {
               />
             </Typography>
             <Typography variant="body2">
-              <strong>موافق عليه:</strong> {rider.is_approved ? 'نعم' : 'لا'}
+              <strong>نشط:</strong> {rider.is_active ? 'نعم' : 'لا'}
             </Typography>
             <Typography variant="body2">
-              <strong>التقييم:</strong> {rider.rating?.toFixed(1) || '-'} ⭐
+              <strong>عدد التوصيلات:</strong> {rider.total_deliveries}
+            </Typography>
+            <Typography variant="body2">
+              <strong>التقييم:</strong> {rider.rating?.toFixed(1) || '-'} ⭐ ({rider.rating_count} تقييم)
             </Typography>
             <Typography variant="body2">
               <strong>تاريخ الانضمام:</strong>{' '}
@@ -168,69 +196,6 @@ const RiderDetailsPage: React.FC = () => {
         </Paper>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <Paper
-            sx={{
-              p: 3,
-              borderRadius: 2,
-              border: '1px solid #B1C0B1',
-              bgcolor: '#FFFFFF',
-            }}
-          >
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
-              <AttachMoneyIcon /> الأرباح
-            </Typography>
-            {earnings ? (
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(4, 1fr)' },
-                  gap: 2,
-                }}
-              >
-                <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: 'rgba(134,181,115,0.1)', borderRadius: 2 }}>
-                  <Typography variant="body2" sx={{ color: '#5A6A5A' }}>اليوم</Typography>
-                  <Typography variant="h6" sx={{ color: '#86B573', fontWeight: 700 }}>
-                    {earnings.today_earnings} ج.م
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
-                    {earnings.today_deliveries} طلب
-                  </Typography>
-                </Box>
-                <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: 'rgba(134,181,115,0.1)', borderRadius: 2 }}>
-                  <Typography variant="body2" sx={{ color: '#5A6A5A' }}>الأسبوع</Typography>
-                  <Typography variant="h6" sx={{ color: '#86B573', fontWeight: 700 }}>
-                    {earnings.week_earnings} ج.م
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
-                    {earnings.week_deliveries} طلب
-                  </Typography>
-                </Box>
-                <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: 'rgba(134,181,115,0.1)', borderRadius: 2 }}>
-                  <Typography variant="body2" sx={{ color: '#5A6A5A' }}>الشهر</Typography>
-                  <Typography variant="h6" sx={{ color: '#86B573', fontWeight: 700 }}>
-                    {earnings.month_earnings} ج.م
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
-                    {earnings.month_deliveries} طلب
-                  </Typography>
-                </Box>
-                <Box sx={{ textAlign: 'center', p: 1.5, bgcolor: 'rgba(134,181,115,0.1)', borderRadius: 2 }}>
-                  <Typography variant="body2" sx={{ color: '#5A6A5A' }}>الإجمالي</Typography>
-                  <Typography variant="h6" sx={{ color: '#86B573', fontWeight: 700 }}>
-                    {earnings.total_earnings} ج.م
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
-                    {earnings.total_deliveries} طلب • معدل {earnings.average_earning_per_delivery.toFixed(0)} ج.م/طلب
-                  </Typography>
-                </Box>
-              </Box>
-            ) : (
-              <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
-                لا توجد بيانات أرباح
-              </Typography>
-            )}
-          </Paper>
-
           <Paper
             sx={{
               p: 3,
@@ -255,7 +220,7 @@ const RiderDetailsPage: React.FC = () => {
                   >
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                        {r.user_name}
+                        {r.userName}
                       </Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         <StarIcon sx={{ color: '#F59E0B', fontSize: 18 }} />
@@ -268,7 +233,7 @@ const RiderDetailsPage: React.FC = () => {
                       </Typography>
                     )}
                     <Typography variant="caption" sx={{ color: '#5A6A5A' }}>
-                      {format(new Date(r.created_at), 'dd MMM yyyy', { locale: ar })}
+                      {format(new Date(r.createdAt), 'dd MMM yyyy', { locale: ar })}
                     </Typography>
                   </Box>
                 ))}

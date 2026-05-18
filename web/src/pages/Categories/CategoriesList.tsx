@@ -26,11 +26,11 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetCategories,
-  mockCreateCategory,
-  mockUpdateCategory,
-  mockDeleteCategory,
-  mockToggleCategoryStatus,
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  toggleCategoryStatus,
   Category,
 } from '../../services/api/categories';
 import { format } from 'date-fns';
@@ -54,7 +54,7 @@ const CategoriesListPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['categories', statusFilter, searchQuery, page, limit],
     queryFn: () =>
-      mockGetCategories({
+      getCategories({
         status: statusFilter,
         search: searchQuery,
         page,
@@ -64,7 +64,7 @@ const CategoriesListPage: React.FC = () => {
 
   const createMutation = useMutation({
     mutationFn: () =>
-      mockCreateCategory({
+      createCategory({
         name,
         slug,
         description: description || undefined,
@@ -83,7 +83,7 @@ const CategoriesListPage: React.FC = () => {
   const updateMutation = useMutation({
     mutationFn: () =>
       editingCategory
-        ? mockUpdateCategory(editingCategory.id, {
+        ? updateCategory(editingCategory.id, {
             name,
             slug,
             description: description || undefined,
@@ -101,7 +101,7 @@ const CategoriesListPage: React.FC = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (category: Category) => mockDeleteCategory(category.id),
+    mutationFn: (category: Category) => deleteCategory(category.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       showSnackbar('تم حذف الفئة', 'success');
@@ -112,7 +112,7 @@ const CategoriesListPage: React.FC = () => {
   });
 
   const toggleStatusMutation = useMutation({
-    mutationFn: (category: Category) => mockToggleCategoryStatus(category.id),
+    mutationFn: (category: Category) => toggleCategoryStatus(category.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       showSnackbar('تم تحديث حالة الفئة', 'success');

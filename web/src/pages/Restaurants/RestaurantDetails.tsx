@@ -1,24 +1,60 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, Paper, Button, Chip, IconButton } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import {
+  Box,
+  Typography,
+  Paper,
+  Button,
+  Chip,
+  IconButton,
+  FormControlLabel,
+  Switch,
+} from '@mui/material';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
-import { mockGetRestaurantById } from '../../services/api/restaurants';
+import { useSnackbar } from '../../hooks/useSnackbar';
+import {
+  getRestaurantById,
+  setRestaurantVerified,
+  deleteRestaurant,
+} from '../../services/api/restaurants';
+import RestaurantMenuPanel from '../../components/restaurants/RestaurantMenuPanel';
 
 const RestaurantDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
 
   const { data: restaurant, isLoading } = useQuery({
     queryKey: ['restaurant', id],
-    queryFn: () => mockGetRestaurantById(id!),
+    queryFn: () => getRestaurantById(id!),
     enabled: !!id,
+  });
+
+  const verifiedMutation = useMutation({
+    mutationFn: (checked: boolean) => setRestaurantVerified(id!, checked),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['restaurant', id] });
+      showSnackbar('تم تحديث حالة التوثيق', 'success');
+    },
+    onError: (e: Error) => showSnackbar(e.message, 'error'),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteRestaurant(id!),
+    onSuccess: () => {
+      showSnackbar('تم حذف المتجر', 'success');
+      navigate('/restaurants');
+    },
+    onError: (e: Error) => showSnackbar(e.message, 'error'),
   });
 
   if (isLoading) {
@@ -69,9 +105,14 @@ const RestaurantDetailsPage: React.FC = () => {
             <ArrowBackIcon />
           </IconButton>
           <Box>
-            <Typography variant="h5" fontWeight={700} mb={0.5}>
-              {restaurant.name}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="h5" fontWeight={700} mb={0.5}>
+                {restaurant.name}
+              </Typography>
+              {restaurant.isVerifiedSeller && (
+                <VerifiedIcon sx={{ color: '#86B573', fontSize: 22 }} />
+              )}
+            </Box>
             <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
               تفاصيل المطعم
             </Typography>
@@ -91,8 +132,7 @@ const RestaurantDetailsPage: React.FC = () => {
             startIcon={<DeleteIcon />}
             onClick={() => {
               if (window.confirm(`هل أنت متأكد من حذف المطعم "${restaurant.name}"؟`)) {
-                // Handle delete
-                navigate('/restaurants');
+                deleteMutation.mutate();
               }
             }}
           >
@@ -216,6 +256,52 @@ const RestaurantDetailsPage: React.FC = () => {
             </Typography>
           </Box>
         )}
+      </Paper>
+
+      <Paper sx={{ bgcolor: '#FFFFFF', borderRadius: 2, border: '1px solid #B1C0B1', p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
+          عناصر الثقة
+        </Typography>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={restaurant.isVerifiedSeller ?? false}
+              onChange={(e) => verifiedMutation.mutate(e.target.checked)}
+              disabled={verifiedMutation.isPending}
+            />
+          }
+          label="بائع موثّق (يظهر في تطبيق العميل)"
+        />
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2, mt: 1 }}>
+          <Typography variant="body2">
+            <strong>دفع آمن:</strong> {restaurant.supportsSecurePayment ? 'نعم' : 'لا'}
+          </Typography>
+          <Typography variant="body2">
+            <strong>شارة التوصيل:</strong> {restaurant.deliveryBadgeLabel || '—'}
+          </Typography>
+          <Typography variant="body2">
+            <strong>ضمان التوصيل:</strong> {restaurant.deliveryGuarantee || '—'}
+          </Typography>
+          <Typography variant="body2">
+            <strong>طرق الدفع:</strong>{' '}
+            {(restaurant.acceptedPaymentMethods ?? []).join(', ') || '—'}
+          </Typography>
+          {restaurant.returnPolicySummary && (
+            <Typography variant="body2" sx={{ gridColumn: '1 / -1' }}>
+              <strong>الاسترجاع:</strong> {restaurant.returnPolicySummary}
+            </Typography>
+          )}
+        </Box>
+      </Paper>
+
+      <Paper sx={{ bgcolor: '#FFFFFF', borderRadius: 2, border: '1px solid #B1C0B1', p: 3, mb: 3 }}>
+        <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
+          قائمة المنيو
+        </Typography>
+        <Typography variant="body2" sx={{ color: '#5A6A5A', mb: 2 }}>
+          تفعيل أو تعطيل توفر الأصناف مباشرة من لوحة الأدمن
+        </Typography>
+        {id && <RestaurantMenuPanel restaurantId={id} />}
       </Paper>
 
       {/* Statistics */}

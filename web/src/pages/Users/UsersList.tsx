@@ -139,9 +139,13 @@ const UsersListPage: React.FC = () => {
           const labels: Record<string, { label: string; color: string }> = {
             customer: { label: 'عميل', color: '#86B573' },
             driver: { label: 'سائق', color: '#22C55E' },
-            restaurant: { label: 'مطعم', color: '#F59E0B' },
+            restaurant: { label: 'متجر / تاجر', color: '#F59E0B' },
           };
-          const config = labels[type] || { label: type, color: '#5A6A5A' };
+          const raw = info.row.original.userTypeRaw;
+          const config = labels[type] || {
+            label: raw ? String(raw) : type,
+            color: '#5A6A5A',
+          };
           return (
             <Chip
               label={config.label}
@@ -237,7 +241,7 @@ const UsersListPage: React.FC = () => {
             variant="body2"
             sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
-            عرض وإدارة جميع المستخدمين في النظام
+            عرض وإدارة جميع المستخدمين في النظام. حسابات المتاجر قد تظهر كنوع vendor — وللمتجر ككيان استخدم صفحة المطاعم.
           </Typography>
         </Box>
         <Button
@@ -280,7 +284,7 @@ const UsersListPage: React.FC = () => {
             <MenuItem value="all">الكل</MenuItem>
             <MenuItem value="customer">عملاء</MenuItem>
             <MenuItem value="driver">سائقون</MenuItem>
-            <MenuItem value="restaurant">مطاعم</MenuItem>
+            <MenuItem value="restaurant">متاجر / تجار</MenuItem>
           </Select>
         </FormControl>
 
