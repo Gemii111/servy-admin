@@ -107,10 +107,8 @@ const BannersListPage: React.FC = () => {
     enabled: dialogOpen,
   });
 
-  const restaurants = restaurantsData?.restaurants ?? [];
-
   const restaurantSelectOptions = useMemo(() => {
-    const list = [...restaurants];
+    const list = [...(restaurantsData?.restaurants ?? [])];
     if (
       restaurantId &&
       !list.some((r) => r.id === restaurantId)
@@ -121,7 +119,7 @@ const BannersListPage: React.FC = () => {
       } as (typeof list)[0]);
     }
     return list;
-  }, [restaurants, restaurantId]);
+  }, [restaurantsData?.restaurants, restaurantId]);
 
   const restaurantSelectValue =
     restaurantId && restaurantSelectOptions.some((r) => r.id === restaurantId)
