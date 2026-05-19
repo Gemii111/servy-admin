@@ -25,6 +25,9 @@ const RestaurantFormPage = lazy(() => import('./pages/Restaurants/RestaurantForm
 const PendingApprovalPage = lazy(() => import('./pages/Restaurants/PendingApproval'));
 const OrdersListPage = lazy(() => import('./pages/Orders/OrdersList'));
 const OrderDetailsPage = lazy(() => import('./pages/Orders/OrderDetails'));
+const OrderEditRedirect = lazy(() =>
+  import('./pages/Orders/OrderDetails').then((m) => ({ default: m.OrderEditRedirect }))
+);
 const CategoriesListPage = lazy(() => import('./pages/Categories/CategoriesList'));
 const CouponsListPage = lazy(() => import('./pages/Coupons/CouponsList'));
 const BannersListPage = lazy(() => import('./pages/Banners/BannersList'));
@@ -229,6 +232,16 @@ const App: React.FC = () => {
                     <OrderDetailsPage />
                   </Suspense>
                 </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/orders/:id/edit"
+            element={
+              <ProtectedRoute>
+                <Suspense fallback={<LoadingFallback />}>
+                  <OrderEditRedirect />
+                </Suspense>
               </ProtectedRoute>
             }
           />

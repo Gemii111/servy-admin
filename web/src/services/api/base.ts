@@ -131,6 +131,47 @@ export const shouldUseMock = (): boolean => {
   return env.environment !== 'production';
 };
 
+/** Unwrap `{ data: T }` envelope (common on this backend). */
+export function unwrap<T>(data: unknown): T {
+  const d = data as { data?: T };
+  return d?.data != null ? d.data : (data as T);
+}
+
+/**
+ * Extract list items from varied API shapes, e.g.:
+ * `{ data: [...] }`, `{ data: { banners: [...] } }`, `{ banners: [...] }`
+ */
+export function extractListFromResponse(
+  raw: unknown,
+  entityKeys: string[]
+): Record<string, unknown>[] {
+  const tryExtract = (value: unknown): Record<string, unknown>[] | null => {
+    if (Array.isArray(value)) {
+      return value as Record<string, unknown>[];
+    }
+    if (!value || typeof value !== 'object') {
+      return null;
+    }
+    const obj = value as Record<string, unknown>;
+    for (const key of entityKeys) {
+      const nested = obj[key];
+      if (Array.isArray(nested)) {
+        return nested as Record<string, unknown>[];
+      }
+    }
+    const inner = obj.data;
+    if (Array.isArray(inner)) {
+      return inner as Record<string, unknown>[];
+    }
+    if (inner && typeof inner === 'object') {
+      return tryExtract(inner);
+    }
+    return null;
+  };
+
+  return tryExtract(unwrap(raw)) ?? tryExtract(raw) ?? [];
+}
+
 /** Omit empty values and literal "all" so backends do not treat them as UUIDs/enums. */
 export function cleanListQueryParams(
   params: Record<string, string | number | boolean | undefined | null>

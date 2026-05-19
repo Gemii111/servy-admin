@@ -117,19 +117,48 @@ export interface OrderTrackingDetail {
   };
 }
 
-function mapApiOrderToOrder(api: ApiOrder): Order {
+function mapApiOrderFromRaw(raw: Record<string, unknown>): Order {
+  const items = (raw.items as OrderItem[] | undefined) ?? [];
   return {
-    ...api,
-    status: api.status as Order['status'],
-    paymentMethod: (api.paymentMethod || 'cash') as Order['paymentMethod'],
-    restaurantId: api.restaurantId || '',
-    restaurantName: api.restaurantName || '-',
-    items: api.items || [],
-    tax: api.discount ?? 0,
-    paymentStatus: 'pending' as const,
-    updatedAt: api.updatedAt || api.createdAt,
-    orderType: (api.orderType as OrderType) || 'vendor',
+    id: String(raw.id ?? ''),
+    orderNumber: String(raw.orderNumber ?? raw.order_number ?? ''),
+    customerId: String(raw.customerId ?? raw.customer_id ?? ''),
+    customerName: String(raw.customerName ?? raw.customer_name ?? ''),
+    customerPhone: String(raw.customerPhone ?? raw.customer_phone ?? ''),
+    restaurantId: String(raw.restaurantId ?? raw.restaurant_id ?? ''),
+    restaurantName: String(raw.restaurantName ?? raw.restaurant_name ?? '-'),
+    driverId: raw.driverId != null ? String(raw.driverId) : raw.driver_id != null ? String(raw.driver_id) : undefined,
+    driverName: raw.driverName != null ? String(raw.driverName) : raw.driver_name != null ? String(raw.driver_name) : undefined,
+    status: String(raw.status ?? 'pending') as Order['status'],
+    items,
+    subtotal: Number(raw.subtotal ?? 0),
+    deliveryFee: Number(raw.deliveryFee ?? raw.delivery_fee ?? 0),
+    tax: Number(raw.tax ?? raw.discount ?? 0),
+    total: Number(raw.total ?? 0),
+    paymentMethod: String(raw.paymentMethod ?? raw.payment_method ?? 'cash') as Order['paymentMethod'],
+    paymentStatus: String(raw.paymentStatus ?? raw.payment_status ?? 'pending') as Order['paymentStatus'],
+    deliveryAddress: String(raw.deliveryAddress ?? raw.delivery_address ?? ''),
+    notes: raw.notes != null ? String(raw.notes) : undefined,
+    createdAt: String(raw.createdAt ?? raw.created_at ?? ''),
+    updatedAt: String(raw.updatedAt ?? raw.updated_at ?? raw.createdAt ?? raw.created_at ?? ''),
+    orderType: (String(raw.orderType ?? raw.order_type ?? 'vendor') as OrderType) || 'vendor',
   };
+}
+
+function mapApiOrderToOrder(api: ApiOrder): Order {
+  return mapApiOrderFromRaw(api as unknown as Record<string, unknown>);
+}
+
+function unwrapOrderPayload(data: unknown): Record<string, unknown> {
+  if (!data || typeof data !== 'object') return {};
+  const envelope = data as Record<string, unknown>;
+  if (envelope.data && typeof envelope.data === 'object' && !Array.isArray(envelope.data)) {
+    return envelope.data as Record<string, unknown>;
+  }
+  if (envelope.order && typeof envelope.order === 'object') {
+    return envelope.order as Record<string, unknown>;
+  }
+  return envelope;
 }
 
 async function realGetOrders(params?: {
@@ -162,12 +191,15 @@ async function realGetOrders(params?: {
 }
 
 async function realGetOrderById(id: string): Promise<Order> {
-  const { data } = await apiClient.get<ApiOrder>(`/admin/orders/${id}`);
-  return mapApiOrderToOrder(data);
+  const { data } = await apiClient.get(`/admin/orders/${id}`);
+  return mapApiOrderFromRaw(unwrapOrderPayload(data));
 }
 
 async function realUpdateOrderStatus(id: string, status: Order['status']): Promise<void> {
-  await apiClient.put(`/admin/orders/${id}/status`, { status });
+  await apiClient.put(`/admin/orders/${id}/status`, {
+    status,
+    Status: status,
+  });
 }
 
 async function realAssignDriver(orderId: string, driverId: string): Promise<void> {
@@ -179,14 +211,77 @@ async function realCancelOrder(id: string, reason?: string): Promise<void> {
   await apiClient.post(`/admin/orders/${id}/cancel`, body);
 }
 
-async function realGetOrderTracking(id: string): Promise<OrderTrackingDetail> {
-  const { data } = await apiClient.get<OrderTrackingDetail>(`/admin/orders/${id}/tracking`);
-  const body = (data as { data?: OrderTrackingDetail }).data ?? data;
+function parseTimelineTimestamp(value: unknown): string | null {
+  if (value == null || value === '') return null;
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const ms = value < 1e12 ? value * 1000 : value;
+    const d = new Date(ms);
+    return Number.isNaN(d.getTime()) ? null : d.toISOString();
+  }
+  const str = String(value).trim();
+  if (!str) return null;
+  const d = new Date(str);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
+
+function mapTrackingTimelineItem(raw: unknown): OrderTrackingTimelineItem | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const r = raw as Record<string, unknown>;
+  const timestamp = parseTimelineTimestamp(
+    r.timestamp ?? r.created_at ?? r.createdAt ?? r.time ?? r.date
+  );
+  if (!timestamp) return null;
+  const status = String(r.status ?? '');
+  if (!status) return null;
   return {
-    ...body,
-    status_timeline: body.status_timeline ?? [],
-    rider_info: body.rider_info ?? null,
+    status,
+    label: r.label != null ? String(r.label) : undefined,
+    timestamp,
+    note: r.note != null ? String(r.note) : undefined,
   };
+}
+
+function mapTrackingTimeline(list: unknown): OrderTrackingTimelineItem[] {
+  if (!Array.isArray(list)) return [];
+  return list
+    .map(mapTrackingTimelineItem)
+    .filter((item): item is OrderTrackingTimelineItem => item != null);
+}
+
+function mapOrderTrackingDetail(raw: Record<string, unknown>, orderId: string): OrderTrackingDetail {
+  const eta = raw.estimated_time ?? raw.estimatedTime;
+  const etaObj =
+    eta && typeof eta === 'object'
+      ? (eta as Record<string, unknown>)
+      : null;
+
+  return {
+    order_id: String(raw.order_id ?? raw.orderId ?? orderId),
+    status: String(raw.status ?? ''),
+    estimated_time: etaObj
+      ? {
+          min_minutes: Number(etaObj.min_minutes ?? etaObj.minMinutes ?? 0),
+          max_minutes: Number(etaObj.max_minutes ?? etaObj.maxMinutes ?? 0),
+          is_delayed: Boolean(etaObj.is_delayed ?? etaObj.isDelayed ?? false),
+        }
+      : undefined,
+    status_timeline: mapTrackingTimeline(
+      raw.status_timeline ?? raw.statusTimeline ?? raw.timeline
+    ),
+    rider_info: (raw.rider_info ?? raw.riderInfo ?? null) as OrderTrackingDetail['rider_info'],
+    delivery_address: (raw.delivery_address ??
+      raw.deliveryAddress) as OrderTrackingDetail['delivery_address'],
+  };
+}
+
+async function realGetOrderTracking(id: string): Promise<OrderTrackingDetail> {
+  const { data } = await apiClient.get(`/admin/orders/${id}/tracking`);
+  const envelope = data as { data?: Record<string, unknown> };
+  const body =
+    envelope?.data && typeof envelope.data === 'object'
+      ? envelope.data
+      : (data as Record<string, unknown>);
+  return mapOrderTrackingDetail(body, id);
 }
 
 async function mockCancelOrder(id: string, reason?: string): Promise<void> {
@@ -210,7 +305,11 @@ async function mockGetOrderTracking(id: string): Promise<OrderTrackingDetail> {
     estimated_time: { min_minutes: 15, max_minutes: 25, is_delayed: false },
     status_timeline: [
       { status: 'pending', label: 'قيد الانتظار', timestamp: order.createdAt },
-      { status: order.status, label: order.status, timestamp: order.updatedAt },
+      {
+        status: order.status,
+        label: order.status,
+        timestamp: order.updatedAt || order.createdAt,
+      },
     ],
     rider_info: order.driverName
       ? {

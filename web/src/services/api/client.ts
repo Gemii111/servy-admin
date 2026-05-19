@@ -166,10 +166,17 @@ export const handleApiError = (error: unknown): string => {
       }
     }
     
-    // Check if error response has error string
+    // Check if error response has error string (incl. Go validator text)
     if (axiosError.response?.data?.error) {
-      return axiosError.response.data.error;
+      const errVal = axiosError.response.data.error;
+      if (typeof errVal === 'string') return errVal;
     }
+
+    const raw = axiosError.response?.data as Record<string, unknown> | undefined;
+    if (raw && typeof raw.data === 'string' && raw.data.length > 0) {
+      return raw.data;
+    }
+
     
     // Use status text or default message
     if (axiosError.response?.statusText) {

@@ -186,7 +186,7 @@ const OrdersListPage: React.FC = () => {
   };
 
   const handleEdit = (order: Order) => {
-    navigate(`/orders/${order.id}/edit`);
+    navigate(`/orders/${order.id}`, { state: { scrollToStatus: true } });
   };
 
   const handleDelete = (order: Order) => {

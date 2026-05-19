@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -39,11 +39,13 @@ import OrderTrackingPanel from '../../components/orders/OrderTrackingPanel';
 const OrderDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const [status, setStatus] = useState<Order['status'] | ''>('');
   const [cancelOpen, setCancelOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
+  const statusSectionRef = useRef<HTMLDivElement>(null);
 
   const {
     data: order,
@@ -59,6 +61,14 @@ const OrderDetailsPage: React.FC = () => {
       setStatus(order.status);
     }
   }, [order]);
+
+  useEffect(() => {
+    const state = location.state as { scrollToStatus?: boolean } | null;
+    if (state?.scrollToStatus && order && statusSectionRef.current) {
+      statusSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [order, location.pathname, location.state, navigate]);
 
   const { data: tracking } = useQuery({
     queryKey: ['order', id, 'tracking'],
@@ -78,18 +88,25 @@ const OrderDetailsPage: React.FC = () => {
 
   const updateStatusMutation = useMutation({
     mutationFn: (newStatus: Order['status']) => updateOrderStatus(id!, newStatus),
-    onSuccess: () => {
+    onSuccess: (_data, newStatus) => {
+      setStatus(newStatus);
       queryClient.invalidateQueries({ queryKey: ['order', id] });
+      queryClient.invalidateQueries({ queryKey: ['order', id, 'tracking'] });
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       showSnackbar('تم تحديث حالة الطلب بنجاح', 'success');
     },
-    onError: () => {
-      showSnackbar('حدث خطأ أثناء تحديث حالة الطلب', 'error');
+    onError: (e: Error) => {
+      if (order) setStatus(order.status);
+      const hint =
+        e.message && e.message !== 'Request failed with status code 500'
+          ? e.message
+          : 'فشل تحديث الحالة على السيرفر (500). قد تكون الانتقالة غير مسموحة — جرّب الحالة التالية في المسار (مثلاً pending → accepted → preparing).';
+      showSnackbar(hint, 'error');
     },
   });
 
   const handleStatusChange = (newStatus: Order['status']) => {
-    setStatus(newStatus);
+    if (!order || newStatus === order.status) return;
     updateStatusMutation.mutate(newStatus);
   };
 
@@ -170,9 +187,11 @@ const OrderDetailsPage: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<EditIcon />}
-            onClick={() => navigate(`/orders/${id}/edit`)}
+            onClick={() =>
+              statusSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
           >
-            تعديل
+            تحديث الحالة
           </Button>
           {order.status !== 'cancelled' && order.status !== 'delivered' && (
             <Button
@@ -189,6 +208,7 @@ const OrderDetailsPage: React.FC = () => {
 
       {/* Status Update */}
       <Paper
+        ref={statusSectionRef}
         sx={{
           bgcolor: '#FFFFFF',
           borderRadius: 2,
@@ -199,6 +219,10 @@ const OrderDetailsPage: React.FC = () => {
       >
         <Typography variant="h6" sx={{ color: '#1A2E1A', mb: 2, fontWeight: 600 }}>
           تحديث حالة الطلب
+        </Typography>
+        <Typography variant="body2" sx={{ color: '#5A6A5A', mb: 2 }}>
+          المسار المعتاد: pending → accepted → preparing → ready → heading_to_restaurant →
+          at_restaurant → delivering → delivered. القفز لحالة بعيدة قد يسبب خطأ 500 من السيرفر.
         </Typography>
         <FormControl size="small" sx={{ minWidth: 200 }}>
           <InputLabel sx={{ color: '#5A6A5A' }}>حالة الطلب</InputLabel>
@@ -529,5 +553,10 @@ const OrderDetailsPage: React.FC = () => {
   );
 };
 
-export default OrderDetailsPage;
+/** Legacy URL: /orders/:id/edit → details + scroll to status section */
+export const OrderEditRedirect: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/orders/${id}`} replace state={{ scrollToStatus: true }} />;
+};
 
+export default OrderDetailsPage;

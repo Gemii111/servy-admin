@@ -5,7 +5,7 @@
 
 import apiClient from './client';
 import { handleApiError } from './client';
-import { shouldUseMock } from './base';
+import { shouldUseMock, unwrap, extractListFromResponse } from './base';
 
 export type BannerType = 'restaurant_promo' | 'platform_offer' | 'campaign' | 'custom';
 export type UserSegment = 'new_user' | 'loyal_user' | 'all';
@@ -146,19 +146,21 @@ async function realGetBanners(params?: {
   is_active?: boolean;
   banner_type?: BannerType;
 }): Promise<Banner[]> {
-  const { data } = await apiClient.get<{ banners?: unknown[] }>('/admin/banners', { params });
-  const list = data.banners ?? (Array.isArray(data) ? data : []);
-  return (list as Record<string, unknown>[]).map(mapBanner);
+  const res = await apiClient.get('/admin/banners', { params });
+  const list = extractListFromResponse(res.data, ['banners', 'items', 'results']);
+  return list.map(mapBanner);
 }
 
 async function realCreateBanner(payload: Partial<Banner>): Promise<Banner> {
-  const { data } = await apiClient.post('/admin/banners', payload);
-  return mapBanner((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+  const res = await apiClient.post('/admin/banners', payload);
+  const raw = unwrap<Record<string, unknown>>(res.data) ?? (res.data as Record<string, unknown>);
+  return mapBanner(raw);
 }
 
 async function realUpdateBanner(id: string, payload: Partial<Banner>): Promise<Banner> {
-  const { data } = await apiClient.put(`/admin/banners/${id}`, payload);
-  return mapBanner((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+  const res = await apiClient.put(`/admin/banners/${id}`, payload);
+  const raw = unwrap<Record<string, unknown>>(res.data) ?? (res.data as Record<string, unknown>);
+  return mapBanner(raw);
 }
 
 async function realDeleteBanner(id: string): Promise<void> {

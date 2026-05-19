@@ -1,11 +1,18 @@
 import React from 'react';
 import { Box, Typography, Paper, List, ListItem, ListItemText, Chip, Link } from '@mui/material';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { OrderTrackingDetail } from '../../services/api/orders';
 
 interface Props {
   tracking: OrderTrackingDetail;
+}
+
+function formatTimelineTimestamp(value: string | undefined): string {
+  if (!value) return '—';
+  const d = new Date(value);
+  if (!isValid(d)) return '—';
+  return format(d, 'dd MMM yyyy HH:mm', { locale: ar });
 }
 
 const OrderTrackingPanel: React.FC<Props> = ({ tracking }) => {
@@ -21,12 +28,21 @@ const OrderTrackingPanel: React.FC<Props> = ({ tracking }) => {
       </Box>
 
       {eta && (
-        <Typography variant="body2" sx={{ color: '#5A6A5A', mb: 2 }}>
-          الوقت المتوقع: {eta.min_minutes}–{eta.max_minutes} دقيقة
-          {eta.is_delayed && (
-            <Chip label="متأخر" size="small" color="warning" sx={{ ml: 1 }} />
-          )}
-        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: 1,
+            mb: 2,
+            color: '#5A6A5A',
+          }}
+        >
+          <Typography variant="body2" component="span" sx={{ color: '#5A6A5A' }}>
+            الوقت المتوقع: {eta.min_minutes}–{eta.max_minutes} دقيقة
+          </Typography>
+          {eta.is_delayed && <Chip label="متأخر" size="small" color="warning" />}
+        </Box>
       )}
 
       {tracking.rider_info && (
@@ -66,7 +82,7 @@ const OrderTrackingPanel: React.FC<Props> = ({ tracking }) => {
           <ListItem key={i}>
             <ListItemText
               primary={ev.label || ev.status}
-              secondary={format(new Date(ev.timestamp), 'dd MMM yyyy HH:mm', { locale: ar })}
+              secondary={formatTimelineTimestamp(ev.timestamp)}
             />
           </ListItem>
         ))}

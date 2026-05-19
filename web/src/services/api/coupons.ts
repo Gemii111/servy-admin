@@ -1,6 +1,6 @@
 import apiClient from './client';
 import { handleApiError } from './client';
-import { shouldUseMock } from './base';
+import { shouldUseMock, unwrap, extractListFromResponse } from './base';
 
 export type CouponType = 'percentage' | 'fixed';
 export type CouponStatus = 'active' | 'scheduled' | 'expired' | 'disabled';
@@ -47,11 +47,6 @@ interface ApiCoupon {
   is_active: boolean;
 }
 
-function unwrap<T>(data: unknown): T {
-  const d = data as { data?: T };
-  return d?.data != null ? d.data : (data as T);
-}
-
 function mapApiCouponToCoupon(c: ApiCoupon): Coupon {
   const type: CouponType = c.discount_type === 'fixed_amount' ? 'fixed' : 'percentage';
   const now = new Date().toISOString();
@@ -81,15 +76,17 @@ async function realGetCoupons(params?: {
   page?: number;
   limit?: number;
 }): Promise<CouponsResponse> {
-  const res = await apiClient.get<{ coupons?: ApiCoupon[]; pagination: CouponsResponse['pagination'] }>(
-    '/admin/coupons',
-    { params }
-  );
-  const body = unwrap<{ coupons?: ApiCoupon[]; pagination: CouponsResponse['pagination'] }>(res.data) ?? res.data;
-  const list = body.coupons ?? [];
+  const res = await apiClient.get('/admin/coupons', { params });
+  const raw = res.data as unknown;
+  const envelope =
+    raw && typeof raw === 'object' && !Array.isArray(raw)
+      ? (raw as Record<string, unknown>)
+      : {};
+  const arr = extractListFromResponse(raw, ['coupons', 'items', 'results']);
+  const pag = envelope.pagination as CouponsResponse['pagination'] | undefined;
   return {
-    coupons: list.map(mapApiCouponToCoupon),
-    pagination: body.pagination ?? { page: 1, limit: 10, total: 0, totalPages: 0 },
+    coupons: arr.map((c) => mapApiCouponToCoupon(c as unknown as ApiCoupon)),
+    pagination: pag ?? { page: 1, limit: 10, total: arr.length, totalPages: 1 },
   };
 }
 

@@ -2,17 +2,21 @@
  * Campaigns API Service — Handoff §11
  */
 
+import axios from 'axios';
 import apiClient from './client';
 import { handleApiError } from './client';
-import { shouldUseMock } from './base';
+import { shouldUseMock, unwrap, extractListFromResponse } from './base';
 
 export type UserSegment = 'new_user' | 'loyal_user' | 'all';
+export type CampaignStatus = 'active' | 'inactive' | 'expired' | 'draft';
+
+const CAMPAIGN_STATUSES: CampaignStatus[] = ['active', 'inactive', 'expired', 'draft'];
 
 export interface Campaign {
   id: string;
   name: string;
   description: string;
-  status: 'active' | 'inactive' | 'expired';
+  status: CampaignStatus;
   start_date: string;
   end_date: string;
   user_segment: UserSegment;
@@ -33,11 +37,44 @@ const USER_SEGMENT_LABELS: Record<UserSegment, string> = {
   all: 'الكل',
 };
 
-const STATUS_LABELS: Record<string, string> = {
+const STATUS_LABELS: Record<CampaignStatus, string> = {
   active: 'نشط',
   inactive: 'غير نشط',
   expired: 'منتهي',
+  draft: 'مسودة',
 };
+
+function normalizeCampaignStatus(value: unknown): CampaignStatus {
+  const s = String(value ?? 'draft').toLowerCase();
+  return CAMPAIGN_STATUSES.includes(s as CampaignStatus) ? (s as CampaignStatus) : 'draft';
+}
+
+/** FCM topics for campaign push — backend contract 2026-05-19 (see campaign-notification-tap-flutter.md). */
+export const CAMPAIGN_FCM_TOPICS: Record<UserSegment, string> = {
+  all: 'campaigns_all',
+  new_user: 'campaigns_new_user',
+  loyal_user: 'campaigns_loyal_user',
+};
+
+export function getCampaignFcmTopic(segment: UserSegment): string {
+  return CAMPAIGN_FCM_TOPICS[segment] ?? CAMPAIGN_FCM_TOPICS.all;
+}
+
+/** Matches backend FCM `data` map from POST /admin/campaigns/:id/notify */
+export function buildCampaignNotificationData(campaign: Campaign): Record<string, string> {
+  const data: Record<string, string> = {
+    type: 'campaign',
+    campaign_id: campaign.id,
+  };
+  if (campaign.coupon_id) data.coupon_id = campaign.coupon_id;
+  if (campaign.restaurant_id) data.restaurant_id = campaign.restaurant_id;
+  if (campaign.banner_id) data.banner_id = campaign.banner_id;
+  return data;
+}
+
+function segmentToNotificationTopic(segment: UserSegment): string {
+  return getCampaignFcmTopic(segment);
+}
 
 // Mock data
 const mockCampaigns: Campaign[] = [
@@ -70,7 +107,8 @@ const mockCampaigns: Campaign[] = [
   },
 ];
 
-export const getCampaignStatusLabel = (status: string) => STATUS_LABELS[status] || status;
+export const getCampaignStatusLabel = (status: string) =>
+  STATUS_LABELS[status as CampaignStatus] || status;
 export const getCampaignUserSegmentLabel = (seg: UserSegment) =>
   USER_SEGMENT_LABELS[seg] || seg;
 
@@ -125,12 +163,71 @@ export async function mockSendCampaignNotification(id: string): Promise<void> {
   if (idx !== -1) mockCampaigns[idx].notification_sent = true;
 }
 
+function toIsoDate(dateStr: string, endOfDay = false): string {
+  if (!dateStr) return dateStr;
+  if (dateStr.includes('T')) return dateStr;
+  return endOfDay ? `${dateStr}T23:59:59.000Z` : `${dateStr}T00:00:00.000Z`;
+}
+
+/** POST/PUT body — snake_case + camelCase (Go backend may bind either). */
+function buildCampaignApiPayload(data: Partial<Campaign>): Record<string, unknown> {
+  const startIso = data.start_date ? toIsoDate(data.start_date, false) : undefined;
+  const endIso = data.end_date ? toIsoDate(data.end_date, true) : undefined;
+
+  const body: Record<string, unknown> = {
+    name: data.name,
+    description: data.description ?? '',
+    status: data.status ?? 'active',
+    user_segment: data.user_segment ?? 'all',
+    userSegment: data.user_segment ?? 'all',
+  };
+
+  if (startIso) {
+    body.start_date = startIso;
+    body.startDate = startIso;
+  }
+  if (endIso) {
+    body.end_date = endIso;
+    body.endDate = endIso;
+  }
+  if (data.restaurant_id) {
+    body.restaurant_id = data.restaurant_id;
+    body.restaurantId = data.restaurant_id;
+  }
+  if (data.banner_id) {
+    body.banner_id = data.banner_id;
+    body.bannerId = data.banner_id;
+  }
+  if (data.coupon_id) {
+    body.coupon_id = data.coupon_id;
+    body.couponId = data.coupon_id;
+  }
+  if (data.loyalty_bonus_points != null && !Number.isNaN(data.loyalty_bonus_points)) {
+    body.loyalty_bonus_points = data.loyalty_bonus_points;
+    body.loyaltyBonusPoints = data.loyalty_bonus_points;
+  }
+  if (data.loyalty_multiplier != null && !Number.isNaN(data.loyalty_multiplier)) {
+    body.loyalty_multiplier = data.loyalty_multiplier;
+    body.loyaltyMultiplier = data.loyalty_multiplier;
+  }
+  if (data.notification_title) {
+    body.notification_title = data.notification_title;
+    body.notificationTitle = data.notification_title;
+  }
+  if (data.notification_body) {
+    body.notification_body = data.notification_body;
+    body.notificationBody = data.notification_body;
+  }
+
+  return body;
+}
+
 function mapCampaign(raw: Record<string, unknown>): Campaign {
   return {
     id: String(raw.id ?? ''),
     name: String(raw.name ?? ''),
     description: String(raw.description ?? ''),
-    status: (raw.status ?? 'active') as Campaign['status'],
+    status: normalizeCampaignStatus(raw.status ?? raw.Status),
     start_date: String(raw.start_date ?? raw.startDate ?? ''),
     end_date: String(raw.end_date ?? raw.endDate ?? ''),
     user_segment: (raw.user_segment ?? raw.userSegment ?? 'all') as UserSegment,
@@ -147,23 +244,51 @@ function mapCampaign(raw: Record<string, unknown>): Campaign {
 }
 
 async function realGetCampaigns(params?: { status?: string }): Promise<Campaign[]> {
-  const { data } = await apiClient.get<{ campaigns?: unknown[] }>('/admin/campaigns', { params });
-  const list = data.campaigns ?? (Array.isArray(data) ? data : []);
-  return (list as Record<string, unknown>[]).map(mapCampaign);
+  const res = await apiClient.get('/admin/campaigns', { params });
+  const list = extractListFromResponse(res.data, ['campaigns', 'items', 'results']);
+  return list.map(mapCampaign);
 }
 
 async function realCreateCampaign(payload: Partial<Campaign>): Promise<Campaign> {
-  const { data } = await apiClient.post('/admin/campaigns', payload);
-  return mapCampaign((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+  const res = await apiClient.post('/admin/campaigns', buildCampaignApiPayload(payload));
+  const raw = unwrap<Record<string, unknown>>(res.data) ?? (res.data as Record<string, unknown>);
+  return mapCampaign(raw);
 }
 
 async function realUpdateCampaign(id: string, payload: Partial<Campaign>): Promise<Campaign> {
-  const { data } = await apiClient.put(`/admin/campaigns/${id}`, payload);
-  return mapCampaign((data as { data?: Record<string, unknown> }).data ?? (data as Record<string, unknown>));
+  const res = await apiClient.put(`/admin/campaigns/${id}`, buildCampaignApiPayload(payload));
+  const raw = unwrap<Record<string, unknown>>(res.data) ?? (res.data as Record<string, unknown>);
+  return mapCampaign(raw);
 }
 
-async function realSendCampaignNotification(id: string): Promise<void> {
-  await apiClient.post(`/admin/campaigns/${id}/send-notification`);
+async function realSendCampaignNotification(campaign: Campaign): Promise<void> {
+  const paths = [
+    `/admin/campaigns/${campaign.id}/notify`,
+    `/admin/campaigns/${campaign.id}/send-notification`,
+  ];
+
+  for (const path of paths) {
+    try {
+      await apiClient.post(path);
+      return;
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 404) {
+        continue;
+      }
+      throw err;
+    }
+  }
+
+  const title = campaign.notification_title?.trim() || campaign.name;
+  const body =
+    campaign.notification_body?.trim() || campaign.description?.trim() || campaign.name;
+
+  await apiClient.post('/admin/notifications/send-bulk', {
+    title,
+    body,
+    topic: segmentToNotificationTopic(campaign.user_segment),
+    data: buildCampaignNotificationData(campaign),
+  });
 }
 
 export async function getCampaigns(params?: { status?: string }): Promise<Campaign[]> {
@@ -190,9 +315,11 @@ export async function updateCampaign(id: string, data: Partial<Campaign>): Promi
   }
 }
 
-export async function sendCampaignNotification(id: string): Promise<void> {
+export async function sendCampaignNotification(campaign: Campaign): Promise<void> {
   try {
-    return shouldUseMock() ? mockSendCampaignNotification(id) : realSendCampaignNotification(id);
+    return shouldUseMock()
+      ? mockSendCampaignNotification(campaign.id)
+      : realSendCampaignNotification(campaign);
   } catch (err) {
     throw new Error(handleApiError(err));
   }

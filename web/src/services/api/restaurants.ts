@@ -1,6 +1,6 @@
 import apiClient from './client';
 import { handleApiError } from './client';
-import { shouldUseMock, cleanListQueryParams } from './base';
+import { shouldUseMock, cleanListQueryParams, unwrap, extractListFromResponse } from './base';
 
 export type VendorType = 'restaurant' | 'pharmacy' | 'supermarket';
 
@@ -131,11 +131,6 @@ function mapApiRestaurant(r: Record<string, unknown>): Restaurant {
   };
 }
 
-function unwrap<T>(data: unknown): T {
-  const d = data as { data?: T };
-  return d?.data != null ? d.data : (data as T);
-}
-
 async function realGetRestaurants(params?: {
   status?: string;
   vendorType?: string;
@@ -153,10 +148,12 @@ async function realGetRestaurants(params?: {
 
   const res = await apiClient.get('/admin/restaurants', { params: cleaned });
   const raw = res.data as unknown;
-  const body = unwrap<Record<string, unknown>>(raw) ?? (raw as Record<string, unknown>);
-  const list = (body?.restaurants ?? body?.vendors ?? body?.data ?? []) as Record<string, unknown>[];
-  const arr = Array.isArray(list) ? list : [];
-  const pag = body?.pagination as RestaurantsResponse['pagination'] | undefined;
+  const envelope =
+    raw && typeof raw === 'object' && !Array.isArray(raw)
+      ? (raw as Record<string, unknown>)
+      : {};
+  const arr = extractListFromResponse(raw, ['restaurants', 'vendors', 'items', 'results']);
+  const pag = envelope.pagination as RestaurantsResponse['pagination'] | undefined;
   return {
     restaurants: arr.map(mapApiRestaurant),
     pagination: pag ?? { page: 1, limit: 10, total: arr.length, totalPages: Math.ceil(arr.length / 10) },
