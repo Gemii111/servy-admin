@@ -1,7 +1,6 @@
-import axios from 'axios';
 import apiClient from './client';
 import { handleApiError } from './client';
-import { shouldUseMock, cleanListQueryParams, extractListFromResponse, unwrap } from './base';
+import { shouldUseMock, cleanListQueryParams, unwrap } from './base';
 import {
   getRiderReviewsList,
   aggregateFlutterRiderReviews,
@@ -214,30 +213,6 @@ function reviewToDriverRating(r: Review): DriverRating {
     isDeleted: false,
     createdAt: r.createdAt,
     updatedAt: r.createdAt,
-  };
-}
-
-function extractDriverRatingsPagination(
-  data: unknown,
-  fallbackTotal: number
-): DriverRatingsResponse['pagination'] {
-  const roots: Record<string, unknown>[] = [];
-  if (data && typeof data === 'object') roots.push(data as Record<string, unknown>);
-  const inner = unwrap<Record<string, unknown>>(data);
-  if (inner) roots.push(inner);
-
-  for (const root of roots) {
-    const pag = root.pagination as DriverRatingsResponse['pagination'] | undefined;
-    if (pag && typeof pag === 'object') return pag;
-  }
-
-  const page = 1;
-  const limit = 10;
-  return {
-    page,
-    limit,
-    total: fallbackTotal,
-    totalPages: Math.max(1, Math.ceil(fallbackTotal / limit)),
   };
 }
 
