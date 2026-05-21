@@ -12,6 +12,7 @@ import {
   extractListFromResponse,
   unwrap,
 } from './base';
+import { getRiders } from './riders';
 
 export type ReviewTargetType = 'restaurant' | 'rider' | 'all';
 
@@ -114,10 +115,30 @@ const REVIEWS_UNAVAILABLE_MSG =
   'GET /admin/reviews لا يزال يعيد خطأ. الباكند أعلن إصلاح SQL (2026-05-21) — جرّب «إعادة المحاولة». للتقييمات حسب مطعم/سائق: افتح تفاصيل الكيان. راجع flutter-reviews-api.md و BACKEND_REVIEWS_500_AR.md';
 
 let reviewsListCachedUnavailable = false;
+let adminDriverRatingsKnownMissing = false;
+
+const ADMIN_REVIEWS_CACHE_MS = 20_000;
+let adminReviewsListCache: { at: number; reviews: Review[] } | null = null;
 
 /** إعادة محاولة بعد deploy الباكند */
 export function clearReviewsUnavailableCache(): void {
   reviewsListCachedUnavailable = false;
+  adminReviewsListCache = null;
+}
+
+async function fetchAdminReviewsListCached(): Promise<Review[]> {
+  if (
+    adminReviewsListCache &&
+    Date.now() - adminReviewsListCache.at < ADMIN_REVIEWS_CACHE_MS
+  ) {
+    return adminReviewsListCache.reviews;
+  }
+  const result = await fetchReviewsFromApi(
+    cleanListQueryParams({ page: 1, limit: 100 })
+  );
+  adminReviewsListCache = { at: Date.now(), reviews: result.reviews };
+  reviewsListCachedUnavailable = false;
+  return result.reviews;
 }
 
 function mapDriverRatingToReview(raw: Record<string, unknown>): Review {
@@ -250,6 +271,21 @@ function filterByTargetId(reviews: Review[], targetId?: string): Review[] {
   return reviews.filter((r) => r.targetId === targetId);
 }
 
+/** فلترة بعد /admin/reviews — الباكند قد يعيد مطاعم+سائق معاً */
+export function filterReviewsByTargetType(
+  reviews: Review[],
+  targetType?: string
+): Review[] {
+  if (!targetType || targetType === 'all') return reviews;
+  if (targetType === 'rider' || targetType === 'driver') {
+    return reviews.filter((r) => r.targetType === 'rider');
+  }
+  if (targetType === 'restaurant') {
+    return reviews.filter((r) => r.targetType === 'restaurant');
+  }
+  return reviews;
+}
+
 function applySearchFilter(reviews: Review[], search?: string): Review[] {
   if (!search?.trim()) return reviews;
   const q = search.trim().toLowerCase();
@@ -316,18 +352,171 @@ async function fetchAdminRiderReviews(
   };
 }
 
+/** GET /riders/{id}/reviews — flutter-reviews-api.md §5 (snake_case, data.reviews) */
 async function fetchRiderReviews(
   riderId: string,
   page: number,
   pageSize: number
 ): Promise<ReviewsResponse> {
+  const size = Math.min(Math.max(pageSize, 1), 50);
   const res = await apiClient.get(`/riders/${riderId}/reviews`, {
-    params: { page, page_size: pageSize },
+    params: { page, page_size: size },
   });
-  return parseCustomerReviewsList(res.data, 'riders/reviews');
+  const parsed = parseCustomerReviewsList(res.data, 'riders/reviews');
+  if (process.env.NODE_ENV === 'development') {
+    console.log(
+      `[Reviews API] GET /riders/${riderId}/reviews →`,
+      parsed.reviews.length,
+      'تقييم'
+    );
+  }
+  return parsed;
 }
 
-/** بديل عند تعطل GET /admin/reviews — تقييمات السائقين فقط */
+/** واجهة موحّدة لتقييمات سائق واحد (الأدمن + تفاصيل السائق + تقييمات السائقين) */
+export async function getRiderReviewsList(
+  riderId: string,
+  params?: { page?: number; page_size?: number; limit?: number }
+): Promise<ReviewsResponse> {
+  const page = params?.page ?? 1;
+  const pageSize = params?.page_size ?? params?.limit ?? 10;
+  if (shouldUseMock()) {
+    return mockGetReviews({
+      targetType: 'rider',
+      targetId: riderId,
+      page,
+      limit: pageSize,
+    });
+  }
+  return fetchRiderReviews(riderId, page, pageSize);
+}
+
+const FLUTTER_RIDER_REVIEWS_MAX_RIDERS = 20;
+
+/** تجميع تقييمات السائقين عبر GET /riders/{id}/reviews لكل سائق (لا يوجد endpoint «كل التقييمات» في الملف) */
+export async function aggregateFlutterRiderReviews(params?: {
+  driverId?: string;
+  page?: number;
+  limit?: number;
+}): Promise<ReviewsResponse> {
+  const page = params?.page ?? 1;
+  const pageSize = Math.min(params?.limit ?? 50, 50);
+
+  if (params?.driverId) {
+    return getRiderReviewsList(params.driverId, { page, page_size: pageSize });
+  }
+
+  const ridersRes = await getRiders({ page: 1, limit: 100 });
+  const riders = ridersRes.riders.slice(0, FLUTTER_RIDER_REVIEWS_MAX_RIDERS);
+  const allReviews: Review[] = [];
+  const triedIds = new Set<string>();
+
+  for (const rider of riders) {
+    const ids = [rider.id, rider.userId].filter((id) => id && !triedIds.has(id));
+    for (const rid of ids) {
+      triedIds.add(rid);
+      try {
+        const res = await fetchRiderReviews(rid, 1, 50);
+        for (const review of res.reviews) {
+          allReviews.push({
+            ...review,
+            targetId: review.targetId || rid,
+            targetName: review.targetName !== '—' ? review.targetName : rider.name || '—',
+            targetType: 'rider',
+          });
+        }
+        if (res.reviews.length > 0) break;
+      } catch {
+        /* جرّب userId أو id التالي */
+      }
+    }
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log(
+      `[Reviews API] تجميع سائقين: ${riders.length} سائق، ${allReviews.length} تقييم rider`
+    );
+  }
+
+  const start = (page - 1) * pageSize;
+  const slice = allReviews.slice(start, start + pageSize);
+
+  return {
+    reviews: slice,
+    pagination: {
+      page,
+      limit: pageSize,
+      total: allReviews.length,
+      totalPages: Math.max(1, Math.ceil(allReviews.length / pageSize)),
+    },
+    dataSource: 'riders/reviews',
+    notice:
+      allReviews.length > 0
+        ? 'تقييمات السائقين من GET /riders/{id}/reviews (flutter-reviews-api.md).'
+        : 'لم يُعثر على تقييمات سائقين عبر GET /riders/{id}/reviews لأي سائق.',
+  };
+}
+
+export type AdminReviewsSnapshot = {
+  total: number;
+  restaurantCount: number;
+  riderCount: number;
+  sampleRestaurantName?: string;
+};
+
+/** لصفحة تقييمات السائقين — طلب /admin/reviews واحد مُخزَّن */
+export async function getAdminReviewsSnapshot(): Promise<AdminReviewsSnapshot> {
+  try {
+    const all = await fetchAdminReviewsListCached();
+    const riders = filterReviewsByTargetType(all, 'rider');
+    const restaurants = filterReviewsByTargetType(all, 'restaurant');
+    return {
+      total: all.length,
+      restaurantCount: restaurants.length,
+      riderCount: riders.length,
+      sampleRestaurantName: restaurants[0]?.targetName,
+    };
+  } catch {
+    return { total: 0, restaurantCount: 0, riderCount: 0 };
+  }
+}
+
+/** استخراج targetType=rider من قائمة /admin/reviews الكاملة */
+export async function getAdminRiderReviewsOnly(
+  page: number,
+  limit: number
+): Promise<ReviewsResponse | null> {
+  try {
+    const all = await fetchAdminReviewsListCached();
+    const riders = filterReviewsByTargetType(all, 'rider');
+    if (riders.length === 0) {
+      const restaurantCount = all.filter((r) => r.targetType === 'restaurant').length;
+      if (process.env.NODE_ENV === 'development' && restaurantCount > 0) {
+        console.warn(
+          `[Reviews API] /admin/reviews: ${restaurantCount} مطعم، 0 سائق — لا يُعرض في تقييمات السائقين`
+        );
+      }
+      return null;
+    }
+    const start = (page - 1) * limit;
+    const slice = riders.slice(start, start + limit);
+    return {
+      reviews: slice,
+      pagination: {
+        page,
+        limit,
+        total: riders.length,
+        totalPages: Math.max(1, Math.ceil(riders.length / limit)),
+      },
+      dataSource: 'admin/reviews',
+      notice: 'تقييمات السائقين من GET /admin/reviews (مفلترة targetType=rider).',
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** غير موجود على السيرفر (404) — لا تعِد الطلب */
 async function fetchDriverRatingsFallback(params?: {
   targetType?: string;
   targetId?: string;
@@ -337,6 +526,7 @@ async function fetchDriverRatingsFallback(params?: {
   limit?: number;
 }): Promise<ReviewsResponse | null> {
   if (params?.targetType === 'restaurant') return null;
+  if (adminDriverRatingsKnownMissing) return null;
 
   try {
     const query = cleanListQueryParams({
@@ -363,9 +553,65 @@ async function fetchDriverRatingsFallback(params?: {
       notice:
         'endpoint التقييمات العام GET /admin/reviews يعيد خطأ 500 من السيرفر. المعروض حالياً: تقييمات السائقين فقط من /admin/driver-ratings. تقييمات المطاعم تحتاج إصلاح الباكند.',
     };
-  } catch {
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.status === 404) {
+      adminDriverRatingsKnownMissing = true;
+    }
     return null;
   }
+}
+
+const NO_RIDER_REVIEWS_MSG =
+  'لا توجد تقييمات سائقين (targetType=rider). يوجد تقييم مطعم فقط في /admin/reviews — أنشئ تقييم سائق من التطبيق: POST /reviews/rider بعد توصيل الطلب.';
+
+async function realGetRiderReviewsOnly(params?: {
+  targetId?: string;
+  rating?: number;
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<ReviewsResponse> {
+  const page = params?.page ?? 1;
+  const limit = Math.min(params?.limit ?? 10, 50);
+
+  try {
+    const flutter = params?.targetId
+      ? await fetchRiderReviews(params.targetId, page, limit)
+      : await aggregateFlutterRiderReviews({ page, limit });
+    let reviews = flutter.reviews;
+    reviews = applySearchFilter(reviews, params?.search);
+    if (params?.rating && params.rating > 0) {
+      reviews = reviews.filter((r) => r.rating === params.rating);
+    }
+    if (reviews.length > 0) {
+      return { ...flutter, reviews };
+    }
+  } catch {
+    /* */
+  }
+
+  const fromAdmin = await getAdminRiderReviewsOnly(page, limit);
+  if (fromAdmin && fromAdmin.reviews.length > 0) {
+    let reviews = fromAdmin.reviews;
+    reviews = applySearchFilter(reviews, params?.search);
+    if (params?.rating && params.rating > 0) {
+      reviews = reviews.filter((r) => r.rating === params.rating);
+    }
+    return { ...fromAdmin, reviews };
+  }
+
+  const snap = await getAdminReviewsSnapshot();
+  const notice =
+    snap.restaurantCount > 0
+      ? `لا توجد تقييمات سائقين. السيرفر يعيد ${snap.restaurantCount} تقييم مطعم فقط${snap.sampleRestaurantName ? ` (مثال: ${snap.sampleRestaurantName})` : ''}. المصدر: GET /riders/{id}/reviews و GET /admin/reviews — راجع flutter-reviews-api.md.`
+      : NO_RIDER_REVIEWS_MSG;
+
+  return {
+    reviews: [],
+    pagination: { page, limit, total: 0, totalPages: 0 },
+    notice,
+    apiUnavailable: true,
+  };
 }
 
 async function realGetReviews(params?: {
@@ -381,8 +627,12 @@ async function realGetReviews(params?: {
   }
 
   const page = params?.page ?? 1;
-  const limit = params?.limit ?? 10;
+  const limit = Math.min(params?.limit ?? 10, 50);
   const tt = params?.targetType;
+
+  if (tt === 'rider' || tt === 'driver') {
+    return realGetRiderReviewsOnly(params);
+  }
 
   const attempts: Record<string, string | number>[] = [
     cleanListQueryParams({ page, limit }),
@@ -408,17 +658,27 @@ async function realGetReviews(params?: {
     try {
       const result = await fetchReviewsFromApi(query);
       let reviews = result.reviews;
+      if (tt) {
+        reviews = filterReviewsByTargetType(reviews, tt);
+      }
       if (params?.targetId) {
         reviews = filterByTargetId(reviews, params.targetId);
+      }
+      if ((tt === 'rider' || tt === 'driver') && reviews.length === 0) {
+        continue;
       }
       reviewsListCachedUnavailable = false;
       return {
         reviews,
         pagination: {
           ...result.pagination,
-          total: params?.targetId ? reviews.length : result.pagination.total,
+          total: params?.targetId || tt ? reviews.length : result.pagination.total,
         },
         dataSource: 'admin/reviews',
+        notice:
+          tt === 'rider' || tt === 'driver'
+            ? 'تقييمات السائقين فقط من GET /admin/reviews.'
+            : undefined,
       };
     } catch (err) {
       lastError = err;
@@ -426,11 +686,12 @@ async function realGetReviews(params?: {
     }
   }
 
-  if (!reviewsListCachedUnavailable) {
+  if (lastError && !adminReviewsListCache) {
     const detail = extractApiErrorDetail(lastError);
-    console.warn('[Reviews API] غير متاح:', detail || '500', formatResponseData(
-      axios.isAxiosError(lastError) ? lastError.response?.data : undefined
-    ));
+    const status = axios.isAxiosError(lastError) ? lastError.response?.status : undefined;
+    if (status === 500) {
+      console.warn('[Reviews API] /admin/reviews 500 —', detail || '');
+    }
   }
 
   if (params?.targetId && params?.targetType === 'restaurant') {
@@ -449,17 +710,6 @@ async function realGetReviews(params?: {
 
   if (params?.targetId && (params?.targetType === 'rider' || params?.targetType === 'driver')) {
     try {
-      const fromAdminRider = await fetchAdminRiderReviews(params.targetId, page, limit);
-      let reviews = fromAdminRider.reviews;
-      reviews = applySearchFilter(reviews, params?.search);
-      if (params?.rating && params.rating > 0) {
-        reviews = reviews.filter((r) => r.rating === params.rating);
-      }
-      return { ...fromAdminRider, reviews };
-    } catch {
-      /* try public rider reviews */
-    }
-    try {
       const fromRider = await fetchRiderReviews(params.targetId, page, limit);
       let reviews = fromRider.reviews;
       reviews = applySearchFilter(reviews, params?.search);
@@ -467,6 +717,17 @@ async function realGetReviews(params?: {
         reviews = reviews.filter((r) => r.rating === params.rating);
       }
       return { ...fromRider, reviews };
+    } catch {
+      /* flutter doc endpoint failed — try admin */
+    }
+    try {
+      const fromAdminRider = await fetchAdminRiderReviews(params.targetId, page, limit);
+      let reviews = fromAdminRider.reviews;
+      reviews = applySearchFilter(reviews, params?.search);
+      if (params?.rating && params.rating > 0) {
+        reviews = reviews.filter((r) => r.rating === params.rating);
+      }
+      return { ...fromAdminRider, reviews };
     } catch {
       /* try next fallback */
     }

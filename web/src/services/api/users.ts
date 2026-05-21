@@ -2,6 +2,7 @@ import apiClient from './client';
 import { handleApiError } from './client';
 import { shouldUseMock, cleanListQueryParams } from './base';
 import { getLoyaltyAccountDetail } from './loyalty';
+import { getRestaurants } from './restaurants';
 
 export type UserTypeFilter = 'customer' | 'driver' | 'restaurant';
 
@@ -84,12 +85,34 @@ function normalizeUserType(raw: string): UserTypeFilter {
   return 'customer';
 }
 
+/** قيم enum في PostgreSQL — لا ترسل merchant/pharmacy/… (تسبب 500) */
+const BACKEND_USER_TYPE_QUERY = new Set(['customer', 'driver', 'vendor', 'restaurant', 'admin']);
+
 function mapUserTypeQuery(filter?: string): string | undefined {
   if (!filter || filter === 'all') return undefined;
   if (filter === 'restaurant') return 'vendor';
   if (filter === 'driver') return 'driver';
   return filter;
 }
+
+function withUserTypeQueryParams(
+  base: Record<string, string | number>,
+  userTypeValue: string
+): Record<string, string | number> {
+  if (!BACKEND_USER_TYPE_QUERY.has(userTypeValue)) {
+    return base;
+  }
+  return { ...base, user_type: userTypeValue };
+}
+
+function isMerchantUser(u: User): boolean {
+  if (u.userType === 'restaurant') return true;
+  const raw = (u.userTypeRaw || '').toLowerCase();
+  return MERCHANT_TYPES.has(raw);
+}
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /** دمج حقول متداخلة مثل { data: { profile: {...} } } */
 function flattenUserRaw(raw: Record<string, unknown>): Record<string, unknown> {
@@ -267,6 +290,174 @@ export interface UsersResponse {
     total: number;
     totalPages: number;
   };
+  notice?: string;
+  dataSource?: 'admin/users' | 'admin/restaurants';
+}
+
+function buildUsersListQuery(params?: {
+  userType?: string;
+  status?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+  /** عند التجار: لا ترسل نوعاً واحداً فقط */
+  omitTypeFilter?: boolean;
+}): Record<string, string | number> {
+  const limit = Math.min(Math.max(params?.limit ?? 50, 1), 100);
+  const base = cleanListQueryParams({
+    status: params?.status,
+    search: params?.search?.trim(),
+    q: params?.search?.trim(),
+    page: params?.page ?? 1,
+    limit,
+    page_size: limit,
+  });
+  if (params?.omitTypeFilter) return base;
+  const mapped = mapUserTypeQuery(params?.userType);
+  if (!mapped) return base;
+  return withUserTypeQueryParams(base, mapped);
+}
+
+async function fetchUsersListPage(
+  query: Record<string, string | number>
+): Promise<UsersResponse> {
+  const { data } = await apiClient.get('/admin/users', { params: query });
+  const result = unwrapUsersResponse(data);
+  return { ...result, dataSource: 'admin/users' };
+}
+
+async function tryFetchUserByDirectLookup(search: string): Promise<User | null> {
+  const term = search.trim();
+  if (!term) return null;
+  if (UUID_RE.test(term)) {
+    try {
+      return await realGetUserById(term);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+function mergeUsersDedupe(users: User[]): User[] {
+  const map = new Map<string, User>();
+  users.forEach((u) => {
+    if (u.id) map.set(u.id, u);
+  });
+  return Array.from(map.values());
+}
+
+function paginateUsersList(
+  users: User[],
+  params?: { page?: number; limit?: number }
+): Pick<UsersResponse, 'users' | 'pagination'> {
+  const limit = Math.min(params?.limit ?? 50, 100);
+  const page = params?.page ?? 1;
+  const start = (page - 1) * limit;
+  return {
+    users: users.slice(start, start + limit),
+    pagination: {
+      page,
+      limit,
+      total: users.length,
+      totalPages: Math.max(1, Math.ceil(users.length / limit)),
+    },
+  };
+}
+
+function applyMerchantSearchFilter(users: User[], search?: string): User[] {
+  const q = search?.trim().toLowerCase();
+  if (!q) return users;
+  return users.filter(
+    (u) =>
+      u.name.toLowerCase().includes(q) ||
+      u.email.toLowerCase().includes(q) ||
+      u.phone.includes(q) ||
+      u.id.toLowerCase().includes(q) ||
+      (u.restaurantId?.toLowerCase().includes(q) ?? false)
+  );
+}
+
+/** طلب واحد user_type=vendor ثم fallback لـ /admin/restaurants — بدون حلقة أنواع (تجنب 500 و429) */
+async function fetchMerchantUsers(
+  params?: {
+    status?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
+  }
+): Promise<UsersResponse> {
+  const base = buildUsersListQuery({ ...params, omitTypeFilter: true });
+
+  try {
+    const res = await fetchUsersListPage(withUserTypeQueryParams(base, 'vendor'));
+    let users = mergeUsersDedupe(res.users.filter(isMerchantUser));
+    users = applyMerchantSearchFilter(users, params?.search);
+    if (users.length > 0) {
+      return {
+        ...paginateUsersList(users, params),
+        dataSource: 'admin/users',
+        notice: 'تجار/متاجر من GET /admin/users?user_type=vendor',
+      };
+    }
+  } catch (err) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Users API] vendor filter:', err);
+    }
+  }
+
+  return merchantsUsersFromRestaurants(params);
+}
+
+async function merchantsUsersFromRestaurants(params?: {
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<UsersResponse> {
+  const limit = Math.min(params?.limit ?? 50, 100);
+  const page = params?.page ?? 1;
+  const res = await getRestaurants({
+    search: params?.search,
+    page,
+    limit,
+  });
+
+  const users: User[] = res.restaurants.map((r) => {
+    const ownerId = r.ownerUserId || `restaurant-owner-${r.id}`;
+    return {
+      id: ownerId,
+      name: r.ownerName?.trim() || r.name,
+      email: r.ownerEmail,
+      phone: r.phone,
+      firstName: '',
+      lastName: '',
+      userType: 'restaurant' as const,
+      userTypeRaw: 'vendor',
+      status: r.status === 'suspended' ? 'suspended' : 'active',
+      totalOrders: r.totalOrders,
+      totalSpent: r.totalRevenue,
+      createdAt: r.createdAt,
+      restaurantId: r.id,
+      imageUrl: r.imageUrl ?? null,
+      isEmailVerified: false,
+      apiRaw: {
+        source: 'admin/restaurants',
+        restaurant_id: r.id,
+        restaurant_name: r.name,
+        owner_user_id: r.ownerUserId,
+        vendor_type: r.vendorType,
+      },
+      apiHasExtendedFields: false,
+    };
+  });
+
+  return {
+    users,
+    pagination: res.pagination,
+    dataSource: 'admin/restaurants',
+    notice:
+      'حسابات التجار من قائمة المتاجر (GET /admin/restaurants) — قد لا تظهر في GET /admin/users. للمتجر ككيان: صفحة المطاعم.',
+  };
 }
 
 async function realGetUsers(params?: {
@@ -276,21 +467,31 @@ async function realGetUsers(params?: {
   page?: number;
   limit?: number;
 }): Promise<UsersResponse> {
-  const cleaned = cleanListQueryParams({
-    user_type: mapUserTypeQuery(params?.userType),
-    status: params?.status,
-    search: params?.search,
-    page: params?.page ?? 1,
-    limit: params?.limit ?? 10,
-  });
-  const { data } = await apiClient.get('/admin/users', { params: cleaned });
-  let result = unwrapUsersResponse(data);
-
   if (params?.userType === 'restaurant') {
+    return fetchMerchantUsers(params);
+  }
+
+  const query = buildUsersListQuery(params);
+  let result = await fetchUsersListPage(query);
+
+  const direct = params?.search ? await tryFetchUserByDirectLookup(params.search) : null;
+  if (direct && !result.users.some((u) => u.id === direct.id)) {
     result = {
       ...result,
-      users: result.users.filter((u) => u.userType === 'restaurant'),
+      users: [direct, ...result.users],
+      pagination: {
+        ...result.pagination,
+        total: result.pagination.total + 1,
+      },
     };
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log(
+      '[Users API]',
+      `صفحة ${result.pagination.page}/${result.pagination.totalPages}`,
+      `— ${result.users.length} من ${result.pagination.total}`
+    );
   }
 
   return result;

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -15,7 +15,11 @@ import {
   TextField,
   Avatar,
   Alert,
+  TablePagination,
+  InputAdornment,
 } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { Link as RouterLink } from 'react-router-dom';
 import { ColumnDef } from '@tanstack/react-table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -41,8 +45,18 @@ const UsersListPage: React.FC = () => {
 
   const [userTypeFilter, setUserTypeFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [searchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(50);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setSearchQuery(searchInput.trim());
+      setPage(1);
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState('');
@@ -50,9 +64,7 @@ const UsersListPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [userType, setUserType] = useState<'customer' | 'driver' | 'restaurant'>('customer');
 
-  const limit = 10;
-
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['users', userTypeFilter, statusFilter, searchQuery, page, limit],
     queryFn: () =>
       getUsers({
@@ -62,6 +74,8 @@ const UsersListPage: React.FC = () => {
         page,
         limit,
       }),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   const deleteMutation = useMutation({
@@ -300,7 +314,7 @@ const UsersListPage: React.FC = () => {
             variant="body2"
             sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}
           >
-            عرض وإدارة جميع المستخدمين في النظام. حسابات المتاجر قد تظهر كنوع vendor — وللمتجر ككيان استخدم صفحة المطاعم.
+            عرض وإدارة المستخدمين من السيرفر. ابحث بالاسم أو الهاتف أو البريد أو معرّف UUID. التجار قد يُجلبون من قائمة المتاجر إن لم يظهروا في users.
           </Typography>
         </Box>
         <Button
@@ -315,6 +329,34 @@ const UsersListPage: React.FC = () => {
         </Button>
       </Box>
 
+      {isError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {(error as Error)?.message?.includes('429') ||
+          String(error).includes('429')
+            ? 'تم تجاوز حد الطلبات على السيرفر (429). انتظر دقيقة ثم حدّث الصفحة.'
+            : 'تعذّر تحميل المستخدمين من السيرفر.'}
+        </Alert>
+      )}
+
+      {data?.notice && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {data.notice}
+          {data.dataSource === 'admin/restaurants' && (
+            <>
+              {' '}
+              <RouterLink to="/restaurants">فتح صفحة المطاعم</RouterLink>
+            </>
+          )}
+        </Alert>
+      )}
+
+      {data?.pagination && data.pagination.total > 0 && (
+        <Typography variant="body2" sx={{ color: '#5A6A5A', mb: 2 }}>
+          يعرض {data.users.length} من إجمالي {data.pagination.total} مستخدم (صفحة{' '}
+          {data.pagination.page} من {data.pagination.totalPages})
+        </Typography>
+      )}
+
       {/* Filters */}
       <Box
         sx={{
@@ -322,8 +364,23 @@ const UsersListPage: React.FC = () => {
           display: 'flex',
           gap: 2,
           flexWrap: 'wrap',
+          alignItems: 'center',
         }}
       >
+        <TextField
+          size="small"
+          placeholder="ابحث بالاسم، الهاتف، البريد، أو UUID..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          sx={{ minWidth: { xs: '100%', sm: 280 }, flex: { sm: 1 }, maxWidth: 420 }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: '#5A6A5A', fontSize: 20 }} />
+              </InputAdornment>
+            ),
+          }}
+        />
         <FormControl size="small" sx={{ minWidth: 150 }}>
           <InputLabel sx={{ color: '#5A6A5A' }}>نوع المستخدم</InputLabel>
           <Select
@@ -379,15 +436,35 @@ const UsersListPage: React.FC = () => {
           description="لم يتم العثور على أي مستخدمين لعرضهم."
         />
       ) : (
-        <DataTable
-          data={data.users}
-          columns={columns}
-          searchable={true}
-          searchPlaceholder="ابحث عن مستخدم..."
-          onView={handleView}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <>
+          <DataTable
+            data={data.users}
+            columns={columns}
+            searchable={false}
+            onView={handleView}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+          {data.pagination.total > limit && (
+            <TablePagination
+              component="div"
+              count={data.pagination.total}
+              page={page - 1}
+              onPageChange={(_, newPage) => setPage(newPage + 1)}
+              rowsPerPage={limit}
+              onRowsPerPageChange={(e) => {
+                setLimit(parseInt(e.target.value, 10));
+                setPage(1);
+              }}
+              rowsPerPageOptions={[25, 50, 100]}
+              labelRowsPerPage="عدد الصفوف"
+              labelDisplayedRows={({ from, to, count }) =>
+                `${from}–${to} من ${count !== -1 ? count : `أكثر من ${to}`}`
+              }
+              sx={{ borderTop: '1px solid #B1C0B1', color: '#1A2E1A' }}
+            />
+          )}
+        </>
       )}
 
       {/* Add User Dialog */}

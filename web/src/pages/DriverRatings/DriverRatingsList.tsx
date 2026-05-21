@@ -215,11 +215,22 @@ const DriverRatingsListPage: React.FC = () => {
 
   if (!data || data.ratings.length === 0) {
     return (
-      <EmptyState
-        title="لا توجد تقييمات"
-        description="لم يتم العثور على أي تقييمات."
-        icon={<StarIcon />}
-      />
+      <Box>
+        <ApiDataSourceBanner />
+        {data?.notice && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            {data.notice}
+          </Alert>
+        )}
+        <EmptyState
+          title="لا توجد تقييمات سائقين"
+          description={
+            data?.notice ||
+            'لا توجد تقييمات سائق في قاعدة البيانات حالياً. التقييم الوحيد قد يكون لمطعم (restaurant) وليس rider.'
+          }
+          icon={<StarIcon />}
+        />
+      </Box>
     );
   }
 

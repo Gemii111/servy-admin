@@ -7,6 +7,8 @@ export type VendorType = 'restaurant' | 'pharmacy' | 'supermarket';
 export interface Restaurant {
   id: string;
   name: string;
+  /** حساب المستخدم المرتبط بالمتجر إن وُجد */
+  ownerUserId?: string;
   ownerEmail: string;
   ownerName: string;
   phone: string;
@@ -101,6 +103,12 @@ function mapApiRestaurant(r: Record<string, unknown>): Restaurant {
   return {
     id: String(r.id),
     name: String(r.name ?? r.restaurant_name ?? ''),
+    ownerUserId:
+      r.ownerUserId != null
+        ? String(r.ownerUserId)
+        : r.owner_user_id != null
+          ? String(r.owner_user_id)
+          : undefined,
     ownerEmail: String(r.ownerEmail ?? r.owner_email ?? ''),
     ownerName: String(r.ownerName ?? r.owner_name ?? ''),
     phone: String(r.phone ?? ''),

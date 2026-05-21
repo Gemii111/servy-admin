@@ -20,7 +20,7 @@ import {
   getRiderStatusLabel,
   getVehicleLabel,
 } from '../../services/api/riders';
-import { getReviews } from '../../services/api/reviews';
+import { getRiderReviewsList } from '../../services/api/reviews';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import { format } from 'date-fns';
@@ -39,15 +39,9 @@ const RiderDetailsPage: React.FC = () => {
   });
 
   const { data: reviewsData } = useQuery({
-    queryKey: ['reviews', 'rider', id, rider?.user_id],
-    queryFn: () =>
-      getReviews({
-        targetType: 'rider',
-        targetId: id,
-        page: 1,
-        limit: 50,
-      }),
-    enabled: !!id && !!rider,
+    queryKey: ['rider-reviews', id],
+    queryFn: () => getRiderReviewsList(id!, { page: 1, page_size: 50 }),
+    enabled: !!id,
     retry: false,
     refetchOnWindowFocus: false,
   });

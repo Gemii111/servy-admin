@@ -2,7 +2,15 @@ import axios from 'axios';
 import apiClient from './client';
 import { handleApiError } from './client';
 import { shouldUseMock, cleanListQueryParams, extractListFromResponse, unwrap } from './base';
-import { getReviews, setReviewHidden, deleteReview, type Review } from './reviews';
+import {
+  getRiderReviewsList,
+  aggregateFlutterRiderReviews,
+  getAdminRiderReviewsOnly,
+  getAdminReviewsSnapshot,
+  setReviewHidden,
+  deleteReview,
+  type Review,
+} from './reviews';
 
 export interface DriverRating {
   id: string;
@@ -780,182 +788,74 @@ function paginateDriverRatings(
   };
 }
 
-/** تجميع من GET /admin/riders ثم /admin/riders/:id/reviews لكل سائق */
-async function fetchAllDriverRatingsFromAdminRiders(
-  params?: GetDriverRatingsParams
-): Promise<DriverRatingsResponse | null> {
-  try {
-    const ridersRes = await apiClient.get('/admin/riders', {
-      params: cleanListQueryParams({ page: 1, limit: 100 }),
-    });
-    const riders = extractListFromResponse(ridersRes.data, ['riders', 'data']);
-    const ratings: DriverRating[] = [];
-
-    const candidates = riders.filter((r) => {
-      const riderId = String(r.id ?? '');
-      if (!riderId) return false;
-      if (params?.driverId) return riderId === params.driverId;
-      const count = Number(
-        r.rating_count ?? r.ratingCount ?? r.total_ratings ?? r.totalRatings ?? 0
-      );
-      return count > 0;
-    });
-
-    const maxRiders = params?.driverId ? 1 : 40;
-    for (const rider of candidates.slice(0, maxRiders)) {
-      const riderId = String(rider.id ?? '');
-      const riderName =
-        pickStr(rider, 'name', 'full_name', 'fullName') ||
-        [pickStr(rider, 'first_name', 'firstName'), pickStr(rider, 'last_name', 'lastName')]
-          .filter(Boolean)
-          .join(' ') ||
-        '—';
-      try {
-        const revRes = await apiClient.get(`/admin/riders/${riderId}/reviews`, {
-          params: { page: 1, page_size: 50 },
-        });
-        const inner = unwrap<Record<string, unknown>>(revRes.data) ?? revRes.data;
-        const list = extractListFromResponse(inner, ['reviews', 'data']);
-        for (const raw of list) {
-          if (!raw || typeof raw !== 'object') continue;
-          ratings.push(
-            mapApiDriverRating({
-              ...(raw as Record<string, unknown>),
-              driver_id: riderId,
-              driver: {
-                id: riderId,
-                name: riderName,
-                email: pickStr(rider, 'email'),
-                phone: pickStr(rider, 'phone', 'phone_number'),
-              },
-            })
-          );
-        }
-      } catch {
-        try {
-          const pubRes = await apiClient.get(`/riders/${riderId}/reviews`, {
-            params: { page: 1, page_size: 50 },
-          });
-          const inner = unwrap<Record<string, unknown>>(pubRes.data) ?? pubRes.data;
-          const list = extractListFromResponse(inner, ['reviews', 'data']);
-          for (const raw of list) {
-            if (!raw || typeof raw !== 'object') continue;
-            ratings.push(
-              mapApiDriverRating({
-                ...(raw as Record<string, unknown>),
-                driver_id: riderId,
-                driver: { id: riderId, name: riderName },
-              })
-            );
-          }
-        } catch {
-          /* skip rider */
-        }
-      }
-    }
-
-    if (ratings.length === 0) return null;
-
-    const filtered = applyDriverRatingsListFilters(ratings, params);
-    const page = params?.page ?? 1;
-    const limit = params?.limit ?? 20;
-    const paged = paginateDriverRatings(filtered, page, limit);
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log(
-        '[Driver Ratings API] مجمّع من riders/:id/reviews:',
-        filtered.length,
-        'تقييم'
-      );
-    }
-
-    return {
-      ...paged,
-      dataSource: 'admin/riders/:id/reviews',
-      notice:
-        'المعروض مجمّعاً من GET /admin/riders/:id/reviews (أو /riders/:id/reviews) لكل سائق لديه تقييمات — لأن /admin/reviews و /admin/driver-ratings غير متاحين.',
-    };
-  } catch (err) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('[Driver Ratings API] تجميع من riders/reviews فشل', err);
-    }
-    return null;
-  }
+function reviewsResponseToDriverRatings(
+  reviewsRes: Awaited<ReturnType<typeof getRiderReviewsList>>,
+  params: GetDriverRatingsParams | undefined,
+  page: number,
+  limit: number,
+  dataSource: DriverRatingsDataSource
+): DriverRatingsResponse {
+  let ratings = reviewsRes.reviews.map(reviewToDriverRating);
+  ratings = applyDriverRatingsListFilters(ratings, params);
+  const paged = paginateDriverRatings(ratings, page, limit);
+  return {
+    ...paged,
+    dataSource,
+    notice: reviewsRes.notice,
+  };
 }
 
 async function realGetDriverRatings(params?: GetDriverRatingsParams): Promise<DriverRatingsResponse> {
   const page = params?.page ?? 1;
-  const limit = params?.limit ?? 20;
+  const limit = Math.min(params?.limit ?? 20, 50);
 
+  let flutterEmptyNotice: string | undefined;
+
+  // 1) flutter-reviews-api.md §5 — GET /riders/{id}/reviews
   try {
-    const query = cleanListQueryParams({
-      driverId: params?.driverId,
-      customerId: params?.customerId,
-      orderId: params?.orderId,
-      minRating: params?.minRating,
-      maxRating: params?.maxRating,
-      dateFrom: params?.dateFrom,
-      dateTo: params?.dateTo,
-      isHidden: params?.isHidden,
+    const flutter = params?.driverId
+      ? await getRiderReviewsList(params.driverId, { page, page_size: limit })
+      : await aggregateFlutterRiderReviews({ page, limit });
+    flutterEmptyNotice = flutter.notice;
+    if (flutter.reviews.length > 0) {
+      return reviewsResponseToDriverRatings(
+        flutter,
+        params,
+        page,
+        limit,
+        'riders/:id/reviews'
+      );
+    }
+  } catch (err) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Driver Ratings API] GET /riders/{id}/reviews:', err);
+    }
+  }
+
+  // 2) GET /admin/reviews — مرة واحدة (مفلتر rider فقط)
+  const adminRiders = await getAdminRiderReviewsOnly(page, limit);
+  if (adminRiders && adminRiders.reviews.length > 0) {
+    return reviewsResponseToDriverRatings(
+      adminRiders,
+      params,
       page,
       limit,
-      sortBy: params?.sortBy,
-      sortOrder: params?.sortOrder,
-    });
-    const res = await apiClient.get('/admin/driver-ratings', { params: query });
-    const rawList = extractListFromResponse(res.data, ['ratings', 'reviews', 'items', 'data']);
-    const ratings = rawList.map((r) => mapApiDriverRating(r));
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[Driver Ratings API] من /admin/driver-ratings:', ratings.length);
-    }
-
-    return {
-      ratings,
-      pagination: extractDriverRatingsPagination(res.data, ratings.length),
-      dataSource: 'admin/driver-ratings',
-    };
-  } catch (adminErr) {
-    if (process.env.NODE_ENV === 'development') {
-      const status = axios.isAxiosError(adminErr) ? adminErr.response?.status : '?';
-      console.warn('[Driver Ratings API] /admin/driver-ratings فشل', status, '— fallback: /admin/reviews');
-    }
+      'admin/reviews'
+    );
   }
 
-  const reviewsRes = await getReviews({
-    targetType: 'rider',
-    targetId: params?.driverId,
-    page,
-    limit,
-    rating:
-      params?.minRating != null && params?.maxRating != null && params.minRating === params.maxRating
-        ? params.minRating
-        : undefined,
-  });
-
-  if (!reviewsRes.apiUnavailable) {
-    let ratings = reviewsRes.reviews.map(reviewToDriverRating);
-    ratings = applyDriverRatingsListFilters(ratings, params);
-    const paged = paginateDriverRatings(ratings, page, limit);
-    return {
-      ...paged,
-      dataSource: 'admin/reviews',
-      notice:
-        reviewsRes.notice ||
-        'المعروض من GET /admin/reviews (تقييمات السائقين). endpoint /admin/driver-ratings غير متاح على السيرفر.',
-    };
-  }
-
-  const fromRiders = await fetchAllDriverRatingsFromAdminRiders(params);
-  if (fromRiders) return fromRiders;
+  const snap = await getAdminReviewsSnapshot();
+  const notice =
+    snap.restaurantCount > 0
+      ? `لا توجد تقييمات سائقين. يوجد ${snap.restaurantCount} تقييم مطعم في السيرفر${snap.sampleRestaurantName ? ` (مثل: ${snap.sampleRestaurantName})` : ''} — ليس تقييم سائق. أنشئ تقييم من التطبيق: POST /reviews/rider (flutter-reviews-api.md).`
+      : flutterEmptyNotice ||
+        'لا توجد تقييمات سائقين عبر GET /riders/{id}/reviews لأي سائق.';
 
   return {
     ratings: [],
     pagination: { page, limit, total: 0, totalPages: 0 },
     apiUnavailable: true,
-    notice:
-      reviewsRes.notice ||
-      'تقييمات السائقين غير متاحة: /admin/driver-ratings و /admin/reviews و /admin/riders/:id/reviews.',
+    notice,
   };
 }
 
