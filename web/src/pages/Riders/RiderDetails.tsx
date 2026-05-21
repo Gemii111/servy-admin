@@ -16,6 +16,7 @@ import {
   getRiderById,
   updateRiderStatus,
   approveRider,
+  riderNeedsApproval,
   getRiderStatusLabel,
   getVehicleLabel,
 } from '../../services/api/riders';
@@ -39,14 +40,28 @@ const RiderDetailsPage: React.FC = () => {
 
   const { data: reviewsData } = useQuery({
     queryKey: ['reviews', 'rider', id, rider?.user_id],
-    queryFn: () => getReviews({ targetType: 'rider', page: 1, limit: 50 }),
+    queryFn: () =>
+      getReviews({
+        targetType: 'rider',
+        targetId: id,
+        page: 1,
+        limit: 50,
+      }),
     enabled: !!id && !!rider,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
-  const reviews =
-    reviewsData?.reviews?.filter(
-      (r) => r.targetId === rider?.user_id || r.targetId === id
-    ) ?? [];
+  const allRiderReviews = reviewsData?.reviews ?? [];
+  const reviews = allRiderReviews.filter(
+    (r) =>
+      !id ||
+      r.targetId === id ||
+      r.targetId === rider?.user_id ||
+      r.targetId === rider?.id
+  );
+  const displayReviews =
+    reviews.length > 0 ? reviews : allRiderReviews;
 
   const updateStatusMutation = useMutation({
     mutationFn: (payload: { isActive?: boolean; status?: string }) =>
@@ -86,6 +101,8 @@ const RiderDetailsPage: React.FC = () => {
     );
   }
 
+  const pendingApproval = riderNeedsApproval(rider);
+
   const statusColors: Record<string, string> = {
     available: '#22C55E',
     heading_to_restaurant: '#3B82F6',
@@ -111,30 +128,33 @@ const RiderDetailsPage: React.FC = () => {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', gap: 1 }}>
-          {!rider.is_active && (
+          {pendingApproval && (
             <Button
               variant="contained"
               onClick={() => approveMutation.mutate()}
               disabled={approveMutation.isPending}
+              sx={{ bgcolor: '#86B573', '&:hover': { bgcolor: '#6B9B5E' } }}
             >
-              موافقة
+              موافقة على السائق
             </Button>
           )}
-          <Button
-            variant="outlined"
-            onClick={() =>
-              updateStatusMutation.mutate({
-                isActive: !rider.is_active,
-              })
-            }
-            disabled={updateStatusMutation.isPending}
-            sx={{
-              borderColor: rider.is_active ? '#EF4444' : '#86B573',
-              color: rider.is_active ? '#EF4444' : '#86B573',
-            }}
-          >
-            {rider.is_active ? 'تعطيل' : 'تفعيل'}
-          </Button>
+          {!pendingApproval && (
+            <Button
+              variant="outlined"
+              onClick={() =>
+                updateStatusMutation.mutate({
+                  isActive: !rider.is_active,
+                })
+              }
+              disabled={updateStatusMutation.isPending}
+              sx={{
+                borderColor: rider.is_active ? '#EF4444' : '#86B573',
+                color: rider.is_active ? '#EF4444' : '#86B573',
+              }}
+            >
+              {rider.is_active ? 'تعطيل' : 'تفعيل'}
+            </Button>
+          )}
         </Box>
       </Box>
 
@@ -180,6 +200,17 @@ const RiderDetailsPage: React.FC = () => {
               />
             </Typography>
             <Typography variant="body2">
+              <strong>موافقة الأدمن:</strong>{' '}
+              <Chip
+                label={pendingApproval ? 'بانتظار الموافقة' : 'موافق عليه'}
+                size="small"
+                sx={{
+                  bgcolor: pendingApproval ? '#F59E0B20' : '#22C55E20',
+                  color: pendingApproval ? '#D97706' : '#22C55E',
+                }}
+              />
+            </Typography>
+            <Typography variant="body2">
               <strong>نشط:</strong> {rider.is_active ? 'نعم' : 'لا'}
             </Typography>
             <Typography variant="body2">
@@ -207,9 +238,19 @@ const RiderDetailsPage: React.FC = () => {
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
               <StarIcon /> التقييمات والمراجعات
             </Typography>
-            {reviews && reviews.length > 0 ? (
+            {reviewsData?.notice && (
+              <Typography variant="caption" sx={{ color: '#D97706', display: 'block', mb: 1 }}>
+                {reviewsData.notice}
+              </Typography>
+            )}
+            {reviewsData?.apiUnavailable ? (
+              <Typography variant="body2" sx={{ color: '#5A6A5A' }}>
+                تقييمات السائق غير متاحة. جرّب إصلاح GET /admin/reviews أو GET /riders/&#123;id&#125;/reviews
+                (flutter-reviews-api.md).
+              </Typography>
+            ) : displayReviews && displayReviews.length > 0 ? (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {reviews.map((r) => (
+                {displayReviews.map((r) => (
                   <Box
                     key={r.id}
                     sx={{

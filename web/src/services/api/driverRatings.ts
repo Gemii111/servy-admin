@@ -1,3 +1,9 @@
+import axios from 'axios';
+import apiClient from './client';
+import { handleApiError } from './client';
+import { shouldUseMock, cleanListQueryParams, extractListFromResponse, unwrap } from './base';
+import { getReviews, setReviewHidden, deleteReview, type Review } from './reviews';
+
 export interface DriverRating {
   id: string;
   driverId: string;
@@ -68,6 +74,12 @@ export interface DriverRatingsStatistics {
   }>;
 }
 
+export type DriverRatingsDataSource =
+  | 'admin/driver-ratings'
+  | 'admin/reviews'
+  | 'admin/riders/:id/reviews'
+  | 'riders/:id/reviews';
+
 export interface DriverRatingsResponse {
   ratings: DriverRating[];
   pagination: {
@@ -75,6 +87,214 @@ export interface DriverRatingsResponse {
     limit: number;
     total: number;
     totalPages: number;
+  };
+  dataSource?: DriverRatingsDataSource;
+  notice?: string;
+  apiUnavailable?: boolean;
+}
+
+function pickStr(raw: Record<string, unknown>, ...keys: string[]): string {
+  for (const k of keys) {
+    const v = raw[k];
+    if (v != null && v !== '') return String(v);
+  }
+  return '';
+}
+
+function mapApiDriverRating(raw: Record<string, unknown>): DriverRating {
+  const driver =
+    raw.driver && typeof raw.driver === 'object'
+      ? (raw.driver as Record<string, unknown>)
+      : {};
+  const customer =
+    raw.customer && typeof raw.customer === 'object'
+      ? (raw.customer as Record<string, unknown>)
+      : {};
+  const order =
+    raw.order && typeof raw.order === 'object' ? (raw.order as Record<string, unknown>) : {};
+
+  const driverId =
+    pickStr(raw, 'driverId', 'driver_id') || pickStr(driver, 'id') || pickStr(raw, 'target_id', 'targetId');
+  const orderId = pickStr(raw, 'orderId', 'order_id') || pickStr(order, 'id');
+  const createdAt = pickStr(raw, 'createdAt', 'created_at') || new Date().toISOString();
+
+  return {
+    id: pickStr(raw, 'id'),
+    driverId,
+    driver: {
+      id: driverId,
+      name: pickStr(driver, 'name') || pickStr(raw, 'driver_name', 'driverName', 'target_name') || '—',
+      email: pickStr(driver, 'email') || '',
+      phone: pickStr(driver, 'phone') || '',
+      totalRatings: driver.total_ratings != null ? Number(driver.total_ratings) : undefined,
+      averageRating: driver.average_rating != null ? Number(driver.average_rating) : undefined,
+      totalDeliveries:
+        driver.total_deliveries != null ? Number(driver.total_deliveries) : undefined,
+    },
+    customerId: pickStr(raw, 'customerId', 'customer_id', 'user_id', 'userId') || pickStr(customer, 'id'),
+    customer: {
+      id: pickStr(customer, 'id') || pickStr(raw, 'customerId', 'customer_id'),
+      name:
+        pickStr(customer, 'name') ||
+        pickStr(raw, 'customer_name', 'customerName', 'user_name', 'userName') ||
+        '—',
+      email: pickStr(customer, 'email') || '',
+    },
+    orderId,
+    order: {
+      id: orderId || pickStr(order, 'id'),
+      orderNumber: pickStr(order, 'orderNumber', 'order_number') || orderId.slice(0, 8) || '—',
+      total: Number(order.total ?? order.amount ?? 0),
+      createdAt: pickStr(order, 'createdAt', 'created_at') || createdAt,
+      restaurantName: pickStr(order, 'restaurantName', 'restaurant_name'),
+      deliveredAt: pickStr(order, 'deliveredAt', 'delivered_at'),
+    },
+    rating: Number(raw.rating ?? 0),
+    comment: pickStr(raw, 'comment') || undefined,
+    imageUrls: Array.isArray(raw.image_urls)
+      ? (raw.image_urls as string[])
+      : Array.isArray(raw.imageUrls)
+        ? (raw.imageUrls as string[])
+        : undefined,
+    punctualityRating:
+      raw.punctuality_rating != null
+        ? Number(raw.punctuality_rating)
+        : raw.punctualityRating != null
+          ? Number(raw.punctualityRating)
+          : undefined,
+    communicationRating:
+      raw.communication_rating != null
+        ? Number(raw.communication_rating)
+        : raw.communicationRating != null
+          ? Number(raw.communicationRating)
+          : undefined,
+    serviceQualityRating:
+      raw.service_quality_rating != null
+        ? Number(raw.service_quality_rating)
+        : raw.serviceQualityRating != null
+          ? Number(raw.serviceQualityRating)
+          : undefined,
+    isHidden: Boolean(raw.isHidden ?? raw.is_hidden ?? raw.hidden ?? false),
+    isDeleted: Boolean(raw.isDeleted ?? raw.is_deleted ?? false),
+    createdAt,
+    updatedAt: pickStr(raw, 'updatedAt', 'updated_at') || createdAt,
+  };
+}
+
+function reviewToDriverRating(r: Review): DriverRating {
+  return {
+    id: r.id,
+    driverId: r.targetId,
+    driver: {
+      id: r.targetId,
+      name: r.targetName,
+      email: '',
+      phone: '',
+    },
+    customerId: r.userId,
+    customer: { id: r.userId, name: r.userName, email: '' },
+    orderId: r.orderId,
+    order: {
+      id: r.orderId,
+      orderNumber: r.orderId ? r.orderId.slice(0, 8) : '—',
+      total: 0,
+      createdAt: r.createdAt,
+    },
+    rating: r.rating,
+    comment: r.comment || undefined,
+    isHidden: Boolean(r.hidden),
+    isDeleted: false,
+    createdAt: r.createdAt,
+    updatedAt: r.createdAt,
+  };
+}
+
+function extractDriverRatingsPagination(
+  data: unknown,
+  fallbackTotal: number
+): DriverRatingsResponse['pagination'] {
+  const roots: Record<string, unknown>[] = [];
+  if (data && typeof data === 'object') roots.push(data as Record<string, unknown>);
+  const inner = unwrap<Record<string, unknown>>(data);
+  if (inner) roots.push(inner);
+
+  for (const root of roots) {
+    const pag = root.pagination as DriverRatingsResponse['pagination'] | undefined;
+    if (pag && typeof pag === 'object') return pag;
+  }
+
+  const page = 1;
+  const limit = 10;
+  return {
+    page,
+    limit,
+    total: fallbackTotal,
+    totalPages: Math.max(1, Math.ceil(fallbackTotal / limit)),
+  };
+}
+
+function computeStatisticsFromRatings(ratings: DriverRating[]): DriverRatingsStatistics {
+  const filtered = ratings.filter((r) => !r.isDeleted && !r.isHidden);
+  const totalRatings = filtered.length;
+  const averageRating =
+    totalRatings > 0 ? filtered.reduce((sum, r) => sum + r.rating, 0) / totalRatings : 0;
+
+  const ratingDistribution = {
+    '5': filtered.filter((r) => r.rating >= 4.5 && r.rating <= 5).length,
+    '4': filtered.filter((r) => r.rating >= 3.5 && r.rating < 4.5).length,
+    '3': filtered.filter((r) => r.rating >= 2.5 && r.rating < 3.5).length,
+    '2': filtered.filter((r) => r.rating >= 1.5 && r.rating < 2.5).length,
+    '1': filtered.filter((r) => r.rating >= 1 && r.rating < 1.5).length,
+  };
+
+  const driverStats = new Map<string, { driverId: string; driverName: string; ratings: number[] }>();
+  filtered.forEach((r) => {
+    if (!driverStats.has(r.driverId)) {
+      driverStats.set(r.driverId, {
+        driverId: r.driverId,
+        driverName: r.driver.name,
+        ratings: [],
+      });
+    }
+    driverStats.get(r.driverId)!.ratings.push(r.rating);
+  });
+
+  const toDriverRow = (stats: { driverId: string; driverName: string; ratings: number[] }) => ({
+    driverId: stats.driverId,
+    driverName: stats.driverName,
+    averageRating: stats.ratings.reduce((a, b) => a + b, 0) / stats.ratings.length,
+    totalRatings: stats.ratings.length,
+  });
+
+  const topDrivers = Array.from(driverStats.values())
+    .map(toDriverRow)
+    .sort((a, b) => b.averageRating - a.averageRating)
+    .slice(0, 10);
+
+  const lowestDrivers = Array.from(driverStats.values())
+    .map(toDriverRow)
+    .filter((d) => d.totalRatings >= 5)
+    .sort((a, b) => a.averageRating - b.averageRating)
+    .slice(0, 10);
+
+  const recentRatings = [...filtered]
+    .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1))
+    .slice(0, 10)
+    .map((r) => ({
+      id: r.id,
+      driverName: r.driver.name,
+      customerName: r.customer.name,
+      rating: r.rating,
+      createdAt: r.createdAt,
+    }));
+
+  return {
+    totalRatings,
+    averageRating: Math.round(averageRating * 10) / 10,
+    ratingDistribution,
+    topDrivers,
+    lowestDrivers,
+    recentRatings,
   };
 }
 
@@ -491,5 +711,369 @@ export async function mockDeleteDriverRating(
     isDeleted: true,
     updatedAt: new Date().toISOString(),
   };
+}
+
+export type GetDriverRatingsParams = {
+  driverId?: string;
+  customerId?: string;
+  orderId?: string;
+  minRating?: number;
+  maxRating?: number;
+  dateFrom?: string;
+  dateTo?: string;
+  isHidden?: boolean;
+  page?: number;
+  limit?: number;
+  sortBy?: 'created_at' | 'rating';
+  sortOrder?: 'asc' | 'desc';
+};
+
+function applyDriverRatingsListFilters(
+  ratings: DriverRating[],
+  params?: GetDriverRatingsParams
+): DriverRating[] {
+  let out = [...ratings];
+  if (params?.customerId) {
+    out = out.filter((r) => r.customerId === params.customerId);
+  }
+  if (params?.orderId) {
+    out = out.filter((r) => r.orderId === params.orderId);
+  }
+  if (params?.minRating != null) {
+    out = out.filter((r) => r.rating >= params.minRating!);
+  }
+  if (params?.maxRating != null) {
+    out = out.filter((r) => r.rating <= params.maxRating!);
+  }
+  if (params?.isHidden !== undefined) {
+    out = out.filter((r) => r.isHidden === params.isHidden);
+  }
+  if (params?.sortBy === 'rating') {
+    out.sort((a, b) =>
+      params?.sortOrder === 'asc' ? a.rating - b.rating : b.rating - a.rating
+    );
+  } else if (params?.sortBy === 'created_at') {
+    out.sort((a, b) =>
+      params?.sortOrder === 'asc'
+        ? a.createdAt.localeCompare(b.createdAt)
+        : b.createdAt.localeCompare(a.createdAt)
+    );
+  }
+  return out;
+}
+
+function paginateDriverRatings(
+  ratings: DriverRating[],
+  page: number,
+  limit: number
+): DriverRatingsResponse {
+  const start = (page - 1) * limit;
+  const slice = ratings.slice(start, start + limit);
+  return {
+    ratings: slice,
+    pagination: {
+      page,
+      limit,
+      total: ratings.length,
+      totalPages: Math.max(1, Math.ceil(ratings.length / limit)),
+    },
+  };
+}
+
+/** تجميع من GET /admin/riders ثم /admin/riders/:id/reviews لكل سائق */
+async function fetchAllDriverRatingsFromAdminRiders(
+  params?: GetDriverRatingsParams
+): Promise<DriverRatingsResponse | null> {
+  try {
+    const ridersRes = await apiClient.get('/admin/riders', {
+      params: cleanListQueryParams({ page: 1, limit: 100 }),
+    });
+    const riders = extractListFromResponse(ridersRes.data, ['riders', 'data']);
+    const ratings: DriverRating[] = [];
+
+    const candidates = riders.filter((r) => {
+      const riderId = String(r.id ?? '');
+      if (!riderId) return false;
+      if (params?.driverId) return riderId === params.driverId;
+      const count = Number(
+        r.rating_count ?? r.ratingCount ?? r.total_ratings ?? r.totalRatings ?? 0
+      );
+      return count > 0;
+    });
+
+    const maxRiders = params?.driverId ? 1 : 40;
+    for (const rider of candidates.slice(0, maxRiders)) {
+      const riderId = String(rider.id ?? '');
+      const riderName =
+        pickStr(rider, 'name', 'full_name', 'fullName') ||
+        [pickStr(rider, 'first_name', 'firstName'), pickStr(rider, 'last_name', 'lastName')]
+          .filter(Boolean)
+          .join(' ') ||
+        '—';
+      try {
+        const revRes = await apiClient.get(`/admin/riders/${riderId}/reviews`, {
+          params: { page: 1, page_size: 50 },
+        });
+        const inner = unwrap<Record<string, unknown>>(revRes.data) ?? revRes.data;
+        const list = extractListFromResponse(inner, ['reviews', 'data']);
+        for (const raw of list) {
+          if (!raw || typeof raw !== 'object') continue;
+          ratings.push(
+            mapApiDriverRating({
+              ...(raw as Record<string, unknown>),
+              driver_id: riderId,
+              driver: {
+                id: riderId,
+                name: riderName,
+                email: pickStr(rider, 'email'),
+                phone: pickStr(rider, 'phone', 'phone_number'),
+              },
+            })
+          );
+        }
+      } catch {
+        try {
+          const pubRes = await apiClient.get(`/riders/${riderId}/reviews`, {
+            params: { page: 1, page_size: 50 },
+          });
+          const inner = unwrap<Record<string, unknown>>(pubRes.data) ?? pubRes.data;
+          const list = extractListFromResponse(inner, ['reviews', 'data']);
+          for (const raw of list) {
+            if (!raw || typeof raw !== 'object') continue;
+            ratings.push(
+              mapApiDriverRating({
+                ...(raw as Record<string, unknown>),
+                driver_id: riderId,
+                driver: { id: riderId, name: riderName },
+              })
+            );
+          }
+        } catch {
+          /* skip rider */
+        }
+      }
+    }
+
+    if (ratings.length === 0) return null;
+
+    const filtered = applyDriverRatingsListFilters(ratings, params);
+    const page = params?.page ?? 1;
+    const limit = params?.limit ?? 20;
+    const paged = paginateDriverRatings(filtered, page, limit);
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log(
+        '[Driver Ratings API] مجمّع من riders/:id/reviews:',
+        filtered.length,
+        'تقييم'
+      );
+    }
+
+    return {
+      ...paged,
+      dataSource: 'admin/riders/:id/reviews',
+      notice:
+        'المعروض مجمّعاً من GET /admin/riders/:id/reviews (أو /riders/:id/reviews) لكل سائق لديه تقييمات — لأن /admin/reviews و /admin/driver-ratings غير متاحين.',
+    };
+  } catch (err) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Driver Ratings API] تجميع من riders/reviews فشل', err);
+    }
+    return null;
+  }
+}
+
+async function realGetDriverRatings(params?: GetDriverRatingsParams): Promise<DriverRatingsResponse> {
+  const page = params?.page ?? 1;
+  const limit = params?.limit ?? 20;
+
+  try {
+    const query = cleanListQueryParams({
+      driverId: params?.driverId,
+      customerId: params?.customerId,
+      orderId: params?.orderId,
+      minRating: params?.minRating,
+      maxRating: params?.maxRating,
+      dateFrom: params?.dateFrom,
+      dateTo: params?.dateTo,
+      isHidden: params?.isHidden,
+      page,
+      limit,
+      sortBy: params?.sortBy,
+      sortOrder: params?.sortOrder,
+    });
+    const res = await apiClient.get('/admin/driver-ratings', { params: query });
+    const rawList = extractListFromResponse(res.data, ['ratings', 'reviews', 'items', 'data']);
+    const ratings = rawList.map((r) => mapApiDriverRating(r));
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Driver Ratings API] من /admin/driver-ratings:', ratings.length);
+    }
+
+    return {
+      ratings,
+      pagination: extractDriverRatingsPagination(res.data, ratings.length),
+      dataSource: 'admin/driver-ratings',
+    };
+  } catch (adminErr) {
+    if (process.env.NODE_ENV === 'development') {
+      const status = axios.isAxiosError(adminErr) ? adminErr.response?.status : '?';
+      console.warn('[Driver Ratings API] /admin/driver-ratings فشل', status, '— fallback: /admin/reviews');
+    }
+  }
+
+  const reviewsRes = await getReviews({
+    targetType: 'rider',
+    targetId: params?.driverId,
+    page,
+    limit,
+    rating:
+      params?.minRating != null && params?.maxRating != null && params.minRating === params.maxRating
+        ? params.minRating
+        : undefined,
+  });
+
+  if (!reviewsRes.apiUnavailable) {
+    let ratings = reviewsRes.reviews.map(reviewToDriverRating);
+    ratings = applyDriverRatingsListFilters(ratings, params);
+    const paged = paginateDriverRatings(ratings, page, limit);
+    return {
+      ...paged,
+      dataSource: 'admin/reviews',
+      notice:
+        reviewsRes.notice ||
+        'المعروض من GET /admin/reviews (تقييمات السائقين). endpoint /admin/driver-ratings غير متاح على السيرفر.',
+    };
+  }
+
+  const fromRiders = await fetchAllDriverRatingsFromAdminRiders(params);
+  if (fromRiders) return fromRiders;
+
+  return {
+    ratings: [],
+    pagination: { page, limit, total: 0, totalPages: 0 },
+    apiUnavailable: true,
+    notice:
+      reviewsRes.notice ||
+      'تقييمات السائقين غير متاحة: /admin/driver-ratings و /admin/reviews و /admin/riders/:id/reviews.',
+  };
+}
+
+async function realGetDriverRatingsStatistics(params?: {
+  driverId?: string;
+  period?: 'today' | 'week' | 'month' | 'year' | 'all';
+}): Promise<DriverRatingsStatistics> {
+  try {
+    const query = cleanListQueryParams({
+      driverId: params?.driverId,
+      period: params?.period,
+    });
+    const res = await apiClient.get('/admin/driver-ratings/statistics', { params: query });
+    const data = unwrap<DriverRatingsStatistics>(res.data);
+    if (data && typeof data === 'object' && 'totalRatings' in data) {
+      return data;
+    }
+  } catch {
+    /* compute from list */
+  }
+
+  const list = await realGetDriverRatings({
+    driverId: params?.driverId,
+    limit: 100,
+    page: 1,
+  });
+  return computeStatisticsFromRatings(list.ratings);
+}
+
+async function realGetDriverRatingById(id: string): Promise<DriverRating> {
+  try {
+    const res = await apiClient.get(`/admin/driver-ratings/${id}`);
+    const raw = unwrap<Record<string, unknown>>(res.data);
+    if (raw && typeof raw === 'object') {
+      return mapApiDriverRating(raw);
+    }
+  } catch {
+    /* fallback below */
+  }
+
+  const list = await realGetDriverRatings({ limit: 100, page: 1 });
+  const found = list.ratings.find((r) => r.id === id);
+  if (!found) throw new Error('التقييم غير موجود');
+  return found;
+}
+
+async function realHideDriverRating(
+  id: string,
+  data: { isHidden: boolean; reason?: string }
+): Promise<DriverRating> {
+  try {
+    const res = await apiClient.put(`/admin/driver-ratings/${id}/hide`, data);
+    const raw = unwrap<Record<string, unknown>>(res.data);
+    if (raw && typeof raw === 'object' && raw.id) {
+      return mapApiDriverRating(raw);
+    }
+    return realGetDriverRatingById(id);
+  } catch {
+    await setReviewHidden(id, data.isHidden);
+    return realGetDriverRatingById(id);
+  }
+}
+
+async function realDeleteDriverRating(id: string): Promise<void> {
+  try {
+    await apiClient.delete(`/admin/driver-ratings/${id}`);
+  } catch {
+    await deleteReview(id);
+  }
+}
+
+export async function getDriverRatings(
+  params?: GetDriverRatingsParams
+): Promise<DriverRatingsResponse> {
+  try {
+    return shouldUseMock() ? mockGetDriverRatings(params) : realGetDriverRatings(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getDriverRatingsStatistics(params?: {
+  driverId?: string;
+  period?: 'today' | 'week' | 'month' | 'year' | 'all';
+}): Promise<DriverRatingsStatistics> {
+  try {
+    return shouldUseMock()
+      ? mockGetDriverRatingsStatistics(params)
+      : realGetDriverRatingsStatistics(params);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function getDriverRatingById(id: string): Promise<DriverRating> {
+  try {
+    return shouldUseMock() ? mockGetDriverRatingById(id) : realGetDriverRatingById(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function hideDriverRating(
+  id: string,
+  data: { isHidden: boolean; reason?: string }
+): Promise<DriverRating> {
+  try {
+    return shouldUseMock() ? mockHideDriverRating(id, data) : realHideDriverRating(id, data);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
+}
+
+export async function deleteDriverRating(id: string, reason?: string): Promise<void> {
+  try {
+    return shouldUseMock() ? mockDeleteDriverRating(id, reason) : realDeleteDriverRating(id);
+  } catch (err) {
+    throw new Error(handleApiError(err));
+  }
 }
 

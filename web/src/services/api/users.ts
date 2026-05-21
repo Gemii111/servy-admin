@@ -1,6 +1,7 @@
 import apiClient from './client';
 import { handleApiError } from './client';
 import { shouldUseMock, cleanListQueryParams } from './base';
+import { getLoyaltyAccountDetail } from './loyalty';
 
 export type UserTypeFilter = 'customer' | 'driver' | 'restaurant';
 
@@ -9,6 +10,9 @@ export interface User {
   name: string;
   email: string;
   phone: string;
+  /** من first_name — قد يكون فارغاً لحسابات السوشيال */
+  firstName: string;
+  lastName: string;
   /** Normalized for UI filters (vendor/pharmacy → restaurant) */
   userType: UserTypeFilter;
   /** Raw value from API */
@@ -17,6 +21,50 @@ export interface User {
   totalOrders: number;
   totalSpent: number;
   createdAt: string;
+  updatedAt?: string;
+  /** image_url — null إن لم يرفع صورة */
+  imageUrl?: string | null;
+  /** is_email_verified — تأكيد البريد فقط، ليس موافقة السائق */
+  isEmailVerified: boolean;
+  /** restaurant_id — للمتاجر فقط */
+  restaurantId?: string | null;
+  lastLoginAt?: string | null;
+  /** last_seen_at — نشاط الملف وليس اتصال لحظي */
+  lastSeenAt?: string | null;
+  loyaltyPoints?: number;
+  /** Full object from API — use for fields not yet mapped in UI */
+  apiRaw: Record<string, unknown>;
+  /** true إذا السيرفر أرسل الحقول السبعة من flutter-admin-users-fields.md */
+  apiHasExtendedFields: boolean;
+}
+
+/** الحقول الموثّقة في flutter-admin-users-fields.md */
+export const EXTENDED_USER_API_KEYS = [
+  'first_name',
+  'firstName',
+  'last_name',
+  'lastName',
+  'image_url',
+  'imageUrl',
+  'is_email_verified',
+  'isEmailVerified',
+  'last_login_at',
+  'lastLoginAt',
+  'last_seen_at',
+  'lastSeenAt',
+  'restaurant_id',
+  'restaurantId',
+] as const;
+
+export function userApiHasExtendedFields(raw: Record<string, unknown>): boolean {
+  return EXTENDED_USER_API_KEYS.some((k) => Object.prototype.hasOwnProperty.call(raw, k));
+}
+
+function splitNameParts(fullName: string): { firstName: string; lastName: string } {
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return { firstName: '', lastName: '' };
+  if (parts.length === 1) return { firstName: parts[0], lastName: '' };
+  return { firstName: parts[0], lastName: parts.slice(1).join(' ') };
 }
 
 const MERCHANT_TYPES = new Set([
@@ -43,41 +91,171 @@ function mapUserTypeQuery(filter?: string): string | undefined {
   return filter;
 }
 
+/** دمج حقول متداخلة مثل { data: { profile: {...} } } */
+function flattenUserRaw(raw: Record<string, unknown>): Record<string, unknown> {
+  const merged = { ...raw };
+  for (const nestKey of ['profile', 'user', 'User', 'customer']) {
+    const nested = raw[nestKey];
+    if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
+      Object.assign(merged, nested as Record<string, unknown>);
+    }
+  }
+  return merged;
+}
+
+function pickString(raw: Record<string, unknown>, ...keys: string[]): string | undefined {
+  for (const k of keys) {
+    const v = raw[k];
+    if (v != null && v !== '') return String(v);
+  }
+  return undefined;
+}
+
+function pickBool(raw: Record<string, unknown>, ...keys: string[]): boolean | undefined {
+  for (const k of keys) {
+    if (raw[k] != null) return Boolean(raw[k]);
+  }
+  return undefined;
+}
+
+function resolveUserStatus(raw: Record<string, unknown>): 'active' | 'suspended' {
+  const statusRaw = pickString(raw, 'status')?.toLowerCase();
+  if (statusRaw === 'suspended' || statusRaw === 'inactive' || statusRaw === 'disabled') {
+    return 'suspended';
+  }
+  const isActive = pickBool(raw, 'is_active', 'isActive');
+  if (isActive === false) return 'suspended';
+  return 'active';
+}
+
 function mapApiUser(raw: Record<string, unknown>): User {
-  const firstName = String(raw.first_name ?? raw.firstName ?? '').trim();
-  const lastName = String(raw.last_name ?? raw.lastName ?? '').trim();
-  const userTypeRaw = String(raw.user_type ?? raw.userType ?? 'customer');
-  const statusRaw = String(raw.status ?? 'active').toLowerCase();
+  const flat = flattenUserRaw(raw);
+  const apiHasExtendedFields = userApiHasExtendedFields(flat);
+  let firstName = pickString(flat, 'first_name', 'firstName', 'FirstName') ?? '';
+  let lastName = pickString(flat, 'last_name', 'lastName', 'LastName') ?? '';
+  const displayName = pickString(flat, 'name', 'Name')?.trim() ?? '';
+  if (!apiHasExtendedFields && !firstName && !lastName && displayName) {
+    const split = splitNameParts(displayName);
+    firstName = split.firstName;
+    lastName = split.lastName;
+  }
+  const userTypeRaw = pickString(flat, 'user_type', 'userType', 'UserType') ?? 'customer';
 
   return {
-    id: String(raw.id ?? ''),
+    id: String(flat.id ?? raw.id ?? ''),
     name:
-      String(raw.name ?? '').trim() ||
+      pickString(flat, 'name', 'Name')?.trim() ||
       [firstName, lastName].filter(Boolean).join(' ') ||
-      String(raw.email ?? '—'),
-    email: String(raw.email ?? ''),
-    phone: String(raw.phone ?? raw.phone_number ?? raw.phoneNumber ?? ''),
+      pickString(flat, 'email', 'Email') ||
+      '—',
+    email: pickString(flat, 'email', 'Email') ?? '',
+    phone: pickString(flat, 'phone', 'phone_number', 'phoneNumber', 'Phone') ?? '',
+    firstName,
+    lastName,
     userType: normalizeUserType(userTypeRaw),
     userTypeRaw,
-    status: statusRaw === 'suspended' ? 'suspended' : 'active',
-    totalOrders: Number(raw.total_orders ?? raw.totalOrders ?? 0),
-    totalSpent: Number(raw.total_spent ?? raw.totalSpent ?? 0),
-    createdAt: String(raw.created_at ?? raw.createdAt ?? ''),
+    status: resolveUserStatus(flat),
+    totalOrders: Number(
+      flat.total_orders ??
+        flat.totalOrders ??
+        flat.no_of_orders ??
+        flat.noOfOrders ??
+        0
+    ),
+    totalSpent: Number(flat.total_spent ?? flat.totalSpent ?? 0),
+    createdAt: pickString(flat, 'created_at', 'createdAt', 'CreatedAt') ?? '',
+    updatedAt: pickString(flat, 'updated_at', 'updatedAt', 'UpdatedAt'),
+    imageUrl:
+      flat.image_url === null || flat.imageUrl === null
+        ? null
+        : pickString(flat, 'image_url', 'imageUrl', 'ImageUrl', 'avatar', 'avatar_url') ?? null,
+    isEmailVerified:
+      pickBool(flat, 'is_email_verified', 'isEmailVerified', 'IsEmailVerified') ?? false,
+    restaurantId:
+      flat.restaurant_id === null || flat.restaurantId === null
+        ? null
+        : pickString(flat, 'restaurant_id', 'restaurantId', 'RestaurantId') ?? null,
+    lastLoginAt: pickString(
+      flat,
+      'last_login_at',
+      'last_login',
+      'lastLoginAt',
+      'LastLoginAt',
+      'last_login_time'
+    ),
+    lastSeenAt:
+      flat.last_seen_at === null || flat.lastSeenAt === null
+        ? null
+        : pickString(flat, 'last_seen_at', 'last_seen', 'lastSeenAt', 'LastSeenAt') ?? null,
+    loyaltyPoints:
+      flat.loyalty_points != null
+        ? Number(flat.loyalty_points)
+        : flat.loyaltyPoints != null
+          ? Number(flat.loyaltyPoints)
+          : flat.current_balance != null
+            ? Number(flat.current_balance)
+            : undefined,
+    apiRaw: { ...flat },
+    apiHasExtendedFields,
   };
 }
 
+function extractRawUsersList(data: unknown): Record<string, unknown>[] {
+  if (Array.isArray(data)) {
+    return data.filter((u) => u && typeof u === 'object') as Record<string, unknown>[];
+  }
+  if (!data || typeof data !== 'object') return [];
+
+  const root = data as Record<string, unknown>;
+
+  if (Array.isArray(root.users)) {
+    return root.users.filter((u) => u && typeof u === 'object') as Record<string, unknown>[];
+  }
+
+  const inner = root.data;
+  if (Array.isArray(inner)) {
+    return inner.filter((u) => u && typeof u === 'object') as Record<string, unknown>[];
+  }
+  if (inner && typeof inner === 'object') {
+    const nested = inner as Record<string, unknown>;
+    if (Array.isArray(nested.users)) {
+      return nested.users.filter((u) => u && typeof u === 'object') as Record<string, unknown>[];
+    }
+  }
+
+  return [];
+}
+
 function unwrapUsersResponse(data: unknown): UsersResponse {
-  const body = (data as { data?: UsersResponse }).data ?? (data as UsersResponse);
-  const rawUsers = (body as { users?: unknown[] }).users ?? [];
-  const users = Array.isArray(rawUsers)
-    ? rawUsers.map((u) => mapApiUser(u as Record<string, unknown>))
-    : [];
-  const pagination = (body as UsersResponse).pagination ?? {
+  const rawList = extractRawUsersList(data);
+
+  if (process.env.NODE_ENV === 'development' && rawList.length > 0) {
+    const sample = rawList[0];
+    const keys = Object.keys(sample);
+    if (!userApiHasExtendedFields(sample)) {
+      console.warn('[Users API] حقول موسّعة غير متوفرة — المرسل:', keys);
+    }
+  }
+
+  const users = rawList.map(mapApiUser);
+
+  const root =
+    data && typeof data === 'object' ? (data as Record<string, unknown>) : {};
+  const pagSource =
+    (root.pagination as UsersResponse['pagination']) ??
+    (root.data &&
+    typeof root.data === 'object' &&
+    !Array.isArray(root.data)
+      ? ((root.data as Record<string, unknown>).pagination as UsersResponse['pagination'])
+      : undefined);
+
+  const pagination = pagSource ?? {
     page: 1,
     limit: 10,
     total: users.length,
     totalPages: 1,
   };
+
   return { users, pagination };
 }
 
@@ -118,10 +296,40 @@ async function realGetUsers(params?: {
   return result;
 }
 
+async function attachLoyaltyBalance(user: User): Promise<User> {
+  try {
+    const detail = await getLoyaltyAccountDetail(user.id);
+    const balance = detail?.account?.current_balance;
+    if (balance == null) return user;
+    return {
+      ...user,
+      loyaltyPoints: balance,
+      apiRaw: { ...user.apiRaw, loyalty_current_balance: balance },
+    };
+  } catch {
+    return user;
+  }
+}
+
 async function realGetUserById(id: string): Promise<User> {
   const { data } = await apiClient.get(`/admin/users/${id}`);
-  const body = (data as { data?: Record<string, unknown> }).data ?? data;
-  return mapApiUser(body as Record<string, unknown>);
+  let raw: Record<string, unknown> = {};
+  if (data && typeof data === 'object') {
+    const o = data as Record<string, unknown>;
+    if (o.data && typeof o.data === 'object' && !Array.isArray(o.data)) {
+      raw = o.data as Record<string, unknown>;
+    } else {
+      raw = o;
+    }
+  }
+  if (process.env.NODE_ENV === 'development' && !userApiHasExtendedFields(raw)) {
+    console.warn(
+      '[Users API] تفاصيل مستخدم بدون الحقول الموسّعة — الحقول المرسلة:',
+      Object.keys(raw)
+    );
+  }
+  const user = mapApiUser(raw);
+  return attachLoyaltyBalance(user);
 }
 
 async function realUpdateUserStatus(id: string, status: 'active' | 'suspended'): Promise<void> {
@@ -242,17 +450,27 @@ export async function createUser(payload: {
 }
 
 // Mock users data
-const mockUsers: User[] = Array.from({ length: 50 }, (_, i) => ({
-  id: `user-${i + 1}`,
-  name: `مستخدم ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  phone: `+966501234${String(i).padStart(3, '0')}`,
-  userType: (['customer', 'driver', 'restaurant'] as const)[i % 3],
-  status: i % 10 === 0 ? 'suspended' : 'active',
-  totalOrders: Math.floor(Math.random() * 100) + 1,
-  totalSpent: Math.floor(Math.random() * 10000) + 100,
-  createdAt: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString(),
-}));
+const mockUsers: User[] = Array.from({ length: 50 }, (_, i) => {
+  const createdAt = new Date(
+    Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
+  ).toISOString();
+  const apiRaw: Record<string, unknown> = {
+    id: `user-${i + 1}`,
+    first_name: `مستخدم`,
+    last_name: `${i + 1}`,
+    email: `user${i + 1}@example.com`,
+    phone: `+966501234${String(i).padStart(3, '0')}`,
+    user_type: (['customer', 'driver', 'vendor'] as const)[i % 3],
+    status: i % 10 === 0 ? 'suspended' : 'active',
+    is_email_verified: i % 3 === 0,
+    total_orders: Math.floor(Math.random() * 100) + 1,
+    total_spent: Math.floor(Math.random() * 10000) + 100,
+    created_at: createdAt,
+    last_login_at: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+    is_online: i % 5 === 0,
+  };
+  return mapApiUser(apiRaw);
+});
 
 async function mockGetUsers(params?: {
   userType?: string;
@@ -335,9 +553,12 @@ async function mockCreateUser(payload: {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const now = new Date().toISOString();
+  const parts = payload.name.trim().split(/\s+/);
   const newUser: User = {
     id: `user-${mockUsers.length + 1}`,
     name: payload.name,
+    firstName: parts[0] ?? '',
+    lastName: parts.slice(1).join(' ') ?? '',
     email: payload.email,
     phone: payload.phone,
     userType: payload.userType,
@@ -345,6 +566,9 @@ async function mockCreateUser(payload: {
     totalOrders: 0,
     totalSpent: 0,
     createdAt: now,
+    isEmailVerified: false,
+    apiRaw: {},
+    apiHasExtendedFields: false,
   };
 
   mockUsers.push(newUser);

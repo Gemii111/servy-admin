@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Alert,
 } from '@mui/material';
 import { ColumnDef } from '@tanstack/react-table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -29,12 +30,13 @@ import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { useSnackbar } from '../../hooks/useSnackbar';
 import {
-  mockGetDriverRatings,
-  mockHideDriverRating,
-  mockDeleteDriverRating,
+  getDriverRatings,
+  hideDriverRating,
+  deleteDriverRating,
   DriverRating,
 } from '../../services/api/driverRatings';
-
+import ApiDataSourceBanner from '../../components/common/ApiDataSourceBanner';
+import { getApiDataSource } from '../../services/api/base';
 const DriverRatingsListPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -50,17 +52,19 @@ const DriverRatingsListPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['driver-ratings', ratingFilter, page, limit],
     queryFn: () =>
-      mockGetDriverRatings({
+      getDriverRatings({
         minRating: ratingFilter !== 'all' ? parseFloat(ratingFilter) : undefined,
         maxRating: ratingFilter !== 'all' ? parseFloat(ratingFilter) : undefined,
         page,
         limit,
       }),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   const hideMutation = useMutation({
     mutationFn: ({ id, isHidden }: { id: string; isHidden: boolean }) =>
-      mockHideDriverRating(id, { isHidden }),
+      hideDriverRating(id, { isHidden }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['driver-ratings'] });
       showSnackbar('تم تحديث حالة التقييم بنجاح', 'success');
@@ -71,7 +75,7 @@ const DriverRatingsListPage: React.FC = () => {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => mockDeleteDriverRating(id),
+    mutationFn: (id: string) => deleteDriverRating(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['driver-ratings'] });
       showSnackbar('تم حذف التقييم بنجاح', 'success');
@@ -221,6 +225,18 @@ const DriverRatingsListPage: React.FC = () => {
 
   return (
     <Box sx={{ color: '#1A2E1A' }}>
+      <ApiDataSourceBanner />
+      {(data?.notice || data?.apiUnavailable) && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {data.notice || 'لا توجد تقييمات سائقين من السيرفر حالياً.'}
+        </Alert>
+      )}
+      {getApiDataSource() === 'mock' && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          البيانات المعروضة <strong>وهمية (Mock)</strong> — لتفعيل السيرفر ضع{' '}
+          <code>REACT_APP_USE_MOCK_API=false</code> في <code>web/.env</code> وأعد تشغيل التطبيق.
+        </Alert>
+      )}
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },
@@ -246,6 +262,11 @@ const DriverRatingsListPage: React.FC = () => {
           >
             عرض وإدارة تقييمات السائقين من العملاء
           </Typography>
+          {data?.dataSource && getApiDataSource() === 'real' && (
+            <Typography variant="caption" sx={{ color: '#D97706', display: 'block', mt: 0.5 }}>
+              مصدر البيانات: {data.dataSource}
+            </Typography>
+          )}
         </Box>
         <Button
           variant="outlined"

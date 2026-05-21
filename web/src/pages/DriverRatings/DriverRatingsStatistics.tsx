@@ -8,20 +8,27 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import StatCard from '../../components/common/StatCard';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import {
-  mockGetDriverRatingsStatistics,
-  mockGetDriverRatings,
+  getDriverRatingsStatistics,
+  getDriverRatings,
 } from '../../services/api/driverRatings';
+import ApiDataSourceBanner from '../../components/common/ApiDataSourceBanner';
+import { getApiDataSource } from '../../services/api/base';
+import { Alert } from '@mui/material';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 const DriverRatingsStatisticsPage: React.FC = () => {
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ['driver-ratings', 'statistics'],
-    queryFn: () => mockGetDriverRatingsStatistics(),
+    queryFn: () => getDriverRatingsStatistics(),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   const { data: recentRatingsData, isLoading: recentLoading } = useQuery({
     queryKey: ['driver-ratings', 'recent'],
-    queryFn: () => mockGetDriverRatings({ limit: 10, sortBy: 'created_at', sortOrder: 'desc' }),
+    queryFn: () => getDriverRatings({ limit: 10, sortBy: 'created_at', sortOrder: 'desc' }),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
   if (statsLoading || recentLoading) {
@@ -54,6 +61,17 @@ const DriverRatingsStatisticsPage: React.FC = () => {
 
   return (
     <Box sx={{ color: '#1A2E1A' }}>
+      <ApiDataSourceBanner />
+      {getApiDataSource() === 'mock' && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          إحصائيات وهمية (Mock) — فعّل <code>REACT_APP_USE_MOCK_API=false</code> للبيانات الحقيقية.
+        </Alert>
+      )}
+      {recentRatingsData?.notice && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {recentRatingsData.notice}
+        </Alert>
+      )}
       <Box
         sx={{
           mb: { xs: 2, sm: 3 },

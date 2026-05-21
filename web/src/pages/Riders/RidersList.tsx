@@ -22,6 +22,8 @@ import { useSnackbar } from '../../hooks/useSnackbar';
 import {
   getRiders,
   updateRiderStatus,
+  approveRider,
+  riderNeedsApproval,
   Rider,
   getRiderStatusLabel,
   getVehicleLabel,
@@ -57,6 +59,15 @@ const RidersListPage: React.FC = () => {
       showSnackbar('تم تحديث حالة السائق', 'success');
     },
     onError: (err: Error) => showSnackbar(err.message || 'فشل تحديث الحالة', 'error'),
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: (id: string) => approveRider(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['riders'] });
+      showSnackbar('تمت الموافقة على السائق — يمكنه استقبال الطلبات', 'success');
+    },
+    onError: (err: Error) => showSnackbar(err.message || 'فشل الموافقة', 'error'),
   });
 
   const columns = useMemo<ColumnDef<Rider>[]>(
@@ -125,19 +136,23 @@ const RidersListPage: React.FC = () => {
         },
       },
       {
-        accessorKey: 'isActive',
-        header: 'نشط',
-        cell: (info) => (
-          <Chip
-            label={info.getValue() ? 'نعم' : 'لا'}
-            size="small"
-            sx={{
-              bgcolor: info.getValue() ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-              color: info.getValue() ? '#22C55E' : '#EF4444',
-              fontSize: 12,
-            }}
-          />
-        ),
+        id: 'approval',
+        header: 'الموافقة',
+        cell: ({ row }) => {
+          const r = row.original;
+          const pending = r.needsApproval ?? riderNeedsApproval(r);
+          return (
+            <Chip
+              label={pending ? 'بانتظار الموافقة' : 'موافق عليه'}
+              size="small"
+              sx={{
+                bgcolor: pending ? 'rgba(245, 158, 11, 0.2)' : 'rgba(34, 197, 94, 0.2)',
+                color: pending ? '#D97706' : '#22C55E',
+                fontSize: 12,
+              }}
+            />
+          );
+        },
       },
       {
         accessorKey: 'totalDeliveries',
@@ -171,32 +186,45 @@ const RidersListPage: React.FC = () => {
         header: 'الإجراءات',
         cell: ({ row }) => {
           const rider = row.original;
+          const pending = rider.needsApproval ?? riderNeedsApproval(rider);
           return (
-            <Box onClick={(e) => e.stopPropagation()}>
-              <Button
-                size="small"
-                variant="outlined"
-                startIcon={rider.isActive ? <BlockIcon /> : <CheckCircleIcon />}
-                onClick={() => updateStatusMutation.mutate({ id: rider.id, isActive: !rider.isActive })}
-                disabled={updateStatusMutation.isPending}
-                sx={{
-                  borderColor: rider.isActive ? '#EF4444' : '#86B573',
-                  color: rider.isActive ? '#EF4444' : '#86B573',
-                  '&:hover': {
-                    borderColor: rider.isActive ? '#DC2626' : '#6B9B5E',
-                    bgcolor: rider.isActive ? 'rgba(239, 68, 68, 0.08)' : 'rgba(134, 181, 115, 0.08)',
-                  },
-                }}
-              >
-                {rider.isActive ? 'تعطيل' : 'تفعيل'}
-              </Button>
+            <Box onClick={(e) => e.stopPropagation()} sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+              {pending && (
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<CheckCircleIcon />}
+                  onClick={() => approveMutation.mutate(rider.id)}
+                  disabled={approveMutation.isPending}
+                  sx={{ bgcolor: '#86B573', '&:hover': { bgcolor: '#6B9B5E' } }}
+                >
+                  موافقة
+                </Button>
+              )}
+              {!pending && (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={rider.isActive ? <BlockIcon /> : <CheckCircleIcon />}
+                  onClick={() =>
+                    updateStatusMutation.mutate({ id: rider.id, isActive: !rider.isActive })
+                  }
+                  disabled={updateStatusMutation.isPending}
+                  sx={{
+                    borderColor: rider.isActive ? '#EF4444' : '#86B573',
+                    color: rider.isActive ? '#EF4444' : '#86B573',
+                  }}
+                >
+                  {rider.isActive ? 'تعطيل' : 'تفعيل'}
+                </Button>
+              )}
             </Box>
           );
         },
       },
     ];
     },
-    [updateStatusMutation]
+    [updateStatusMutation, approveMutation]
   );
 
   if (isLoading) {

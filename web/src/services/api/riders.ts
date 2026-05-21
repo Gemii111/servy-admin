@@ -6,7 +6,7 @@
 import axios from 'axios';
 import apiClient from './client';
 import { handleApiError } from './client';
-import { shouldUseMock, cleanListQueryParams } from './base';
+import { shouldUseMock, cleanListQueryParams, extractListFromResponse } from './base';
 
 export type RiderStatus =
   | 'available'
@@ -26,6 +26,10 @@ export interface Rider {
   vehiclePlate: string;
   status: RiderStatus;
   isActive: boolean;
+  /** من is_approved في DB — موافقة انضمام */
+  isApproved?: boolean;
+  /** يظهر زر «موافقة» */
+  needsApproval?: boolean;
   totalDeliveries: number;
   rating: number;
   ratingCount: number;
@@ -46,6 +50,8 @@ export interface RiderDetail {
   rating: number;
   rating_count: number;
   is_active: boolean;
+  is_approved?: boolean;
+  needs_approval?: boolean;
   last_location_update?: string;
   created_at: string;
 }
@@ -90,6 +96,116 @@ function unwrap<T>(data: unknown): T {
   return d?.data != null ? d.data : (data as T);
 }
 
+function pickString(raw: Record<string, unknown>, ...keys: string[]): string {
+  for (const k of keys) {
+    const v = raw[k];
+    if (v != null && v !== '') return String(v);
+  }
+  return '';
+}
+
+function pickBool(raw: Record<string, unknown>, ...keys: string[]): boolean | undefined {
+  for (const k of keys) {
+    if (raw[k] != null) return Boolean(raw[k]);
+  }
+  return undefined;
+}
+
+/** هل السائق يحتاج موافقة أدمن (انضمام جديد) */
+export function riderNeedsApproval(r: {
+  status?: string;
+  is_active?: boolean;
+  isActive?: boolean;
+  is_approved?: boolean;
+  isApproved?: boolean;
+  needs_approval?: boolean;
+  needsApproval?: boolean;
+}): boolean {
+  if (r.needs_approval === true || r.needsApproval === true) return true;
+  const approved = r.is_approved ?? r.isApproved;
+  if (approved === false) return true;
+  const status = String(r.status ?? '').toLowerCase();
+  if (status === 'pending' || status === 'inactive') return true;
+  const active = r.is_active ?? r.isActive;
+  if (active === false && (status === 'pending' || status === 'inactive' || status === '')) {
+    return true;
+  }
+  return false;
+}
+
+function mapApiRider(raw: Record<string, unknown>): Rider {
+  const first = pickString(raw, 'first_name', 'firstName');
+  const last = pickString(raw, 'last_name', 'lastName');
+  const name =
+    pickString(raw, 'name', 'rider_name', 'riderName') ||
+    [first, last].filter(Boolean).join(' ') ||
+    '—';
+  const isApproved = pickBool(raw, 'is_approved', 'isApproved');
+  const isActive = pickBool(raw, 'is_active', 'isActive') ?? isApproved ?? false;
+  const statusRaw = pickString(raw, 'status') || 'offline';
+  const operationalStatuses = new Set([
+    'available',
+    'heading_to_restaurant',
+    'at_restaurant',
+    'delivering',
+    'offline',
+  ]);
+  const status = (
+    operationalStatuses.has(statusRaw) ? statusRaw : 'offline'
+  ) as RiderStatus;
+
+  const rider: Rider = {
+    id: String(raw.id ?? ''),
+    userId: pickString(raw, 'userId', 'user_id') || '',
+    name,
+    phone: pickString(raw, 'phone') || '',
+    email: pickString(raw, 'email') || '',
+    vehicleType: (pickString(raw, 'vehicleType', 'vehicle_type') || 'motorcycle') as VehicleType,
+    vehiclePlate: pickString(raw, 'vehiclePlate', 'vehicle_plate') || '',
+    status,
+    isActive,
+    isApproved,
+    totalDeliveries: Number(raw.totalDeliveries ?? raw.total_deliveries ?? raw.total_orders ?? 0),
+    rating: Number(raw.rating ?? 0),
+    ratingCount: Number(raw.ratingCount ?? raw.rating_count ?? 0),
+    createdAt: pickString(raw, 'createdAt', 'created_at') || '',
+  };
+  rider.needsApproval = riderNeedsApproval({
+    status: statusRaw,
+    is_active: isActive,
+    isActive: isActive,
+    is_approved: isApproved,
+    isApproved: isApproved,
+  });
+  return rider;
+}
+
+function mapApiRiderDetail(raw: Record<string, unknown>): RiderDetail {
+  const list = mapApiRider(raw);
+  const detail: RiderDetail = {
+    id: list.id,
+    user_id: list.userId,
+    rider_name: list.name,
+    phone: list.phone,
+    vehicle_type: list.vehicleType,
+    vehicle_plate: list.vehiclePlate,
+    status: list.status,
+    total_deliveries: list.totalDeliveries,
+    rating: list.rating,
+    rating_count: list.ratingCount,
+    is_active: list.isActive,
+    is_approved: list.isApproved,
+    created_at: list.createdAt,
+    needs_approval: list.needsApproval,
+  };
+  if (raw.current_location && typeof raw.current_location === 'object') {
+    detail.current_location = raw.current_location as RiderDetail['current_location'];
+  }
+  detail.current_order_count = Number(raw.current_order_count ?? raw.currentOrderCount ?? 0);
+  detail.last_location_update = pickString(raw, 'last_location_update', 'lastLocationUpdate');
+  return detail;
+}
+
 // ——— Real API (Phase 3) ———
 
 async function realGetRiders(params?: {
@@ -110,12 +226,12 @@ async function realGetRiders(params?: {
   });
 
   const res = await apiClient.get('/admin/riders', { params: cleaned });
-  const raw = res.data as unknown;
-  const body = (unwrap<Record<string, unknown>>(raw) ?? raw) as Record<string, unknown>;
-  const riders = (body?.riders ?? body?.data ?? []) as Rider[];
-  const pagination = (body?.pagination ?? (Array.isArray(riders) ? undefined : null)) as RidersResponse['pagination'] | undefined;
+  const rawList = extractListFromResponse(res.data, ['riders', 'data']);
+  const riders = rawList.map((r) => mapApiRider(r));
+  const body = (unwrap<Record<string, unknown>>(res.data) ?? res.data) as Record<string, unknown>;
+  const pagination = body?.pagination as RidersResponse['pagination'] | undefined;
   return {
-    riders: Array.isArray(riders) ? riders : [],
+    riders,
     pagination:
       pagination ?? {
         page: 1,
@@ -135,8 +251,9 @@ async function realGetRiderStats(): Promise<RiderStats> {
 async function realGetRiderById(id: string): Promise<RiderDetail | null> {
   try {
     const res = await apiClient.get(`/admin/riders/${id}`);
-    const data = unwrap<RiderDetail>(res.data);
-    return data;
+    const raw = unwrap<Record<string, unknown>>(res.data);
+    if (!raw || typeof raw !== 'object') return null;
+    return mapApiRiderDetail(raw);
   } catch (err: unknown) {
     if (axios.isAxiosError(err) && err.response?.status === 404) return null;
     throw err;
@@ -147,7 +264,15 @@ async function realUpdateRiderStatus(
   id: string,
   payload: { isActive?: boolean; status?: string }
 ): Promise<void> {
-  await apiClient.put(`/admin/riders/${id}/status`, payload);
+  const body: Record<string, unknown> = {};
+  if (payload.isActive !== undefined) {
+    body.isActive = payload.isActive;
+    body.is_active = payload.isActive;
+  }
+  if (payload.status !== undefined) {
+    body.status = payload.status;
+  }
+  await apiClient.put(`/admin/riders/${id}/status`, body);
 }
 
 // ——— Mock (fallback) ———
@@ -193,6 +318,8 @@ const mockRiders: Rider[] = [
     vehiclePlate: '',
     status: 'offline',
     isActive: false,
+    isApproved: false,
+    needsApproval: true,
     totalDeliveries: 0,
     rating: 0,
     ratingCount: 0,
@@ -268,7 +395,7 @@ export async function mockGetRiderById(id: string): Promise<RiderDetail | null> 
   await new Promise((r) => setTimeout(r, 200));
   const r = mockRiders.find((x) => x.id === id);
   if (!r) return null;
-  return {
+  const detail: RiderDetail = {
     id: r.id,
     user_id: r.userId,
     rider_name: r.name,
@@ -280,8 +407,11 @@ export async function mockGetRiderById(id: string): Promise<RiderDetail | null> 
     rating: r.rating,
     rating_count: r.ratingCount,
     is_active: r.isActive,
+    is_approved: r.isApproved ?? r.isActive,
+    needs_approval: r.needsApproval ?? riderNeedsApproval(r),
     created_at: r.createdAt,
   };
+  return detail;
 }
 
 export async function mockUpdateRiderStatus(
@@ -344,13 +474,29 @@ export async function updateRiderStatus(
 }
 
 async function realApproveRider(id: string): Promise<void> {
-  await apiClient.put(`/admin/riders/${id}/approve`);
+  try {
+    await apiClient.put(`/admin/riders/${id}/approve`);
+  } catch (err) {
+    if (
+      axios.isAxiosError(err) &&
+      (err.response?.status === 404 || err.response?.status === 405)
+    ) {
+      await apiClient.post(`/admin/riders/${id}/approve`);
+      return;
+    }
+    throw err;
+  }
 }
 
 async function mockApproveRider(id: string): Promise<void> {
   await new Promise((r) => setTimeout(r, 200));
   const rider = mockRiders.find((x) => x.id === id);
-  if (rider) rider.isActive = true;
+  if (rider) {
+    rider.isActive = true;
+    rider.isApproved = true;
+    rider.needsApproval = false;
+    rider.status = 'available';
+  }
 }
 
 export async function approveRider(id: string): Promise<void> {

@@ -13,6 +13,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Avatar,
+  Alert,
 } from '@mui/material';
 import { ColumnDef } from '@tanstack/react-table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,6 +30,9 @@ import {
   createUser,
   User,
 } from '../../services/api/users';
+import ApiDataSourceBanner from '../../components/common/ApiDataSourceBanner';
+import { getApiDataSource } from '../../services/api/base';
+import { formatApiDate } from '../../utils/apiDates';
 
 const UsersListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -107,11 +112,26 @@ const UsersListPage: React.FC = () => {
       {
         accessorKey: 'name',
         header: 'الاسم',
-        cell: (info) => (
-          <Typography sx={{ color: '#1A2E1A', fontWeight: 500 }}>
-            {String(info.getValue())}
-          </Typography>
-        ),
+        cell: (info) => {
+          const row = info.row.original;
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Avatar src={row.imageUrl ?? undefined} sx={{ width: 28, height: 28, fontSize: 12 }}>
+                {(row.firstName || row.name).charAt(0)}
+              </Avatar>
+              <Box>
+                <Typography sx={{ color: '#1A2E1A', fontWeight: 500, fontSize: 14 }}>
+                  {String(info.getValue())}
+                </Typography>
+                {(row.firstName || row.lastName) && (
+                  <Typography sx={{ color: '#9CA3AF', fontSize: 11 }}>
+                    {[row.firstName, row.lastName].filter(Boolean).join(' ')}
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          );
+        },
       },
       {
         accessorKey: 'email',
@@ -179,8 +199,38 @@ const UsersListPage: React.FC = () => {
         ),
       },
       {
+        accessorKey: 'lastLoginAt',
+        header: 'آخر دخول',
+        cell: (info) => (
+          <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
+            {formatApiDate(info.getValue() as string | null | undefined)}
+          </Typography>
+        ),
+      },
+      {
+        accessorKey: 'isEmailVerified',
+        header: 'البريد موثّق',
+        cell: (info) => {
+          if (!info.row.original.apiHasExtendedFields) {
+            return <Typography sx={{ fontSize: 13, color: '#9CA3AF' }}>—</Typography>;
+          }
+          const verified = Boolean(info.getValue());
+          return (
+            <Chip
+              label={verified ? 'نعم' : 'لا'}
+              size="small"
+              sx={{
+                bgcolor: verified ? '#22C55E20' : '#9CA3AF20',
+                color: verified ? '#22C55E' : '#6B7280',
+                fontSize: 12,
+              }}
+            />
+          );
+        },
+      },
+      {
         accessorKey: 'status',
-        header: 'الحالة',
+        header: 'حالة الحساب',
         cell: (info) => {
           const status = String(info.getValue());
           return (
@@ -217,6 +267,15 @@ const UsersListPage: React.FC = () => {
 
   return (
     <Box sx={{ color: '#1A2E1A' }}>
+      <ApiDataSourceBanner />
+      {getApiDataSource() === 'real' &&
+        data?.users?.length &&
+        !data.users[0].apiHasExtendedFields && (
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            السيرفر لم يرسل الحقول الجديدة بعد (first_name, image_url, last_login_at, …) — الواجهة
+            جاهزة؛ مطلوب deploy من الباكند حسب flutter-admin-users-fields.md.
+          </Alert>
+        )}
       {/* Header */}
       <Box
         sx={{

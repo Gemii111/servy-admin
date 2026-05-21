@@ -131,6 +131,10 @@ export const shouldUseMock = (): boolean => {
   return env.environment !== 'production';
 };
 
+/** للعرض في الواجهة — هل البيانات من Mock أم من السيرفر */
+export const getApiDataSource = (): 'mock' | 'real' =>
+  shouldUseMock() ? 'mock' : 'real';
+
 /** Unwrap `{ data: T }` envelope (common on this backend). */
 export function unwrap<T>(data: unknown): T {
   const d = data as { data?: T };

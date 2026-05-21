@@ -10,13 +10,18 @@ import {
   TextField,
   InputAdornment,
   IconButton,
+  Alert,
+  Button,
+  Avatar,
 } from '@mui/material';
 import { ColumnDef } from '@tanstack/react-table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import SearchIcon from '@mui/icons-material/Search';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import StarIcon from '@mui/icons-material/Star';
 import DataTable from '../../components/tables/DataTable';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import EmptyState from '../../components/common/EmptyState';
@@ -25,11 +30,18 @@ import {
   getReviews,
   deleteReview,
   setReviewHidden,
+  clearReviewsUnavailableCache,
   Review,
 } from '../../services/api/reviews';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { ar } from 'date-fns/locale';
-import StarIcon from '@mui/icons-material/Star';
+import ApiDataSourceBanner from '../../components/common/ApiDataSourceBanner';
+import { getApiDataSource } from '../../services/api/base';
+
+const formatReviewDate = (value: string) => {
+  const d = new Date(value);
+  return isValid(d) ? format(d, 'dd MMM yyyy', { locale: ar }) : value || '—';
+};
 
 const TARGET_LABELS: Record<string, string> = {
   restaurant: 'مطعم',
@@ -45,7 +57,7 @@ const ReviewsListPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [page] = useState(1);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['reviews', targetTypeFilter, ratingFilter, searchQuery, page],
     queryFn: () =>
       getReviews({
@@ -55,7 +67,14 @@ const ReviewsListPage: React.FC = () => {
         page,
         limit: 10,
       }),
+    retry: false,
+    refetchOnWindowFocus: false,
   });
+
+  const handleRefreshReviews = () => {
+    clearReviewsUnavailableCache();
+    refetch();
+  };
 
   const deleteMutation = useMutation({
     mutationFn: deleteReview,
@@ -81,16 +100,24 @@ const ReviewsListPage: React.FC = () => {
         accessorKey: 'userName',
         header: 'المستخدم',
         cell: ({ row, getValue }) => (
-          <Typography
-            sx={{
-              color: row.original.hidden ? '#9CA3AF' : '#1A2E1A',
-              fontWeight: 600,
-              fontSize: 14,
-              textDecoration: row.original.hidden ? 'line-through' : 'none',
-            }}
-          >
-            {String(getValue())}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Avatar
+              src={row.original.userImage ?? undefined}
+              sx={{ width: 28, height: 28, fontSize: 12 }}
+            >
+              {String(getValue()).charAt(0)}
+            </Avatar>
+            <Typography
+              sx={{
+                color: row.original.hidden ? '#9CA3AF' : '#1A2E1A',
+                fontWeight: 600,
+                fontSize: 14,
+                textDecoration: row.original.hidden ? 'line-through' : 'none',
+              }}
+            >
+              {String(getValue())}
+            </Typography>
+          </Box>
         ),
       },
       {
@@ -152,7 +179,7 @@ const ReviewsListPage: React.FC = () => {
         header: 'التاريخ',
         cell: (info) => (
           <Typography sx={{ color: '#5A6A5A', fontSize: 13 }}>
-            {format(new Date(String(info.getValue())), 'dd MMM yyyy', { locale: ar })}
+            {formatReviewDate(String(info.getValue()))}
           </Typography>
         ),
       },
@@ -206,6 +233,29 @@ const ReviewsListPage: React.FC = () => {
 
   return (
     <Box sx={{ color: '#1A2E1A' }}>
+      <ApiDataSourceBanner />
+      {(data?.notice || data?.apiUnavailable) && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {data.notice}
+          <Typography variant="body2" sx={{ mt: 1.5 }}>
+            الباكند أصلح <code>GET /admin/reviews</code> (2026-05-21 — flutter-reviews-api.md). اضغط{' '}
+            <strong>إعادة المحاولة</strong> أدناه. تقييمات التطبيق:{' '}
+            <code>/restaurants/&#123;id&#125;/reviews</code> و <code>/riders/&#123;id&#125;/reviews</code>.
+          </Typography>
+        </Alert>
+      )}
+      {isError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          فشل تحميل التقييمات: {(error as Error).message}
+        </Alert>
+      )}
+      {getApiDataSource() === 'real' && !isLoading && !isError && !data?.apiUnavailable && reviews.length === 0 && !data?.notice && (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          السيرفر رجّع قائمة فارغة من <code>GET /admin/reviews</code>. إن كان في تقييمات في
+          التطبيق ولا تظهر هنا، تأكد أن الباكند يملأ جدول المراجعات ويربط الـ endpoint. افتح
+          Console وابحث عن <code>[Reviews API]</code> لرؤية الاستجابة الخام.
+        </Alert>
+      )}
       <Box
         sx={{
           mb: 3,
@@ -221,9 +271,23 @@ const ReviewsListPage: React.FC = () => {
             التقييمات
           </Typography>
           <Typography variant="body2" sx={{ color: '#5A6A5A', fontSize: { xs: 12, sm: 14 } }}>
-            إدارة تقييمات المطاعم والسائقين
+            إدارة تقييمات المطاعم والسائقين — قائمة الأدمن: <code>GET /admin/reviews</code>
           </Typography>
+          {data?.dataSource && data.dataSource !== 'admin/reviews' && (
+            <Typography variant="caption" sx={{ color: '#D97706', display: 'block', mt: 0.5 }}>
+              مصدر البيانات: {data.dataSource}
+            </Typography>
+          )}
         </Box>
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<RefreshIcon />}
+          onClick={handleRefreshReviews}
+          disabled={isFetching}
+        >
+          إعادة المحاولة
+        </Button>
 
         <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
           <TextField
@@ -286,8 +350,12 @@ const ReviewsListPage: React.FC = () => {
 
       {reviews.length === 0 ? (
         <EmptyState
-          title="لا توجد تقييمات"
-          description="لم يتم العثور على تقييمات مطابقة للبحث أو الفلاتر."
+          title={data?.apiUnavailable ? 'التقييمات غير متاحة من السيرفر' : 'لا توجد تقييمات'}
+          description={
+            data?.apiUnavailable
+              ? 'الـ API معطّل حالياً. Dashboard يعمل — المشكلة في endpoint التقييمات فقط.'
+              : 'لم يتم العثور على تقييمات مطابقة للبحث أو الفلاتر.'
+          }
         />
       ) : (
         <DataTable data={reviews} columns={columns} searchable={false} isLoading={isLoading} />
